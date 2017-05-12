@@ -1,25 +1,28 @@
-export default prop => Target => {
-  const {inited, attached, created, detached} = Target.prototype
+export default (prop = 'san') => Target => {
+  const {inited, attached, created} = Target.prototype
   const hooks = {
-      enter: `${prop}-enter`,
-      enterActive: `${prop}-enter-active`,
-      leave: `${prop}-leave`,
-      leaveActive: `${prop}-leave-active`,
+    enter: `${prop}-enter`,
+    enterActive: `${prop}-enter-active`,
+    leave: `${prop}-leave`,
+    leaveActive: `${prop}-leave-active`,
   }
 
-  Target.prototype.inited = function () {
-    this.dispose = function () {
-      const {el} = this
-      el.classList.add(hooks.leave)
-      requestAnimationFrame(() => {
-        el.classList.remove(hooks.leave)
-        el.classList.add(hooks.leaveActive)
-      })
-      el.addEventListener('transitionend', e => {
-        this._dispose()
-        this._toPhase('disposed')
-      })
+
+  Target.prototype.dispose = function () {
+    const {el} = this
+    el.classList.add(hooks.leave)
+    requestAnimationFrame(() => {
+      el.classList.remove(hooks.leave)
+      el.classList.add(hooks.leaveActive)
+    })
+
+    const leaveHandler = e => {
+      el.removeEventListener('transitionend', leaveHandler)
+      this._dispose()
+      this._toPhase('disposed')
     }
+
+    el.addEventListener('transitionend', leaveHandler)
   }
 
   Target.prototype.attached = function () {
@@ -31,9 +34,14 @@ export default prop => Target => {
 
   Target.prototype.created = function () {
     const {el} = this
+    const enterHandler = e => {
+      el.removeEventListener(enterHandler)
+      el.classList.remove(hooks.enterActive)
+    }
     el.classList.add(hooks.enter)
-    el.addEventListener('transitionend', () => el.classList.remove(hooks.enterActive))
+    el.addEventListener('transitionend', () => enterHandler)
     created && created.call(this)
   }
+
   return Target
 }
