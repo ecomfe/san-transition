@@ -4,16 +4,12 @@
 
 <script>
 export default {
-  initData () {
-    return {
-      text: 'Transition Layer'
-    }
-  }
 }
 </script>
 
 <style>
 .fade-enter-active, .fade-leave-active {
+  position: absolute;
   opacity: 1;
   transform: translate(0, 0);
   transition: all 3s;

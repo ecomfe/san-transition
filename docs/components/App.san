@@ -1,7 +1,8 @@
 <template>
 <section>
   <button on-click="toggle">Toggle</button>
-  <transition-layer san-if="isShow"></transition-layer>
+  <transition-layer san-if="isShow" text="Transition Layer 1"></transition-layer>
+  <transition-layer san-else text="Transition Layer 2"></transition-layer>
 </section>
 </template>
 

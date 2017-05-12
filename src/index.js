@@ -6,7 +6,6 @@ export default (prop = 'san') => Target => {
     leave: `${prop}-leave`,
     leaveActive: `${prop}-leave-active`,
   }
-
   Target.prototype.dispose = function () {
     const {el} = this
     el.classList.add(hooks.leave)
