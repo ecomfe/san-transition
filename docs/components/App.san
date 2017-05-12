@@ -1,0 +1,25 @@
+<template>
+<section>
+  <button on-click="toggle">Toggle</button>
+  <transition-layer san-if="isShow"></transition-layer>
+</section>
+</template>
+
+<script>
+import TransitionLayer from 'docs/components/TransitionLayer.san'
+import sanTransition from '@/index.js'
+
+export default {
+  components: {
+    'transition-layer': sanTransition('fade')(TransitionLayer)
+  },
+  initData () {
+    return {
+      isShow: true
+    }
+  },
+  toggle () {
+    this.data.set('isShow', !this.data.get('isShow'))
+  }
+}
+</script>

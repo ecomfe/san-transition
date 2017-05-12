@@ -1,0 +1,23 @@
+<template>
+<div>{{text}}</div>
+</template>
+
+<script>
+export default {
+  initData () {
+    return {
+      text: 'Transition Layer'
+    }
+  }
+}
+</script>
+
+<style>
+.fade-enter-active, .fade-leave-active {
+  opacity: 1;
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-active {
+  opacity: 0;
+}
+</style>

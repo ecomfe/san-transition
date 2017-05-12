@@ -7,6 +7,21 @@ export default prop => Target => {
       leaveActive: `${prop}-leave-active`,
   }
 
+  Target.prototype.inited = function () {
+    this.dispose = function () {
+      const {el} = this
+      el.classList.add(hooks.leave)
+      requestAnimationFrame(() => {
+        el.classList.remove(hooks.leave)
+        el.classList.add(hooks.leaveActive)
+      })
+      el.addEventListener('transitionend', e => {
+        this._dispose()
+        this._toPhase('disposed')
+      })
+    }
+  }
+
   Target.prototype.attached = function () {
     const {el} = this
     el.classList.add(hooks.enterActive)
@@ -20,6 +35,5 @@ export default prop => Target => {
     el.addEventListener('transitionend', () => el.classList.remove(hooks.enterActive))
     created && created.call(this)
   }
-
   return Target
 }
