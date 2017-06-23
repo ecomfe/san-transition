@@ -56,10 +56,5 @@
   },
   "peerDependencies": {
     "san": "^3.1.1"
-  },
-  "dependencies": {
-    "markdown-it": "^8.3.1",
-    "regjsgen": "^0.3.0",
-    "regjsparser": "^0.2.1"
   }
 }
