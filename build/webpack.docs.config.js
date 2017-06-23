@@ -2,42 +2,46 @@ const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
-  context: path.resolve(__dirname, '../docs'),
+  context: path.resolve(__dirname, '../docs/src'),
   entry: './main.js',
   output: {
-    path: path.resolve(__dirname, '../dist'),
+    path: path.resolve(__dirname, '../docs'),
     filename: 'index.js'
   },
   module: {
     rules: [
       {
         test: /\.san$/,
-        loader: 'san-loader'
+        use: ['san-loader']
+      },
+      {
+        test: /\.styl$/,
+        use: ['style-loader', 'css-loader', 'stylus-loader']
       },
       {
         test: /\.js$/,
-        loader: 'babel-loader',
+        use: ['babel-loader', 'eslint-loader'],
         exclude: /node_modules/
       },
       {
         test: /\.css$/,
-        loader: 'style-loader!css-loader'
+        use: ['style-loader', 'css-loader']
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
-        loader: 'url-loader'
+        use: ['url-loader']
       }
     ]
   },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, '../src'),
-      'docs': path.resolve(__dirname, '../docs')
+      'docs': path.resolve(__dirname, '../docs/src')
     }
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, '../docs/template.html')
+      template: path.resolve(__dirname, '../docs/src/template.html')
     })
   ]
 }

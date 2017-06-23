@@ -1,0 +1,211 @@
+<template lang="md">
+# <img src="https://ecomfe.github.io/san/img/logo-colorful.svg" height="28px"><span>San Transition</span>
+
+High order component factory for generating [san](//github.com/ecomfe/san) components with transition effects.
+
+## Get Start
+
+### Installation
+
+```bash
+$ npm install --save san-transition
+```
+
+### Usage
+
+```html
+<template>
+  <div>
+    <transition-layer>A component with transition effects.</transition-layer>
+  <div>
+</template>
+
+<script>
+import {transition} from 'san-transition'
+import {YourComponent} from 'YOUR_SAN_COMPONENT'
+
+export default {
+  components: {
+    'transition-layer': transition('fade')(YourComponent)
+  }
+}
+</script>
+
+<style>
+.fade-enter-active, .fade-leave {
+  opacity: 1;
+  transform: translate(0, 0);
+  transition: all .5s;
+}
+.fade-enter, .fade-leave-active {
+  opacity: 0;
+  transform: translate(100px, 0);
+}
+</style>
+
+```
+
+## API
+
+### transition
+
+- Arguments
+  - {None, String, Object} hook id
+- Usage
+  ```javascript
+  // register default hooks
+  // the same as `transition('san')(YourComponent)`
+  transition()(YourComponent)
+
+  // register named hooks
+  transition('foo')(YourComponent)
+
+  // register custom hooks
+  transition({
+    enter: 'custom-enter-hook'
+    enterActive: 'custom-enter-active-hook',
+    leave: 'custom-leave-hook',
+    leaveActive: 'custom-leave-active-hook'
+  })(YourComponent)
+  ```
+
+### transitionGroup (uncompleted)
+
+Coming soon...
+
+## Try It Out
+
+<div class="try">
+  <button on-click="toggleLayer('expand')">Toggle Expand</button>
+  <layer-expand s-if="isShow.expand">Component with expand effect</layer-expand>
+</div>
+<div class="try">
+  <button on-click="toggleLayer('fade')">Toggle Fade</button>
+  <layer-fade s-if="isShow.fade">Component with fade effect</layer-fade>
+</div>
+
+<div class="try">
+  <button on-click="toggleLayer('keyframes')">Toggle Keyframes</button>
+  <layer-keyframes s-if="isShow.keyframes">Component with animation keyframes</layer-keyframes>
+</div>
+</template>
+
+<script>
+import Prism from 'prismjs'
+import TransitionLayer from 'docs/components/TransitionLayer.san'
+import {transition} from '@/index.js'
+
+const LayerExpand = transition('expand')(TransitionLayer)
+const LayerFade = transition('fade')(TransitionLayer)
+const LayerKeyframes = transition('keyframes')(TransitionLayer)
+
+export default {
+  attach () {
+    Prism.highlightAll()
+  },
+  components: {
+    'layer-expand': LayerExpand,
+    'layer-fade': LayerFade,
+    'layer-keyframes': LayerKeyframes,
+  },
+  initData () {
+    return {
+      isShow: {
+        expand: true,
+        fade: true,
+        keyframes: true
+      }
+    }
+  },
+  toggleLayer (name) {
+    this.data.set(`isShow.${name}`, !this.data.get(`isShow.${name}`))
+  }
+}
+</script>
+
+<style>
+h1 * {
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+.try {
+  background-color: #334959;
+  color: white;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.try button {
+  background: #c7a31a;
+  color: #fff;
+  border-radius: 3px;
+  border: 0;
+  outline: 0;
+  width: 150px;
+  text-align: center;
+  font-size: 14px;
+  margin-right: 10px;
+}
+
+.try div, .try button {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.try button:hover {
+  background-color: #a88500;
+}
+
+.fade-enter-active, .fade-leave {
+  opacity: 1;
+  transform: translate(0, 0);
+  transition: all .5s;
+}
+.fade-enter, .fade-leave-active {
+  opacity: 0;
+  transform: translate(100px, 0);
+}
+
+.expand-enter-active, .expand-leave {
+  transition: all .5s ease;
+  height: 20px;
+  line-height: 20px;
+  overflow: hidden;
+}
+.expand-enter, .expand-leave-active {
+  height: 0;
+  opacity: 0;
+}
+
+.keyframes-enter-active {
+  animation: in .5s;
+}
+.keyframes-leave-active {
+  animation: out .5s;
+}
+
+@keyframes in {
+  0% {
+    transform: scale(0)
+  }
+  50% {
+    transform: scale(1.5)
+  }
+  100% {
+    transform: scale(1)
+  }
+}
+
+@keyframes out {
+  0% {
+    transform: scale(1)
+  }
+  50% {
+    transform: scale(1.5)
+  }
+  100% {
+    transform: scale(0)
+  }
+}
+</style>
