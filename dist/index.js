@@ -5108,6 +5108,7 @@ IfDirective.prototype.genHTML = function (buf) {
 IfDirective.prototype.updateView = function (changes) {
     var child = this.childs[0];
     var el = this._getEl();
+
     if (this.evalExpr(this.cond)) {
         if (child) {
             this.updateChilds(changes);
@@ -8137,7 +8138,7 @@ function parseANodeFromEl(el) {
     // #[end]
 })(this);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(31).setImmediate))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(25).setImmediate))
 
 /***/ }),
 /* 3 */
@@ -8172,13 +8173,13 @@ module.exports = g;
 
 var __san_script__, __san_template__
 var __san_styles__ = {}
-__webpack_require__(29)
-__san_script__ = __webpack_require__(14)
+__webpack_require__(23)
+__san_script__ = __webpack_require__(10)
 if (__san_script__ &&
     __san_script__.__esModule &&
     Object.keys(__san_script__).length > 1) {
-  console.warn("[san-loader] docs/components/App.san: named exports in *.san files are ignored.")}
-__san_template__ = __webpack_require__(21)
+  console.warn("[san-loader] docs\\components\\App.san: named exports in *.san files are ignored.")}
+__san_template__ = __webpack_require__(17)
 var __san_proto__ = {}
 if (__san_script__) {
   __san_proto__ = __san_script__.__esModule
@@ -9765,7 +9766,7 @@ exports['default'] = EventQueue;
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(16);
+var content = __webpack_require__(12);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(1)(content, {});
@@ -9791,7 +9792,7 @@ if(false) {
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(17);
+var content = __webpack_require__(13);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(1)(content, {});
@@ -9817,7 +9818,7 @@ if(false) {
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(20);
+var content = __webpack_require__(16);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(1)(content, {});
@@ -9878,274 +9879,8 @@ _sanRouter.router.start();
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.transitionGroup = exports.transition = undefined;
 
-var _transition = __webpack_require__(12);
-
-var _transition2 = _interopRequireDefault(_transition);
-
-var _transitionGroup = __webpack_require__(11);
-
-var _transitionGroup2 = _interopRequireDefault(_transitionGroup);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-exports.transition = _transition2.default;
-exports.transitionGroup = _transitionGroup2.default;
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-// todos: transition group
-
-exports.default = function () {
-  var prop = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'san';
-  return function (Component) {
-    var Target = function (_Component) {
-      _inherits(Target, _Component);
-
-      function Target() {
-        _classCallCheck(this, Target);
-
-        return _possibleConstructorReturn(this, (Target.__proto__ || Object.getPrototypeOf(Target)).apply(this, arguments));
-      }
-
-      return Target;
-    }(Component);
-
-    return Target;
-  };
-};
-
-/***/ }),
-/* 12 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _util = __webpack_require__(13);
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-exports.default = function () {
-  var prop = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'san';
-  return function (Component) {
-    var Target = function (_Component) {
-      _inherits(Target, _Component);
-
-      function Target() {
-        _classCallCheck(this, Target);
-
-        return _possibleConstructorReturn(this, (Target.__proto__ || Object.getPrototypeOf(Target)).apply(this, arguments));
-      }
-
-      return Target;
-    }(Component);
-
-    var _Target$prototype = Target.prototype,
-        attached = _Target$prototype.attached,
-        attach = _Target$prototype.attach,
-        inited = _Target$prototype.inited;
-
-    // define css hooks name
-
-    var hooks = (0, _util.getHooks)(prop
-
-    // define transition flags
-    );Target.prototype.isEntering = false;
-    Target.prototype.isLeaving = false;
-
-    // override attached lifecycle
-    Target.prototype.attached = function () {
-      // entering
-      var el = this.el,
-          parent = this.parent;
-
-      (0, _util.clearParentTimeout)(parent);
-      el.classList.add(hooks.enter);
-      parent.isEntering = true;
-      parent.transitionEl = el;
-      var transitionHandler = function transitionHandler() {
-        el.classList.remove(hooks.enter);
-        parent.enteringTimeout = setTimeout(function () {
-          parent.isEntering = false;
-        }, (0, _util.getTimeout)(el));
-      };
-      el.classList.add(hooks.enterActive);
-      requestAnimationFrame(transitionHandler);
-
-      attached && attached.call(this);
-    };
-
-    // override attach function
-    Target.prototype.attach = function () {
-      // entering
-      var parent = this.parent;
-
-      if (parent.isLeaving) {
-        (0, _util.prepareEnter)(parent, hooks);
-      } else {
-        attach.apply(this, arguments);
-      }
-    };
-
-    // override inited lifecycle
-    Target.prototype.inited = function () {
-      var parent = this.parent;
-      var updateView = parent.updateView,
-          _disposeChilds = parent._disposeChilds;
-
-      // override updateView function
-
-      parent.updateView = function (changes) {
-        var _this2 = this;
-
-        var child = this.childs[0];
-        if (this.evalExpr(this.cond)) {
-          if (child) {
-            if (parent.isLeaving) {
-              // entering
-              var el = this.transitionEl;
-              (0, _util.prepareEnter)(parent, hooks);
-              parent.enteringTimeout = setTimeout(function () {
-                parent.isEntering = false;
-                updateView.call(_this2, changes);
-              }, (0, _util.getTimeout)(el));
-            }
-          }
-          updateView.call(this, changes);
-        } else {
-          // leaving
-          var _el = this.transitionEl;
-          (0, _util.clearParentTimeout)(parent);
-          if (!parent.isLeaving) {
-            (0, _util.prepareLeave)(parent, hooks);
-            var leaveHandler = function leaveHandler(e) {
-              if (parent.isLeaving) {
-                _disposeChilds.call(_this2);
-                parent.isLeaving = false;
-              }
-            };
-            var transitionHandler = function transitionHandler() {
-              _el.classList.add(hooks.leaveActive);
-              parent.leavingTimeout = setTimeout(leaveHandler, (0, _util.getTimeout)(_el));
-            };
-            requestAnimationFrame(transitionHandler);
-          }
-        }
-      };
-      inited && inited.call(this);
-    };
-    return Target;
-  };
-};
-
-/***/ }),
-/* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-var getTime = function getTime(duration, delay) {
-  return Math.max.apply(undefined, duration.map(function (str, i) {
-    return getFloat(str) + parseFloat(delay[i]);
-  }));
-};
-
-var getFloat = function getFloat(str) {
-  return (parseFloat(str) || 0) * 1000;
-};
-
-var getTimeout = exports.getTimeout = function getTimeout(el) {
-  var style = getComputedStyle(el);
-  var transDuration = style.transitionDuration.split(',');
-  var transDelay = style.transitionDelay.split(',');
-  var aniDuration = style.animationDuration.split(',');
-  var aniDelay = style.animationDelay.split(',');
-  return Math.max(getTime(transDuration, transDelay), getTime(aniDuration, aniDelay));
-};
-
-var clearParentTimeout = exports.clearParentTimeout = function clearParentTimeout(parent) {
-  clearTimeout(parent.leavingTimeout);
-  clearTimeout(parent.enteringTimeout);
-};
-
-var prepareEnter = exports.prepareEnter = function prepareEnter(parent, hooks) {
-  var transitionEl = parent.transitionEl;
-
-  parent.isEntering = true;
-  parent.isLeaving = false;
-  transitionEl.classList.add(hooks.enterActive);
-  transitionEl.classList.remove(hooks.leave);
-  transitionEl.classList.remove(hooks.leaveActive);
-};
-
-var prepareLeave = exports.prepareLeave = function prepareLeave(parent, hooks) {
-  var transitionEl = parent.transitionEl;
-
-  parent.isEntering = false;
-  parent.isLeaving = true;
-  transitionEl.classList.remove(hooks.enter);
-  transitionEl.classList.remove(hooks.enterActive);
-  transitionEl.classList.add(hooks.leave);
-};
-
-var getHooks = exports.getHooks = function getHooks(prop) {
-  return (typeof prop === 'undefined' ? 'undefined' : _typeof(prop)) === 'object' ? {
-    enter: prop.enter || 'san-enter',
-    enterActive: prop.enterActive || 'san-enter-active',
-    leave: prop.leave || 'san-leave',
-    leaveActive: prop.leaveActive || 'san-leave-active'
-  } : {
-    enter: prop + '-enter',
-    enterActive: prop + '-enter-active',
-    leave: prop + '-leave',
-    leaveActive: prop + '-leave-active'
-  };
-};
-
-/***/ }),
-/* 14 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _Doc = __webpack_require__(26);
+var _Doc = __webpack_require__(21);
 
 var _Doc2 = _interopRequireDefault(_Doc);
 
@@ -10177,7 +9912,7 @@ exports.default = {
 // <script>
 
 /***/ }),
-/* 15 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10187,19 +9922,26 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _prismjs = __webpack_require__(24);
+var _prismjs = __webpack_require__(19);
 
 var _prismjs2 = _interopRequireDefault(_prismjs);
 
-var _TransitionLayer = __webpack_require__(27);
-
-var _TransitionLayer2 = _interopRequireDefault(_TransitionLayer);
-
-var _index = __webpack_require__(10);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var LayerExpand = (0, _index.transition)('expand')(_TransitionLayer2.default); // <template lang="md">
+exports.default = {
+  attach: function attach() {
+    _prismjs2.default.highlightAll();
+  }
+};
+// </script>
+//
+// <style>
+// h1 * {
+//   margin-right: 10px;
+//   vertical-align: middle;
+// }
+// </style>
+// <template lang="md">
 // # <img src="https://ecomfe.github.io/san/img/logo-colorful.svg" height="28px"><span>San Transition</span>
 //
 // High order component factory for generating [san](//github.com/ecomfe/san) components with transition effects.
@@ -10276,159 +10018,36 @@ var LayerExpand = (0, _index.transition)('expand')(_TransitionLayer2.default); /
 //
 // ## Try It Out
 //
-// <div class="try">
-//   <button on-click="toggleLayer('expand')">Toggle Expand</button>
-//   <layer-expand s-if="isShow.expand">Component with expand effect</layer-expand>
-// </div>
-// <div class="try">
-//   <button on-click="toggleLayer('fade')">Toggle Fade</button>
-//   <layer-fade s-if="isShow.fade">Component with fade effect</layer-fade>
-// </div>
+// ### Default Hooks
 //
-// <div class="try">
-//   <button on-click="toggleLayer('keyframes')">Toggle Keyframes</button>
-//   <layer-keyframes s-if="isShow.keyframes">Component with animation keyframes</layer-keyframes>
-// </div>
+// <iframe height='300' scrolling='no' title='San Transition - Default' src='//codepen.io/Dafrok/embed/pwravg/?height=300&theme-id=dark&default-tab=js,result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true' style='width: 100%;'>See the Pen <a href='https://codepen.io/Dafrok/pen/pwravg/'>San Transition - Default</a> by Dafrok (<a href='https://codepen.io/Dafrok'>@Dafrok</a>) on <a href='https://codepen.io'>CodePen</a>.
+// </iframe>
 //
-// <div class="try">
-//   <button on-click="toggleLayer('ifElse')">Toggle s-if / s-else</button>
-//   <layer-fade s-if="isShow.ifElse">Component with s-if</layer-fade>
-//   <layer-expand s-else>Component with s-else</layer-expand>
-// </div>
+// ### Named Hooks
+//
+// <iframe height='300' scrolling='no' title='San Transition - Named' src='//codepen.io/Dafrok/embed/VWzQWV/?height=300&theme-id=dark&default-tab=js,result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true' style='width: 100%;'>See the Pen <a href='https://codepen.io/Dafrok/pen/VWzQWV/'>San Transition - Named</a> by Dafrok (<a href='https://codepen.io/Dafrok'>@Dafrok</a>) on <a href='https://codepen.io'>CodePen</a>.
+// </iframe>
+//
+// ### Custom Hooks
+//
+// <iframe height='300' scrolling='no' title='San Transition - Custom' src='//codepen.io/Dafrok/embed/xrLYYz/?height=300&theme-id=dark&default-tab=js,result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true' style='width: 100%;'>See the Pen <a href='https://codepen.io/Dafrok/pen/xrLYYz/'>San Transition - Custom Hooks</a> by Dafrok (<a href='https://codepen.io/Dafrok'>@Dafrok</a>) on <a href='https://codepen.io'>CodePen</a>.
+// </iframe>
+//
+// ### Keyframe Animation Transition
+//
+// <iframe height='300' scrolling='no' title='San Transition - Animation' src='//codepen.io/Dafrok/embed/rwzJqJ/?height=300&theme-id=dark&default-tab=js,result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true' style='width: 100%;'>See the Pen <a href='https://codepen.io/Dafrok/pen/rwzJqJ/'>San Transition - Animation</a> by Dafrok (<a href='https://codepen.io/Dafrok'>@Dafrok</a>) on <a href='https://codepen.io'>CodePen</a>.
+// </iframe>
+//
+// ### Working with s-if & s-else expression
+// <iframe height='300' scrolling='no' title='San Transition - if  / else' src='//codepen.io/Dafrok/embed/dRzmbB/?height=300&theme-id=dark&default-tab=js,result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true' style='width: 100%;'>See the Pen <a href='https://codepen.io/Dafrok/pen/dRzmbB/'>dRzmbB</a> by Dafrok (<a href='https://codepen.io/Dafrok'>@Dafrok</a>) on <a href='https://codepen.io'>CodePen</a>.
+// </iframe>
 // </template>
+//
 //
 // <script>
 
-var LayerFade = (0, _index.transition)('fade')(_TransitionLayer2.default);
-var LayerKeyframes = (0, _index.transition)('keyframes')(_TransitionLayer2.default);
-
-exports.default = {
-  attach: function attach() {
-    _prismjs2.default.highlightAll();
-  },
-
-  components: {
-    'layer-expand': LayerExpand,
-    'layer-fade': LayerFade,
-    'layer-keyframes': LayerKeyframes
-  },
-  initData: function initData() {
-    return {
-      isShow: {
-        expand: true,
-        fade: true,
-        keyframes: true,
-        ifElse: true
-      }
-    };
-  },
-  toggleLayer: function toggleLayer(name) {
-    this.data.set('isShow.' + name, !this.data.get('isShow.' + name));
-  }
-};
-// </script>
-//
-// <style>
-// h1 * {
-//   margin-right: 10px;
-//   vertical-align: middle;
-// }
-//
-// .try {
-//   font-size: 0;
-//   background-color: #334959;
-//   color: white;
-//   margin-bottom: 10px;
-//   padding: 10px;
-// }
-//
-// .try button {
-//   background: #c7a31a;
-//   color: #fff;
-//   border-radius: 3px;
-//   border: 0;
-//   outline: 0;
-//   width: 150px;
-//   text-align: center;
-//   margin-right: 10px;
-// }
-//
-// .try div, .try button {
-//   display: inline-block;
-//   vertical-align: middle;
-//   font-size: 14px;
-// }
-//
-// .try button:hover {
-//   background-color: #a88500;
-// }
-//
-// .fade-enter-active, .fade-leave {
-//   position: absolute;
-//   opacity: 1;
-//   transform: translate(0, 0);
-//   transition: all .5s;
-//   height: 20px;
-//   line-height: 20px;
-// }
-// .fade-enter, .fade-leave-active {
-//   opacity: 0;
-//   transform: translate(100px, 0);
-// }
-//
-// .expand-enter-active, .expand-leave {
-//   position: absolute;
-//   transition: all .5s ease;
-//   height: 20px;
-//   line-height: 20px;
-//   overflow: hidden;
-// }
-// .expand-enter, .expand-leave-active {
-//   height: 0;
-//   opacity: 0;
-// }
-//
-//
-// .keyframes-leave {
-//   transform: scale(0);
-//   animation: in .5s;
-// }
-// .keyframes-enter-active {
-//   height: 20px;
-//   line-height: 20px;
-//   animation: in .5s;
-// }
-// .keyframes-leave-active {
-//   animation: out .5s;
-// }
-//
-// @keyframes in {
-//   0% {
-//     transform: scale(0)
-//   }
-//   50% {
-//     transform: scale(1.5)
-//   }
-//   100% {
-//     transform: scale(1)
-//   }
-// }
-//
-// @keyframes out {
-//   0% {
-//     transform: scale(1)
-//   }
-//   50% {
-//     transform: scale(1.5)
-//   }
-//   100% {
-//     transform: scale(0)
-//   }
-// }
-// </style>
-
 /***/ }),
-/* 16 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(0)();
@@ -10442,7 +10061,7 @@ exports.push([module.i, "/*! normalize.css v6.0.0 | MIT License | github.com/nec
 
 
 /***/ }),
-/* 17 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(0)();
@@ -10456,7 +10075,7 @@ exports.push([module.i, "/**\n * prism.js tomorrow night eighties for JavaScript
 
 
 /***/ }),
-/* 18 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(0)();
@@ -10464,13 +10083,13 @@ exports = module.exports = __webpack_require__(0)();
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nbody {\n  padding: 20px;\n  color: #999;\n  background-color: #19232e;\n}\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\r\nbody {\r\n  padding: 20px;\r\n  color: #999;\r\n  background-color: #19232e;\r\n}\r\n", ""]);
 
 // exports
 
 
 /***/ }),
-/* 19 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(0)();
@@ -10478,13 +10097,13 @@ exports = module.exports = __webpack_require__(0)();
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nh1 * {\n  margin-right: 10px;\n  vertical-align: middle;\n}\n\n.try {\n  font-size: 0;\n  background-color: #334959;\n  color: white;\n  margin-bottom: 10px;\n  padding: 10px;\n}\n\n.try button {\n  background: #c7a31a;\n  color: #fff;\n  border-radius: 3px;\n  border: 0;\n  outline: 0;\n  width: 150px;\n  text-align: center;\n  margin-right: 10px;\n}\n\n.try div, .try button {\n  display: inline-block;\n  vertical-align: middle;\n  font-size: 14px;\n}\n\n.try button:hover {\n  background-color: #a88500;\n}\n\n.fade-enter-active, .fade-leave {\n  position: absolute;\n  opacity: 1;\n  transform: translate(0, 0);\n  transition: all .5s;\n  height: 20px;\n  line-height: 20px;\n}\n.fade-enter, .fade-leave-active {\n  opacity: 0;\n  transform: translate(100px, 0);\n}\n\n.expand-enter-active, .expand-leave {\n  position: absolute;\n  transition: all .5s ease;\n  height: 20px;\n  line-height: 20px;\n  overflow: hidden;\n}\n.expand-enter, .expand-leave-active {\n  height: 0;\n  opacity: 0;\n}\n\n\n.keyframes-leave {\n  transform: scale(0);\n  animation: in .5s;\n}\n.keyframes-enter-active {\n  height: 20px;\n  line-height: 20px;\n  animation: in .5s;\n}\n.keyframes-leave-active {\n  animation: out .5s;\n}\n\n@keyframes in {\n  0% {\n    transform: scale(0)\n  }\n  50% {\n    transform: scale(1.5)\n  }\n  100% {\n    transform: scale(1)\n  }\n}\n\n@keyframes out {\n  0% {\n    transform: scale(1)\n  }\n  50% {\n    transform: scale(1.5)\n  }\n  100% {\n    transform: scale(0)\n  }\n}\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\r\nh1 * {\r\n  margin-right: 10px;\r\n  vertical-align: middle;\r\n}\r\n", ""]);
 
 // exports
 
 
 /***/ }),
-/* 20 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(0)();
@@ -10498,25 +10117,19 @@ exports.push([module.i, ".markdown-body {\n  color: #999;\n}\n.markdown-body tab
 
 
 /***/ }),
-/* 21 */
+/* 17 */
 /***/ (function(module, exports) {
 
-module.exports = "\n<section>\n  <a href=\"https://github.com/dafrok/san-transition\"><img style=\"position: absolute; top: 0; right: 0; border: 0;\" src=\"https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67\" alt=\"Fork me on GitHub\" data-canonical-src=\"https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png\"></a>\n  <div class=\"markdown-body\">\n    <doc></doc>\n  </div>\n</section>\n";
+module.exports = "\r\n<section>\r\n  <a href=\"https://github.com/dafrok/san-transition\"><img style=\"position: absolute; top: 0; right: 0; border: 0;\" src=\"https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67\" alt=\"Fork me on GitHub\" data-canonical-src=\"https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png\"></a>\r\n  <div class=\"markdown-body\">\r\n    <doc></doc>\r\n  </div>\r\n</section>\r\n";
 
 /***/ }),
-/* 22 */
+/* 18 */
 /***/ (function(module, exports) {
 
-module.exports = "\n<div>\n  <slot></slot>\n</div>\n";
+module.exports = "<div><h1><img src=\"https://ecomfe.github.io/san/img/logo-colorful.svg\" height=\"28px\"><span>San Transition</span></h1>\n<p>High order component factory for generating <a href=\"//github.com/ecomfe/san\">san</a> components with transition effects.</p>\n<h2>Get Start</h2>\n<h3>Installation</h3>\n<pre><code class=\"language-bash\">$ npm install --save san-transition\n</code></pre>\n<h3>Usage</h3>\n<pre><code class=\"language-html\">&lt;template&gt;\n  &lt;div&gt;\n    &lt;transition-layer&gt;A component with transition effects.&lt;/transition-layer&gt;\n  &lt;div&gt;\n&lt;/template&gt;\n\n&lt;script&gt;\nimport {transition} from 'san-transition'\nimport {YourComponent} from 'YOUR_SAN_COMPONENT'\n\nexport default {\n  components: {\n    'transition-layer': transition('fade')(YourComponent)\n  }\n}\n&lt;/script&gt;\n\n&lt;style&gt;\n.fade-enter-active, .fade-leave {\n  opacity: 1;\n  transform: translate(0, 0);\n  transition: all .5s;\n}\n.fade-enter, .fade-leave-active {\n  opacity: 0;\n  transform: translate(100px, 0);\n}\n&lt;/style&gt;\n\n</code></pre>\n<h2>API</h2>\n<h3>transition</h3>\n<ul>\n<li>Arguments\n<ul>\n<li><strong>{None, String, Object}</strong> hook id</li>\n</ul>\n</li>\n<li>Usage<pre><code class=\"language-javascript\">// register default hooks\n// the same as `transition('san')(YourComponent)`\ntransition()(YourComponent)\n\n// register named hooks\ntransition('foo')(YourComponent)\n\n// register custom hooks\ntransition({\n  enter: 'custom-enter-hook'\n  enterActive: 'custom-enter-active-hook',\n  leave: 'custom-leave-hook',\n  leaveActive: 'custom-leave-active-hook'\n})(YourComponent)\n</code></pre>\n</li>\n</ul>\n<h3>transitionGroup (uncompleted)</h3>\n<p>Coming soon...</p>\n<h2>Try It Out</h2>\n<h3>Default Hooks</h3>\n<iframe height='300' scrolling='no' title='San Transition - Default' src='//codepen.io/Dafrok/embed/pwravg/?height=300&theme-id=dark&default-tab=js,result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true' style='width: 100%;'>See the Pen <a href='https://codepen.io/Dafrok/pen/pwravg/'>San Transition - Default</a> by Dafrok (<a href='https://codepen.io/Dafrok'>@Dafrok</a>) on <a href='https://codepen.io'>CodePen</a>.\n</iframe>\n<h3>Named Hooks</h3>\n<iframe height='300' scrolling='no' title='San Transition - Named' src='//codepen.io/Dafrok/embed/VWzQWV/?height=300&theme-id=dark&default-tab=js,result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true' style='width: 100%;'>See the Pen <a href='https://codepen.io/Dafrok/pen/VWzQWV/'>San Transition - Named</a> by Dafrok (<a href='https://codepen.io/Dafrok'>@Dafrok</a>) on <a href='https://codepen.io'>CodePen</a>.\n</iframe>\n<h3>Custom Hooks</h3>\n<iframe height='300' scrolling='no' title='San Transition - Custom' src='//codepen.io/Dafrok/embed/xrLYYz/?height=300&theme-id=dark&default-tab=js,result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true' style='width: 100%;'>See the Pen <a href='https://codepen.io/Dafrok/pen/xrLYYz/'>San Transition - Custom Hooks</a> by Dafrok (<a href='https://codepen.io/Dafrok'>@Dafrok</a>) on <a href='https://codepen.io'>CodePen</a>.\n</iframe>\n<h3>Keyframe Animation Transition</h3>\n<iframe height='300' scrolling='no' title='San Transition - Animation' src='//codepen.io/Dafrok/embed/rwzJqJ/?height=300&theme-id=dark&default-tab=js,result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true' style='width: 100%;'>See the Pen <a href='https://codepen.io/Dafrok/pen/rwzJqJ/'>San Transition - Animation</a> by Dafrok (<a href='https://codepen.io/Dafrok'>@Dafrok</a>) on <a href='https://codepen.io'>CodePen</a>.\n</iframe>\n<h3>Working with s-if &amp; s-else expression</h3>\n<iframe height='300' scrolling='no' title='San Transition - if  / else' src='//codepen.io/Dafrok/embed/dRzmbB/?height=300&theme-id=dark&default-tab=js,result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true' style='width: 100%;'>See the Pen <a href='https://codepen.io/Dafrok/pen/dRzmbB/'>dRzmbB</a> by Dafrok (<a href='https://codepen.io/Dafrok'>@Dafrok</a>) on <a href='https://codepen.io'>CodePen</a>.\n</iframe>\n</div>";
 
 /***/ }),
-/* 23 */
-/***/ (function(module, exports) {
-
-module.exports = "<div><h1 id=\"-img-src-https-ecomfe-github-io-san-img-logo-colorful-svg-height-28px-span-san-transition-span-\"><img src=\"https://ecomfe.github.io/san/img/logo-colorful.svg\" height=\"28px\"><span>San Transition</span></h1>\n<p>High order component factory for generating <a href=\"//github.com/ecomfe/san\">san</a> components with transition effects.</p>\n<h2 id=\"get-start\">Get Start</h2>\n<h3 id=\"installation\">Installation</h3>\n<pre><code class=\"lang-bash\">$ npm install --save san-transition\n</code></pre>\n<h3 id=\"usage\">Usage</h3>\n<pre><code class=\"lang-html\">&lt;template&gt;\n  &lt;div&gt;\n    &lt;transition-layer&gt;A component with transition effects.&lt;/transition-layer&gt;\n  &lt;div&gt;\n&lt;/template&gt;\n\n&lt;script&gt;\nimport {transition} from &#39;san-transition&#39;\nimport {YourComponent} from &#39;YOUR_SAN_COMPONENT&#39;\n\nexport default {\n  components: {\n    &#39;transition-layer&#39;: transition(&#39;fade&#39;)(YourComponent)\n  }\n}\n&lt;/script&gt;\n\n&lt;style&gt;\n.fade-enter-active, .fade-leave {\n  opacity: 1;\n  transform: translate(0, 0);\n  transition: all .5s;\n}\n.fade-enter, .fade-leave-active {\n  opacity: 0;\n  transform: translate(100px, 0);\n}\n&lt;/style&gt;\n</code></pre>\n<h2 id=\"api\">API</h2>\n<h3 id=\"transition\">transition</h3>\n<ul>\n<li>Arguments<ul>\n<li><strong>{None, String, Object}</strong> hook id</li>\n</ul>\n</li>\n<li><p>Usage</p>\n<pre><code class=\"lang-javascript\">// register default hooks\n// the same as `transition(&#39;san&#39;)(YourComponent)`\ntransition()(YourComponent)\n\n// register named hooks\ntransition(&#39;foo&#39;)(YourComponent)\n\n// register custom hooks\ntransition({\n  enter: &#39;custom-enter-hook&#39;\n  enterActive: &#39;custom-enter-active-hook&#39;,\n  leave: &#39;custom-leave-hook&#39;,\n  leaveActive: &#39;custom-leave-active-hook&#39;\n})(YourComponent)\n</code></pre>\n</li>\n</ul>\n<h3 id=\"transitiongroup-uncompleted-\">transitionGroup (uncompleted)</h3>\n<p>Coming soon...</p>\n<h2 id=\"try-it-out\">Try It Out</h2>\n<div class=\"try\">\n  <button on-click=\"toggleLayer('expand')\">Toggle Expand</button>\n  <layer-expand s-if=\"isShow.expand\">Component with expand effect</layer-expand>\n</div>\n<div class=\"try\">\n  <button on-click=\"toggleLayer('fade')\">Toggle Fade</button>\n  <layer-fade s-if=\"isShow.fade\">Component with fade effect</layer-fade>\n</div>\n\n<div class=\"try\">\n  <button on-click=\"toggleLayer('keyframes')\">Toggle Keyframes</button>\n  <layer-keyframes s-if=\"isShow.keyframes\">Component with animation keyframes</layer-keyframes>\n</div>\n\n<div class=\"try\">\n  <button on-click=\"toggleLayer('ifElse')\">Toggle s-if / s-else</button>\n  <layer-fade s-if=\"isShow.ifElse\">Component with s-if</layer-fade>\n  <layer-expand s-else>Component with s-else</layer-expand>\n</div>\n</div>";
-
-/***/ }),
-/* 24 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {
@@ -11318,7 +10931,7 @@ Prism.languages.js = Prism.languages.javascript;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
-/* 25 */
+/* 20 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -11508,18 +11121,18 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 26 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __san_script__, __san_template__
 var __san_styles__ = {}
-__webpack_require__(30)
-__san_script__ = __webpack_require__(15)
+__webpack_require__(24)
+__san_script__ = __webpack_require__(11)
 if (__san_script__ &&
     __san_script__.__esModule &&
     Object.keys(__san_script__).length > 1) {
-  console.warn("[san-loader] docs/components/Doc.san: named exports in *.san files are ignored.")}
-__san_template__ = __webpack_require__(23)
+  console.warn("[san-loader] docs\\components\\Doc.san: named exports in *.san files are ignored.")}
+__san_template__ = __webpack_require__(18)
 var __san_proto__ = {}
 if (__san_script__) {
   __san_proto__ = __san_script__.__esModule
@@ -11541,34 +11154,7 @@ __san_exports__.computed[key] = function () { return module }
 
 
 /***/ }),
-/* 27 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __san_script__, __san_template__
-var __san_styles__ = {}
-__san_template__ = __webpack_require__(22)
-var __san_proto__ = {}
-if (__san_script__) {
-  __san_proto__ = __san_script__.__esModule
-    ? __san_script__['default']
-    : __san_script__
-}
-if (__san_template__) {
-  __san_proto__.template = __san_template__
-}
-var san = __webpack_require__(2)
-var __san_exports__ = san.defineComponent(__san_proto__)
-module.exports = __san_exports__
-if (module.exports.__esModule) module.exports = module.exports['default']
-if (!__san_exports__.computed) __san_exports__.computed = {}
-Object.keys(__san_styles__).forEach(function (key) {
-var module = __san_styles__[key]
-__san_exports__.computed[key] = function () { return module }
-})
-
-
-/***/ }),
-/* 28 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
@@ -11758,16 +11344,16 @@ __san_exports__.computed[key] = function () { return module }
     attachTo.clearImmediate = clearImmediate;
 }(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), __webpack_require__(25)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), __webpack_require__(20)))
 
 /***/ }),
-/* 29 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(18);
+var content = __webpack_require__(14);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(1)(content, {});
@@ -11787,13 +11373,13 @@ if(false) {
 }
 
 /***/ }),
-/* 30 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(19);
+var content = __webpack_require__(15);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(1)(content, {});
@@ -11813,7 +11399,7 @@ if(false) {
 }
 
 /***/ }),
-/* 31 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var apply = Function.prototype.apply;
@@ -11866,7 +11452,7 @@ exports._unrefActive = exports.active = function(item) {
 };
 
 // setimmediate attaches itself to the global object
-__webpack_require__(28);
+__webpack_require__(22);
 exports.setImmediate = setImmediate;
 exports.clearImmediate = clearImmediate;
 

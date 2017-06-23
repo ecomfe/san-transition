@@ -75,57 +75,38 @@ Coming soon...
 
 ## Try It Out
 
-<div class="try">
-  <button on-click="toggleLayer('expand')">Toggle Expand</button>
-  <layer-expand s-if="isShow.expand">Component with expand effect</layer-expand>
-</div>
-<div class="try">
-  <button on-click="toggleLayer('fade')">Toggle Fade</button>
-  <layer-fade s-if="isShow.fade">Component with fade effect</layer-fade>
-</div>
+### Default Hooks
 
-<div class="try">
-  <button on-click="toggleLayer('keyframes')">Toggle Keyframes</button>
-  <layer-keyframes s-if="isShow.keyframes">Component with animation keyframes</layer-keyframes>
-</div>
+<iframe height='300' scrolling='no' title='San Transition - Default' src='//codepen.io/Dafrok/embed/pwravg/?height=300&theme-id=dark&default-tab=js,result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true' style='width: 100%;'>See the Pen <a href='https://codepen.io/Dafrok/pen/pwravg/'>San Transition - Default</a> by Dafrok (<a href='https://codepen.io/Dafrok'>@Dafrok</a>) on <a href='https://codepen.io'>CodePen</a>.
+</iframe>
 
-<div class="try">
-  <button on-click="toggleLayer('ifElse')">Toggle s-if / s-else</button>
-  <layer-fade s-if="isShow.ifElse">Component with s-if</layer-fade>
-  <layer-expand s-else>Component with s-else</layer-expand>
-</div>
+### Named Hooks
+
+<iframe height='300' scrolling='no' title='San Transition - Named' src='//codepen.io/Dafrok/embed/VWzQWV/?height=300&theme-id=dark&default-tab=js,result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true' style='width: 100%;'>See the Pen <a href='https://codepen.io/Dafrok/pen/VWzQWV/'>San Transition - Named</a> by Dafrok (<a href='https://codepen.io/Dafrok'>@Dafrok</a>) on <a href='https://codepen.io'>CodePen</a>.
+</iframe>
+
+### Custom Hooks
+
+<iframe height='300' scrolling='no' title='San Transition - Custom' src='//codepen.io/Dafrok/embed/xrLYYz/?height=300&theme-id=dark&default-tab=js,result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true' style='width: 100%;'>See the Pen <a href='https://codepen.io/Dafrok/pen/xrLYYz/'>San Transition - Custom Hooks</a> by Dafrok (<a href='https://codepen.io/Dafrok'>@Dafrok</a>) on <a href='https://codepen.io'>CodePen</a>.
+</iframe>
+
+### Keyframe Animation Transition
+
+<iframe height='300' scrolling='no' title='San Transition - Animation' src='//codepen.io/Dafrok/embed/rwzJqJ/?height=300&theme-id=dark&default-tab=js,result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true' style='width: 100%;'>See the Pen <a href='https://codepen.io/Dafrok/pen/rwzJqJ/'>San Transition - Animation</a> by Dafrok (<a href='https://codepen.io/Dafrok'>@Dafrok</a>) on <a href='https://codepen.io'>CodePen</a>.
+</iframe>
+
+### Working with s-if & s-else expression
+<iframe height='300' scrolling='no' title='San Transition - if  / else' src='//codepen.io/Dafrok/embed/dRzmbB/?height=300&theme-id=dark&default-tab=js,result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true' style='width: 100%;'>See the Pen <a href='https://codepen.io/Dafrok/pen/dRzmbB/'>dRzmbB</a> by Dafrok (<a href='https://codepen.io/Dafrok'>@Dafrok</a>) on <a href='https://codepen.io'>CodePen</a>.
+</iframe>
 </template>
+
 
 <script>
 import Prism from 'prismjs'
-import TransitionLayer from 'docs/components/TransitionLayer.san'
-import {transition} from '@/index.js'
-
-const LayerExpand = transition('expand')(TransitionLayer)
-const LayerFade = transition('fade')(TransitionLayer)
-const LayerKeyframes = transition('keyframes')(TransitionLayer)
 
 export default {
   attach () {
     Prism.highlightAll()
-  },
-  components: {
-    'layer-expand': LayerExpand,
-    'layer-fade': LayerFade,
-    'layer-keyframes': LayerKeyframes,
-  },
-  initData () {
-    return {
-      isShow: {
-        expand: true,
-        fade: true,
-        keyframes: true,
-        ifElse: true,
-      }
-    }
-  },
-  toggleLayer (name) {
-    this.data.set(`isShow.${name}`, !this.data.get(`isShow.${name}`))
   }
 }
 </script>
@@ -134,96 +115,5 @@ export default {
 h1 * {
   margin-right: 10px;
   vertical-align: middle;
-}
-
-.try {
-  font-size: 0;
-  background-color: #334959;
-  color: white;
-  margin-bottom: 10px;
-  padding: 10px;
-}
-
-.try button {
-  background: #c7a31a;
-  color: #fff;
-  border-radius: 3px;
-  border: 0;
-  outline: 0;
-  width: 150px;
-  text-align: center;
-  margin-right: 10px;
-}
-
-.try div, .try button {
-  display: inline-block;
-  vertical-align: middle;
-  font-size: 14px;
-}
-
-.try button:hover {
-  background-color: #a88500;
-}
-
-.fade-enter-active, .fade-leave {
-  position: absolute;
-  opacity: 1;
-  transform: translate(0, 0);
-  transition: all .5s;
-  height: 20px;
-  line-height: 20px;
-}
-.fade-enter, .fade-leave-active {
-  opacity: 0;
-  transform: translate(100px, 0);
-}
-
-.expand-enter-active, .expand-leave {
-  position: absolute;
-  transition: all .5s ease;
-  height: 20px;
-  line-height: 20px;
-  overflow: hidden;
-}
-.expand-enter, .expand-leave-active {
-  height: 0;
-  opacity: 0;
-}
-
-.keyframes-leave {
-  transform: scale(0);
-  animation: in .5s;
-}
-.keyframes-enter-active {
-  height: 20px;
-  line-height: 20px;
-  animation: in .5s;
-}
-.keyframes-leave-active {
-  animation: out .5s;
-}
-
-@keyframes in {
-  0% {
-    transform: scale(0)
-  }
-  50% {
-    transform: scale(1.5)
-  }
-  100% {
-    transform: scale(1)
-  }
-}
-
-@keyframes out {
-  0% {
-    transform: scale(1)
-  }
-  50% {
-    transform: scale(1.5)
-  }
-  100% {
-    transform: scale(0)
-  }
 }
 </style>

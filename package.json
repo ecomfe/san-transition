@@ -33,7 +33,7 @@
     "eslint-config-standard": "^10.2.1",
     "eslint-loader": "^1.8.0",
     "eslint-plugin-html": "^2.0.3",
-    "eslint-plugin-import": "^2.3.0",
+    "eslint-plugin-import": "^2.6.0",
     "eslint-plugin-node": "^4.2.2",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
@@ -52,9 +52,14 @@
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.1",
     "webpack": "^2.4.1",
-    "webpack-dev-server": "^2.4.2"
+    "webpack-dev-server": "^2.5.0"
   },
   "peerDependencies": {
     "san": "^3.1.1"
+  },
+  "dependencies": {
+    "markdown-it": "^8.3.1",
+    "regjsgen": "^0.3.0",
+    "regjsparser": "^0.2.1"
   }
 }
