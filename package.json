@@ -7,11 +7,11 @@
     "doc": "docs"
   },
   "scripts": {
-    "test": "standard",
+    "test": "npm run lint",
     "dev": "webpack-dev-server --content-base dist --config ./build/webpack.docs.config.js --hot --inline",
     "build": "webpack -p --config ./build/webpack.prod.config.js",
     "build:docs": "webpack --config ./build/webpack.docs.config.js",
-    "lint": "eslint --ext .js,.san src docs build"
+    "lint": "eslint --ext .js src docs build"
   },
   "repository": {
     "type": "git",

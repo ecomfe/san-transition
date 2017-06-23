@@ -4,7 +4,7 @@ node_js:
 branches:
   only: master
 script:
-  - npm run build:docs
+  # - npm run build:docs
 after_script:
   - cd dist
   - git init
