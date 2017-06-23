@@ -88,6 +88,12 @@ Coming soon...
   <button on-click="toggleLayer('keyframes')">Toggle Keyframes</button>
   <layer-keyframes s-if="isShow.keyframes">Component with animation keyframes</layer-keyframes>
 </div>
+
+<div class="try">
+  <button on-click="toggleLayer('ifElse')">Toggle s-if / s-else</button>
+  <layer-fade s-if="isShow.ifElse">Component with s-if</layer-fade>
+  <layer-expand s-else>Component with s-else</layer-expand>
+</div>
 </template>
 
 <script>
@@ -113,7 +119,8 @@ export default {
       isShow: {
         expand: true,
         fade: true,
-        keyframes: true
+        keyframes: true,
+        ifElse: true,
       }
     }
   },
@@ -130,6 +137,7 @@ h1 * {
 }
 
 .try {
+  font-size: 0;
   background-color: #334959;
   color: white;
   margin-bottom: 10px;
@@ -144,13 +152,13 @@ h1 * {
   outline: 0;
   width: 150px;
   text-align: center;
-  font-size: 14px;
   margin-right: 10px;
 }
 
 .try div, .try button {
   display: inline-block;
   vertical-align: middle;
+  font-size: 14px;
 }
 
 .try button:hover {
@@ -158,6 +166,7 @@ h1 * {
 }
 
 .fade-enter-active, .fade-leave {
+  position: absolute;
   opacity: 1;
   transform: translate(0, 0);
   transition: all .5s;
@@ -168,6 +177,7 @@ h1 * {
 }
 
 .expand-enter-active, .expand-leave {
+  position: absolute;
   transition: all .5s ease;
   height: 20px;
   line-height: 20px;
@@ -178,6 +188,11 @@ h1 * {
   opacity: 0;
 }
 
+
+.keyframes-leave {
+  transform: scale(0);
+  animation: in .5s;
+}
 .keyframes-enter-active {
   animation: in .5s;
 }

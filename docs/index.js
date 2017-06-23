@@ -10200,7 +10200,6 @@ var LayerExpand = (0, _index.transition)('expand')(_TransitionLayer2.default); /
 //   opacity: 0;
 //   transform: translate(100px, 0);
 // }
-//
 // </style>
 //
 // ```
@@ -10248,6 +10247,12 @@ var LayerExpand = (0, _index.transition)('expand')(_TransitionLayer2.default); /
 //   <button on-click="toggleLayer('keyframes')">Toggle Keyframes</button>
 //   <layer-keyframes s-if="isShow.keyframes">Component with animation keyframes</layer-keyframes>
 // </div>
+//
+// <div class="try">
+//   <button on-click="toggleLayer('ifElse')">Toggle s-if / s-else</button>
+//   <layer-fade s-if="isShow.ifElse">Component with s-if</layer-fade>
+//   <layer-expand s-else>Component with s-else</layer-expand>
+// </div>
 // </template>
 //
 // <script>
@@ -10270,7 +10275,8 @@ exports.default = {
       isShow: {
         expand: true,
         fade: true,
-        keyframes: true
+        keyframes: true,
+        ifElse: true
       }
     };
   },
@@ -10287,6 +10293,7 @@ exports.default = {
 // }
 //
 // .try {
+//   font-size: 0;
 //   background-color: #334959;
 //   color: white;
 //   margin-bottom: 10px;
@@ -10301,13 +10308,13 @@ exports.default = {
 //   outline: 0;
 //   width: 150px;
 //   text-align: center;
-//   font-size: 14px;
 //   margin-right: 10px;
 // }
 //
 // .try div, .try button {
 //   display: inline-block;
 //   vertical-align: middle;
+//   font-size: 14px;
 // }
 //
 // .try button:hover {
@@ -10315,6 +10322,7 @@ exports.default = {
 // }
 //
 // .fade-enter-active, .fade-leave {
+//   position: absolute;
 //   opacity: 1;
 //   transform: translate(0, 0);
 //   transition: all .5s;
@@ -10325,6 +10333,7 @@ exports.default = {
 // }
 //
 // .expand-enter-active, .expand-leave {
+//   position: absolute;
 //   transition: all .5s ease;
 //   height: 20px;
 //   line-height: 20px;
@@ -10335,6 +10344,11 @@ exports.default = {
 //   opacity: 0;
 // }
 //
+//
+// .keyframes-leave {
+//   transform: scale(0);
+//   animation: in .5s;
+// }
 // .keyframes-enter-active {
 //   animation: in .5s;
 // }
@@ -10404,7 +10418,7 @@ exports = module.exports = __webpack_require__(0)();
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nh1 * {\n  margin-right: 10px;\n  vertical-align: middle;\n}\n\n.try {\n  background-color: #334959;\n  color: white;\n  margin-bottom: 10px;\n  padding: 10px;\n}\n\n.try button {\n  background: #c7a31a;\n  color: #fff;\n  border-radius: 3px;\n  border: 0;\n  outline: 0;\n  width: 150px;\n  text-align: center;\n  font-size: 14px;\n  margin-right: 10px;\n}\n\n.try div, .try button {\n  display: inline-block;\n  vertical-align: middle;\n}\n\n.try button:hover {\n  background-color: #a88500;\n}\n\n.fade-enter-active, .fade-leave {\n  opacity: 1;\n  transform: translate(0, 0);\n  transition: all .5s;\n}\n.fade-enter, .fade-leave-active {\n  opacity: 0;\n  transform: translate(100px, 0);\n}\n\n.expand-enter-active, .expand-leave {\n  transition: all .5s ease;\n  height: 20px;\n  line-height: 20px;\n  overflow: hidden;\n}\n.expand-enter, .expand-leave-active {\n  height: 0;\n  opacity: 0;\n}\n\n.keyframes-enter-active {\n  animation: in .5s;\n}\n.keyframes-leave-active {\n  animation: out .5s;\n}\n\n@keyframes in {\n  0% {\n    transform: scale(0)\n  }\n  50% {\n    transform: scale(1.5)\n  }\n  100% {\n    transform: scale(1)\n  }\n}\n\n@keyframes out {\n  0% {\n    transform: scale(1)\n  }\n  50% {\n    transform: scale(1.5)\n  }\n  100% {\n    transform: scale(0)\n  }\n}\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nh1 * {\n  margin-right: 10px;\n  vertical-align: middle;\n}\n\n.try {\n  font-size: 0;\n  background-color: #334959;\n  color: white;\n  margin-bottom: 10px;\n  padding: 10px;\n}\n\n.try button {\n  background: #c7a31a;\n  color: #fff;\n  border-radius: 3px;\n  border: 0;\n  outline: 0;\n  width: 150px;\n  text-align: center;\n  margin-right: 10px;\n}\n\n.try div, .try button {\n  display: inline-block;\n  vertical-align: middle;\n  font-size: 14px;\n}\n\n.try button:hover {\n  background-color: #a88500;\n}\n\n.fade-enter-active, .fade-leave {\n  position: absolute;\n  opacity: 1;\n  transform: translate(0, 0);\n  transition: all .5s;\n}\n.fade-enter, .fade-leave-active {\n  opacity: 0;\n  transform: translate(100px, 0);\n}\n\n.expand-enter-active, .expand-leave {\n  position: absolute;\n  transition: all .5s ease;\n  height: 20px;\n  line-height: 20px;\n  overflow: hidden;\n}\n.expand-enter, .expand-leave-active {\n  height: 0;\n  opacity: 0;\n}\n\n\n.keyframes-leave {\n  transform: scale(0);\n  animation: in .5s;\n}\n.keyframes-enter-active {\n  animation: in .5s;\n}\n.keyframes-leave-active {\n  animation: out .5s;\n}\n\n@keyframes in {\n  0% {\n    transform: scale(0)\n  }\n  50% {\n    transform: scale(1.5)\n  }\n  100% {\n    transform: scale(1)\n  }\n}\n\n@keyframes out {\n  0% {\n    transform: scale(1)\n  }\n  50% {\n    transform: scale(1.5)\n  }\n  100% {\n    transform: scale(0)\n  }\n}\n", ""]);
 
 // exports
 
@@ -10439,7 +10453,7 @@ module.exports = "\n<div>\n  <slot></slot>\n</div>\n";
 /* 21 */
 /***/ (function(module, exports) {
 
-module.exports = "<div><h1 id=\"-img-src-https-ecomfe-github-io-san-img-logo-colorful-svg-height-28px-span-san-transition-span-\"><img src=\"https://ecomfe.github.io/san/img/logo-colorful.svg\" height=\"28px\"><span>San Transition</span></h1>\n<p>High order component factory for generating <a href=\"//github.com/ecomfe/san\">san</a> components with transition effects.</p>\n<h2 id=\"get-start\">Get Start</h2>\n<h3 id=\"installation\">Installation</h3>\n<pre><code class=\"lang-bash\">$ npm install --save san-transition\n</code></pre>\n<h3 id=\"usage\">Usage</h3>\n<pre><code class=\"lang-html\">&lt;template&gt;\n  &lt;div&gt;\n    &lt;transition-layer&gt;A component with transition effects.&lt;/transition-layer&gt;\n  &lt;div&gt;\n&lt;/template&gt;\n\n&lt;script&gt;\nimport {transition} from &#39;san-transition&#39;\nimport {YourComponent} from &#39;YOUR_SAN_COMPONENT&#39;\n\nexport default {\n  components: {\n    &#39;transition-layer&#39;: transition(&#39;fade&#39;)(YourComponent)\n  }\n}\n&lt;/script&gt;\n\n&lt;style&gt;\n.fade-enter-active, .fade-leave {\n  opacity: 1;\n  transform: translate(0, 0);\n  transition: all .5s;\n}\n.fade-enter, .fade-leave-active {\n  opacity: 0;\n  transform: translate(100px, 0);\n}\n\n&lt;/style&gt;\n</code></pre>\n<h2 id=\"api\">API</h2>\n<h3 id=\"transition\">transition</h3>\n<ul>\n<li>Arguments<ul>\n<li>{None, String, Object} hook id</li>\n</ul>\n</li>\n<li><p>Usage</p>\n<pre><code class=\"lang-javascript\">// register default hooks\n// the same as `transition(&#39;san&#39;)(YourComponent)`\ntransition()(YourComponent)\n\n// register named hooks\ntransition(&#39;foo&#39;)(YourComponent)\n\n// register custom hooks\ntransition({\n  enter: &#39;custom-enter-hook&#39;\n  enterActive: &#39;custom-enter-active-hook&#39;,\n  leave: &#39;custom-leave-hook&#39;,\n  leaveActive: &#39;custom-leave-active-hook&#39;\n})(YourComponent)\n</code></pre>\n</li>\n</ul>\n<h3 id=\"transitiongroup-uncompleted-\">transitionGroup (uncompleted)</h3>\n<p>Coming soon...</p>\n<h2 id=\"try-it-out\">Try It Out</h2>\n<div class=\"try\">\n  <button on-click=\"toggleLayer('expand')\">Toggle Expand</button>\n  <layer-expand s-if=\"isShow.expand\">Component with expand effect</layer-expand>\n</div>\n<div class=\"try\">\n  <button on-click=\"toggleLayer('fade')\">Toggle Fade</button>\n  <layer-fade s-if=\"isShow.fade\">Component with fade effect</layer-fade>\n</div>\n\n<div class=\"try\">\n  <button on-click=\"toggleLayer('keyframes')\">Toggle Keyframes</button>\n  <layer-keyframes s-if=\"isShow.keyframes\">Component with animation keyframes</layer-keyframes>\n</div>\n</div>";
+module.exports = "<div><h1 id=\"-img-src-https-ecomfe-github-io-san-img-logo-colorful-svg-height-28px-span-san-transition-span-\"><img src=\"https://ecomfe.github.io/san/img/logo-colorful.svg\" height=\"28px\"><span>San Transition</span></h1>\n<p>High order component factory for generating <a href=\"//github.com/ecomfe/san\">san</a> components with transition effects.</p>\n<h2 id=\"get-start\">Get Start</h2>\n<h3 id=\"installation\">Installation</h3>\n<pre><code class=\"lang-bash\">$ npm install --save san-transition\n</code></pre>\n<h3 id=\"usage\">Usage</h3>\n<pre><code class=\"lang-html\">&lt;template&gt;\n  &lt;div&gt;\n    &lt;transition-layer&gt;A component with transition effects.&lt;/transition-layer&gt;\n  &lt;div&gt;\n&lt;/template&gt;\n\n&lt;script&gt;\nimport {transition} from &#39;san-transition&#39;\nimport {YourComponent} from &#39;YOUR_SAN_COMPONENT&#39;\n\nexport default {\n  components: {\n    &#39;transition-layer&#39;: transition(&#39;fade&#39;)(YourComponent)\n  }\n}\n&lt;/script&gt;\n\n&lt;style&gt;\n.fade-enter-active, .fade-leave {\n  opacity: 1;\n  transform: translate(0, 0);\n  transition: all .5s;\n}\n.fade-enter, .fade-leave-active {\n  opacity: 0;\n  transform: translate(100px, 0);\n}\n&lt;/style&gt;\n</code></pre>\n<h2 id=\"api\">API</h2>\n<h3 id=\"transition\">transition</h3>\n<ul>\n<li>Arguments<ul>\n<li>{None, String, Object} hook id</li>\n</ul>\n</li>\n<li><p>Usage</p>\n<pre><code class=\"lang-javascript\">// register default hooks\n// the same as `transition(&#39;san&#39;)(YourComponent)`\ntransition()(YourComponent)\n\n// register named hooks\ntransition(&#39;foo&#39;)(YourComponent)\n\n// register custom hooks\ntransition({\n  enter: &#39;custom-enter-hook&#39;\n  enterActive: &#39;custom-enter-active-hook&#39;,\n  leave: &#39;custom-leave-hook&#39;,\n  leaveActive: &#39;custom-leave-active-hook&#39;\n})(YourComponent)\n</code></pre>\n</li>\n</ul>\n<h3 id=\"transitiongroup-uncompleted-\">transitionGroup (uncompleted)</h3>\n<p>Coming soon...</p>\n<h2 id=\"try-it-out\">Try It Out</h2>\n<div class=\"try\">\n  <button on-click=\"toggleLayer('expand')\">Toggle Expand</button>\n  <layer-expand s-if=\"isShow.expand\">Component with expand effect</layer-expand>\n</div>\n<div class=\"try\">\n  <button on-click=\"toggleLayer('fade')\">Toggle Fade</button>\n  <layer-fade s-if=\"isShow.fade\">Component with fade effect</layer-fade>\n</div>\n\n<div class=\"try\">\n  <button on-click=\"toggleLayer('keyframes')\">Toggle Keyframes</button>\n  <layer-keyframes s-if=\"isShow.keyframes\">Component with animation keyframes</layer-keyframes>\n</div>\n\n<div class=\"try\">\n  <button on-click=\"toggleLayer('ifElse')\">Toggle s-if / s-else</button>\n  <layer-fade s-if=\"isShow.ifElse\">Component with s-if</layer-fade>\n  <layer-expand s-else>Component with s-else</layer-expand>\n</div>\n</div>";
 
 /***/ }),
 /* 22 */
