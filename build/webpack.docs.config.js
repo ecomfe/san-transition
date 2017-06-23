@@ -2,10 +2,10 @@ const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
-  context: path.resolve(__dirname, '../docs/src'),
+  context: path.resolve(__dirname, '../docs'),
   entry: './main.js',
   output: {
-    path: path.resolve(__dirname, '../docs'),
+    path: path.resolve(__dirname, '../dist'),
     filename: 'index.js'
   },
   module: {
@@ -36,12 +36,12 @@ module.exports = {
   resolve: {
     alias: {
       '@': path.resolve(__dirname, '../src'),
-      'docs': path.resolve(__dirname, '../docs/src')
+      'docs': path.resolve(__dirname, '../docs')
     }
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, '../docs/src/template.html')
+      template: path.resolve(__dirname, '../docs/template.html')
     })
   ]
 }
