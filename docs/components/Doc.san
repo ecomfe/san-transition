@@ -50,7 +50,7 @@ export default {
 ### transition
 
 - Arguments
-  - {None, String, Object} hook id
+  - **{None, String, Object}** hook id
 - Usage
   ```javascript
   // register default hooks
@@ -170,6 +170,8 @@ h1 * {
   opacity: 1;
   transform: translate(0, 0);
   transition: all .5s;
+  height: 20px;
+  line-height: 20px;
 }
 .fade-enter, .fade-leave-active {
   opacity: 0;
@@ -188,12 +190,13 @@ h1 * {
   opacity: 0;
 }
 
-
 .keyframes-leave {
   transform: scale(0);
   animation: in .5s;
 }
 .keyframes-enter-active {
+  height: 20px;
+  line-height: 20px;
   animation: in .5s;
 }
 .keyframes-leave-active {

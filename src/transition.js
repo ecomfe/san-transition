@@ -1,4 +1,4 @@
-import {prepareEnter, prepareLeave, getTimeout, clearParentTimeout} from './util.js'
+import {getHooks, prepareEnter, prepareLeave, getTimeout, clearParentTimeout} from './util.js'
 
 export default (prop = 'san') => Component => {
   class Target extends Component {
@@ -7,19 +7,7 @@ export default (prop = 'san') => Component => {
   const {attached, attach, inited} = Target.prototype
 
   // define css hooks name
-  const hooks = typeof prop === 'object'
-    ? {
-      enter: prop.enter || 'san-enter',
-      enterActive: prop.enterActive || 'san-enter-active',
-      leave: prop.leave || 'san-leave',
-      leaveActive: prop.leaveActive || 'san-leave-active'
-    }
-    : {
-      enter: `${prop}-enter`,
-      enterActive: `${prop}-enter-active`,
-      leave: `${prop}-leave`,
-      leaveActive: `${prop}-leave-active`
-    }
+  const hooks = getHooks(prop)
 
   // define transition flags
   Target.prototype.isEntering = false
@@ -56,7 +44,7 @@ export default (prop = 'san') => Component => {
     }
   }
 
-  // override attached lifecycle
+  // override inited lifecycle
   Target.prototype.inited = function () {
     const {parent} = this
     const {updateView, _disposeChilds} = parent
@@ -64,22 +52,20 @@ export default (prop = 'san') => Component => {
     // override updateView function
     parent.updateView = function (changes) {
       const child = this.childs[0]
+      const el = this.transitionEl
       if (this.evalExpr(this.cond)) {
-        if (child) {
-          if (parent.isLeaving) {
-            // entering
-            const el = this.transitionEl
-            prepareEnter(parent, hooks)
-            parent.enteringTimeout = setTimeout(() => {
-              parent.isEntering = false
-              updateView.call(this, changes)
-            }, getTimeout(el))
-          }
+        if (child && parent.isLeaving) {
+          // entering
+          prepareEnter(parent, hooks)
+          parent.enteringTimeout = setTimeout(() => {
+            parent.isEntering = false
+            updateView.call(this, changes)
+          }, getTimeout(el))
+        } else {
+          updateView.call(this, changes)
         }
-        updateView.call(this, changes)
       } else {
         // leaving
-        const el = this.transitionEl
         clearParentTimeout(parent)
         if (!parent.isLeaving) {
           prepareLeave(parent, hooks)
@@ -99,5 +85,6 @@ export default (prop = 'san') => Component => {
     }
     inited && inited.call(this)
   }
+
   return Target
 }

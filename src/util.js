@@ -33,3 +33,17 @@ export const prepareLeave = (parent, hooks) => {
   transitionEl.classList.remove(hooks.enterActive)
   transitionEl.classList.add(hooks.leave)
 }
+
+export const getHooks = prop => typeof prop === 'object'
+  ? {
+    enter: prop.enter || 'san-enter',
+    enterActive: prop.enterActive || 'san-enter-active',
+    leave: prop.leave || 'san-leave',
+    leaveActive: prop.leaveActive || 'san-leave-active'
+  }
+  : {
+    enter: `${prop}-enter`,
+    enterActive: `${prop}-enter-active`,
+    leave: `${prop}-leave`,
+    leaveActive: `${prop}-leave-active`
+  }

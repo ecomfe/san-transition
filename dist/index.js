@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 8);
+/******/ 	return __webpack_require__(__webpack_require__.s = 9);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -8137,7 +8137,7 @@ function parseANodeFromEl(el) {
     // #[end]
 })(this);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(29).setImmediate))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(31).setImmediate))
 
 /***/ }),
 /* 3 */
@@ -8172,13 +8172,13 @@ module.exports = g;
 
 var __san_script__, __san_template__
 var __san_styles__ = {}
-__webpack_require__(27)
-__san_script__ = __webpack_require__(13)
+__webpack_require__(29)
+__san_script__ = __webpack_require__(14)
 if (__san_script__ &&
     __san_script__.__esModule &&
     Object.keys(__san_script__).length > 1) {
   console.warn("[san-loader] docs/components/App.san: named exports in *.san files are ignored.")}
-__san_template__ = __webpack_require__(19)
+__san_template__ = __webpack_require__(21)
 var __san_proto__ = {}
 if (__san_script__) {
   __san_proto__ = __san_script__.__esModule
@@ -9765,7 +9765,33 @@ exports['default'] = EventQueue;
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(15);
+var content = __webpack_require__(16);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(1)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../css-loader/index.js!./normalize.css", function() {
+			var newContent = require("!!../css-loader/index.js!./normalize.css");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(17);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(1)(content, {});
@@ -9785,13 +9811,13 @@ if(false) {
 }
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(18);
+var content = __webpack_require__(20);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(1)(content, {});
@@ -9811,7 +9837,7 @@ if(false) {
 }
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9823,15 +9849,16 @@ var _App2 = _interopRequireDefault(_App);
 
 var _sanRouter = __webpack_require__(5);
 
+__webpack_require__(7);
+
 __webpack_require__(6);
 
-__webpack_require__(7);
+__webpack_require__(8);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// import Prism from 'prismjs'
-
 _sanRouter.router.setMode('hash');
+// import Prism from 'prismjs'
 
 _sanRouter.router.add({
   rule: '/',
@@ -9842,7 +9869,7 @@ _sanRouter.router.add({
 _sanRouter.router.start();
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9853,11 +9880,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.transitionGroup = exports.transition = undefined;
 
-var _transition = __webpack_require__(11);
+var _transition = __webpack_require__(12);
 
 var _transition2 = _interopRequireDefault(_transition);
 
-var _transitionGroup = __webpack_require__(10);
+var _transitionGroup = __webpack_require__(11);
 
 var _transitionGroup2 = _interopRequireDefault(_transitionGroup);
 
@@ -9867,7 +9894,7 @@ exports.transition = _transition2.default;
 exports.transitionGroup = _transitionGroup2.default;
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9905,7 +9932,7 @@ exports.default = function () {
 };
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9915,9 +9942,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-var _util = __webpack_require__(12);
+var _util = __webpack_require__(13);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -9947,19 +9972,10 @@ exports.default = function () {
 
     // define css hooks name
 
-    var hooks = (typeof prop === 'undefined' ? 'undefined' : _typeof(prop)) === 'object' ? {
-      enter: prop.enter || 'san-enter',
-      enterActive: prop.enterActive || 'san-enter-active',
-      leave: prop.leave || 'san-leave',
-      leaveActive: prop.leaveActive || 'san-leave-active'
-    } : {
-      enter: prop + '-enter',
-      enterActive: prop + '-enter-active',
-      leave: prop + '-leave',
-      leaveActive: prop + '-leave-active'
+    var hooks = (0, _util.getHooks)(prop
 
-      // define transition flags
-    };Target.prototype.isEntering = false;
+    // define transition flags
+    );Target.prototype.isEntering = false;
     Target.prototype.isLeaving = false;
 
     // override attached lifecycle
@@ -9996,7 +10012,7 @@ exports.default = function () {
       }
     };
 
-    // override attached lifecycle
+    // override inited lifecycle
     Target.prototype.inited = function () {
       var parent = this.parent;
       var updateView = parent.updateView,
@@ -10048,7 +10064,7 @@ exports.default = function () {
 };
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10057,6 +10073,9 @@ exports.default = function () {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 var getTime = function getTime(duration, delay) {
   return Math.max.apply(undefined, duration.map(function (str, i) {
     return getFloat(str) + parseFloat(delay[i]);
@@ -10101,8 +10120,22 @@ var prepareLeave = exports.prepareLeave = function prepareLeave(parent, hooks) {
   transitionEl.classList.add(hooks.leave);
 };
 
+var getHooks = exports.getHooks = function getHooks(prop) {
+  return (typeof prop === 'undefined' ? 'undefined' : _typeof(prop)) === 'object' ? {
+    enter: prop.enter || 'san-enter',
+    enterActive: prop.enterActive || 'san-enter-active',
+    leave: prop.leave || 'san-leave',
+    leaveActive: prop.leaveActive || 'san-leave-active'
+  } : {
+    enter: prop + '-enter',
+    enterActive: prop + '-enter-active',
+    leave: prop + '-leave',
+    leaveActive: prop + '-leave-active'
+  };
+};
+
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10112,7 +10145,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _Doc = __webpack_require__(24);
+var _Doc = __webpack_require__(26);
 
 var _Doc2 = _interopRequireDefault(_Doc);
 
@@ -10126,6 +10159,7 @@ exports.default = {
   //
   // <style>
   // body {
+  //   padding: 20px;
   //   color: #999;
   //   background-color: #19232e;
   // }
@@ -10143,7 +10177,7 @@ exports.default = {
 // <script>
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10153,15 +10187,15 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _prismjs = __webpack_require__(22);
+var _prismjs = __webpack_require__(24);
 
 var _prismjs2 = _interopRequireDefault(_prismjs);
 
-var _TransitionLayer = __webpack_require__(25);
+var _TransitionLayer = __webpack_require__(27);
 
 var _TransitionLayer2 = _interopRequireDefault(_TransitionLayer);
 
-var _index = __webpack_require__(9);
+var _index = __webpack_require__(10);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -10217,7 +10251,7 @@ var LayerExpand = (0, _index.transition)('expand')(_TransitionLayer2.default); /
 // ### transition
 //
 // - Arguments
-//   - {None, String, Object} hook id
+//   - **{None, String, Object}** hook id
 // - Usage
 //   ```javascript
 //   // register default hooks
@@ -10334,6 +10368,8 @@ exports.default = {
 //   opacity: 1;
 //   transform: translate(0, 0);
 //   transition: all .5s;
+//   height: 20px;
+//   line-height: 20px;
 // }
 // .fade-enter, .fade-leave-active {
 //   opacity: 0;
@@ -10358,6 +10394,8 @@ exports.default = {
 //   animation: in .5s;
 // }
 // .keyframes-enter-active {
+//   height: 20px;
+//   line-height: 20px;
 //   animation: in .5s;
 // }
 // .keyframes-leave-active {
@@ -10390,20 +10428,6 @@ exports.default = {
 // </style>
 
 /***/ }),
-/* 15 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(0)();
-// imports
-
-
-// module
-exports.push([module.i, "/**\n * prism.js tomorrow night eighties for JavaScript, CoffeeScript, CSS and HTML\n * Based on https://github.com/chriskempson/tomorrow-theme\n * @author Rose Pritchard\n */\n\ncode[class*=\"language-\"],\npre[class*=\"language-\"] {\n\tcolor: #ccc;\n\tbackground: none;\n\tfont-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;\n\ttext-align: left;\n\twhite-space: pre;\n\tword-spacing: normal;\n\tword-break: normal;\n\tword-wrap: normal;\n\tline-height: 1.5;\n\n\t-moz-tab-size: 4;\n\t-o-tab-size: 4;\n\ttab-size: 4;\n\n\t-webkit-hyphens: none;\n\t-moz-hyphens: none;\n\t-ms-hyphens: none;\n\thyphens: none;\n\n}\n\n/* Code blocks */\npre[class*=\"language-\"] {\n\tpadding: 1em;\n\tmargin: .5em 0;\n\toverflow: auto;\n}\n\n:not(pre) > code[class*=\"language-\"],\npre[class*=\"language-\"] {\n\tbackground: #2d2d2d;\n}\n\n/* Inline code */\n:not(pre) > code[class*=\"language-\"] {\n\tpadding: .1em;\n\tborder-radius: .3em;\n\twhite-space: normal;\n}\n\n.token.comment,\n.token.block-comment,\n.token.prolog,\n.token.doctype,\n.token.cdata {\n\tcolor: #999;\n}\n\n.token.punctuation {\n\tcolor: #ccc;\n}\n\n.token.tag,\n.token.attr-name,\n.token.namespace,\n.token.deleted {\n\tcolor: #e2777a;\n}\n\n.token.function-name {\n\tcolor: #6196cc;\n}\n\n.token.boolean,\n.token.number,\n.token.function {\n\tcolor: #f08d49;\n}\n\n.token.property,\n.token.class-name,\n.token.constant,\n.token.symbol {\n\tcolor: #f8c555;\n}\n\n.token.selector,\n.token.important,\n.token.atrule,\n.token.keyword,\n.token.builtin {\n\tcolor: #cc99cd;\n}\n\n.token.string,\n.token.char,\n.token.attr-value,\n.token.regex,\n.token.variable {\n\tcolor: #7ec699;\n}\n\n.token.operator,\n.token.entity,\n.token.url {\n\tcolor: #67cdcc;\n}\n\n.token.important,\n.token.bold {\n\tfont-weight: bold;\n}\n.token.italic {\n\tfont-style: italic;\n}\n\n.token.entity {\n\tcursor: help;\n}\n\n.token.inserted {\n\tcolor: green;\n}\n", ""]);
-
-// exports
-
-
-/***/ }),
 /* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10412,7 +10436,7 @@ exports = module.exports = __webpack_require__(0)();
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nbody {\n  color: #999;\n  background-color: #19232e;\n}\n", ""]);
+exports.push([module.i, "/*! normalize.css v6.0.0 | MIT License | github.com/necolas/normalize.css */\n\n/* Document\n   ========================================================================== */\n\n/**\n * 1. Correct the line height in all browsers.\n * 2. Prevent adjustments of font size after orientation changes in\n *    IE on Windows Phone and in iOS.\n */\n\nhtml {\n  line-height: 1.15; /* 1 */\n  -ms-text-size-adjust: 100%; /* 2 */\n  -webkit-text-size-adjust: 100%; /* 2 */\n}\n\n/* Sections\n   ========================================================================== */\n\n/**\n * Add the correct display in IE 9-.\n */\n\narticle,\naside,\nfooter,\nheader,\nnav,\nsection {\n  display: block;\n}\n\n/**\n * Correct the font size and margin on `h1` elements within `section` and\n * `article` contexts in Chrome, Firefox, and Safari.\n */\n\nh1 {\n  font-size: 2em;\n  margin: 0.67em 0;\n}\n\n/* Grouping content\n   ========================================================================== */\n\n/**\n * Add the correct display in IE 9-.\n * 1. Add the correct display in IE.\n */\n\nfigcaption,\nfigure,\nmain { /* 1 */\n  display: block;\n}\n\n/**\n * Add the correct margin in IE 8.\n */\n\nfigure {\n  margin: 1em 40px;\n}\n\n/**\n * 1. Add the correct box sizing in Firefox.\n * 2. Show the overflow in Edge and IE.\n */\n\nhr {\n  box-sizing: content-box; /* 1 */\n  height: 0; /* 1 */\n  overflow: visible; /* 2 */\n}\n\n/**\n * 1. Correct the inheritance and scaling of font size in all browsers.\n * 2. Correct the odd `em` font sizing in all browsers.\n */\n\npre {\n  font-family: monospace, monospace; /* 1 */\n  font-size: 1em; /* 2 */\n}\n\n/* Text-level semantics\n   ========================================================================== */\n\n/**\n * 1. Remove the gray background on active links in IE 10.\n * 2. Remove gaps in links underline in iOS 8+ and Safari 8+.\n */\n\na {\n  background-color: transparent; /* 1 */\n  -webkit-text-decoration-skip: objects; /* 2 */\n}\n\n/**\n * 1. Remove the bottom border in Chrome 57- and Firefox 39-.\n * 2. Add the correct text decoration in Chrome, Edge, IE, Opera, and Safari.\n */\n\nabbr[title] {\n  border-bottom: none; /* 1 */\n  text-decoration: underline; /* 2 */\n  text-decoration: underline dotted; /* 2 */\n}\n\n/**\n * Prevent the duplicate application of `bolder` by the next rule in Safari 6.\n */\n\nb,\nstrong {\n  font-weight: inherit;\n}\n\n/**\n * Add the correct font weight in Chrome, Edge, and Safari.\n */\n\nb,\nstrong {\n  font-weight: bolder;\n}\n\n/**\n * 1. Correct the inheritance and scaling of font size in all browsers.\n * 2. Correct the odd `em` font sizing in all browsers.\n */\n\ncode,\nkbd,\nsamp {\n  font-family: monospace, monospace; /* 1 */\n  font-size: 1em; /* 2 */\n}\n\n/**\n * Add the correct font style in Android 4.3-.\n */\n\ndfn {\n  font-style: italic;\n}\n\n/**\n * Add the correct background and color in IE 9-.\n */\n\nmark {\n  background-color: #ff0;\n  color: #000;\n}\n\n/**\n * Add the correct font size in all browsers.\n */\n\nsmall {\n  font-size: 80%;\n}\n\n/**\n * Prevent `sub` and `sup` elements from affecting the line height in\n * all browsers.\n */\n\nsub,\nsup {\n  font-size: 75%;\n  line-height: 0;\n  position: relative;\n  vertical-align: baseline;\n}\n\nsub {\n  bottom: -0.25em;\n}\n\nsup {\n  top: -0.5em;\n}\n\n/* Embedded content\n   ========================================================================== */\n\n/**\n * Add the correct display in IE 9-.\n */\n\naudio,\nvideo {\n  display: inline-block;\n}\n\n/**\n * Add the correct display in iOS 4-7.\n */\n\naudio:not([controls]) {\n  display: none;\n  height: 0;\n}\n\n/**\n * Remove the border on images inside links in IE 10-.\n */\n\nimg {\n  border-style: none;\n}\n\n/**\n * Hide the overflow in IE.\n */\n\nsvg:not(:root) {\n  overflow: hidden;\n}\n\n/* Forms\n   ========================================================================== */\n\n/**\n * Remove the margin in Firefox and Safari.\n */\n\nbutton,\ninput,\noptgroup,\nselect,\ntextarea {\n  margin: 0;\n}\n\n/**\n * Show the overflow in IE.\n * 1. Show the overflow in Edge.\n */\n\nbutton,\ninput { /* 1 */\n  overflow: visible;\n}\n\n/**\n * Remove the inheritance of text transform in Edge, Firefox, and IE.\n * 1. Remove the inheritance of text transform in Firefox.\n */\n\nbutton,\nselect { /* 1 */\n  text-transform: none;\n}\n\n/**\n * 1. Prevent a WebKit bug where (2) destroys native `audio` and `video`\n *    controls in Android 4.\n * 2. Correct the inability to style clickable types in iOS and Safari.\n */\n\nbutton,\nhtml [type=\"button\"], /* 1 */\n[type=\"reset\"],\n[type=\"submit\"] {\n  -webkit-appearance: button; /* 2 */\n}\n\n/**\n * Remove the inner border and padding in Firefox.\n */\n\nbutton::-moz-focus-inner,\n[type=\"button\"]::-moz-focus-inner,\n[type=\"reset\"]::-moz-focus-inner,\n[type=\"submit\"]::-moz-focus-inner {\n  border-style: none;\n  padding: 0;\n}\n\n/**\n * Restore the focus styles unset by the previous rule.\n */\n\nbutton:-moz-focusring,\n[type=\"button\"]:-moz-focusring,\n[type=\"reset\"]:-moz-focusring,\n[type=\"submit\"]:-moz-focusring {\n  outline: 1px dotted ButtonText;\n}\n\n/**\n * 1. Correct the text wrapping in Edge and IE.\n * 2. Correct the color inheritance from `fieldset` elements in IE.\n * 3. Remove the padding so developers are not caught out when they zero out\n *    `fieldset` elements in all browsers.\n */\n\nlegend {\n  box-sizing: border-box; /* 1 */\n  color: inherit; /* 2 */\n  display: table; /* 1 */\n  max-width: 100%; /* 1 */\n  padding: 0; /* 3 */\n  white-space: normal; /* 1 */\n}\n\n/**\n * 1. Add the correct display in IE 9-.\n * 2. Add the correct vertical alignment in Chrome, Firefox, and Opera.\n */\n\nprogress {\n  display: inline-block; /* 1 */\n  vertical-align: baseline; /* 2 */\n}\n\n/**\n * Remove the default vertical scrollbar in IE.\n */\n\ntextarea {\n  overflow: auto;\n}\n\n/**\n * 1. Add the correct box sizing in IE 10-.\n * 2. Remove the padding in IE 10-.\n */\n\n[type=\"checkbox\"],\n[type=\"radio\"] {\n  box-sizing: border-box; /* 1 */\n  padding: 0; /* 2 */\n}\n\n/**\n * Correct the cursor style of increment and decrement buttons in Chrome.\n */\n\n[type=\"number\"]::-webkit-inner-spin-button,\n[type=\"number\"]::-webkit-outer-spin-button {\n  height: auto;\n}\n\n/**\n * 1. Correct the odd appearance in Chrome and Safari.\n * 2. Correct the outline style in Safari.\n */\n\n[type=\"search\"] {\n  -webkit-appearance: textfield; /* 1 */\n  outline-offset: -2px; /* 2 */\n}\n\n/**\n * Remove the inner padding and cancel buttons in Chrome and Safari on macOS.\n */\n\n[type=\"search\"]::-webkit-search-cancel-button,\n[type=\"search\"]::-webkit-search-decoration {\n  -webkit-appearance: none;\n}\n\n/**\n * 1. Correct the inability to style clickable types in iOS and Safari.\n * 2. Change font properties to `inherit` in Safari.\n */\n\n::-webkit-file-upload-button {\n  -webkit-appearance: button; /* 1 */\n  font: inherit; /* 2 */\n}\n\n/* Interactive\n   ========================================================================== */\n\n/*\n * Add the correct display in IE 9-.\n * 1. Add the correct display in Edge, IE, and Firefox.\n */\n\ndetails, /* 1 */\nmenu {\n  display: block;\n}\n\n/*\n * Add the correct display in all browsers.\n */\n\nsummary {\n  display: list-item;\n}\n\n/* Scripting\n   ========================================================================== */\n\n/**\n * Add the correct display in IE 9-.\n */\n\ncanvas {\n  display: inline-block;\n}\n\n/**\n * Add the correct display in IE.\n */\n\ntemplate {\n  display: none;\n}\n\n/* Hidden\n   ========================================================================== */\n\n/**\n * Add the correct display in IE 10-.\n */\n\n[hidden] {\n  display: none;\n}\n", ""]);
 
 // exports
 
@@ -10426,7 +10450,7 @@ exports = module.exports = __webpack_require__(0)();
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nh1 * {\n  margin-right: 10px;\n  vertical-align: middle;\n}\n\n.try {\n  font-size: 0;\n  background-color: #334959;\n  color: white;\n  margin-bottom: 10px;\n  padding: 10px;\n}\n\n.try button {\n  background: #c7a31a;\n  color: #fff;\n  border-radius: 3px;\n  border: 0;\n  outline: 0;\n  width: 150px;\n  text-align: center;\n  margin-right: 10px;\n}\n\n.try div, .try button {\n  display: inline-block;\n  vertical-align: middle;\n  font-size: 14px;\n}\n\n.try button:hover {\n  background-color: #a88500;\n}\n\n.fade-enter-active, .fade-leave {\n  position: absolute;\n  opacity: 1;\n  transform: translate(0, 0);\n  transition: all .5s;\n}\n.fade-enter, .fade-leave-active {\n  opacity: 0;\n  transform: translate(100px, 0);\n}\n\n.expand-enter-active, .expand-leave {\n  position: absolute;\n  transition: all .5s ease;\n  height: 20px;\n  line-height: 20px;\n  overflow: hidden;\n}\n.expand-enter, .expand-leave-active {\n  height: 0;\n  opacity: 0;\n}\n\n\n.keyframes-leave {\n  transform: scale(0);\n  animation: in .5s;\n}\n.keyframes-enter-active {\n  animation: in .5s;\n}\n.keyframes-leave-active {\n  animation: out .5s;\n}\n\n@keyframes in {\n  0% {\n    transform: scale(0)\n  }\n  50% {\n    transform: scale(1.5)\n  }\n  100% {\n    transform: scale(1)\n  }\n}\n\n@keyframes out {\n  0% {\n    transform: scale(1)\n  }\n  50% {\n    transform: scale(1.5)\n  }\n  100% {\n    transform: scale(0)\n  }\n}\n", ""]);
+exports.push([module.i, "/**\n * prism.js tomorrow night eighties for JavaScript, CoffeeScript, CSS and HTML\n * Based on https://github.com/chriskempson/tomorrow-theme\n * @author Rose Pritchard\n */\n\ncode[class*=\"language-\"],\npre[class*=\"language-\"] {\n\tcolor: #ccc;\n\tbackground: none;\n\tfont-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;\n\ttext-align: left;\n\twhite-space: pre;\n\tword-spacing: normal;\n\tword-break: normal;\n\tword-wrap: normal;\n\tline-height: 1.5;\n\n\t-moz-tab-size: 4;\n\t-o-tab-size: 4;\n\ttab-size: 4;\n\n\t-webkit-hyphens: none;\n\t-moz-hyphens: none;\n\t-ms-hyphens: none;\n\thyphens: none;\n\n}\n\n/* Code blocks */\npre[class*=\"language-\"] {\n\tpadding: 1em;\n\tmargin: .5em 0;\n\toverflow: auto;\n}\n\n:not(pre) > code[class*=\"language-\"],\npre[class*=\"language-\"] {\n\tbackground: #2d2d2d;\n}\n\n/* Inline code */\n:not(pre) > code[class*=\"language-\"] {\n\tpadding: .1em;\n\tborder-radius: .3em;\n\twhite-space: normal;\n}\n\n.token.comment,\n.token.block-comment,\n.token.prolog,\n.token.doctype,\n.token.cdata {\n\tcolor: #999;\n}\n\n.token.punctuation {\n\tcolor: #ccc;\n}\n\n.token.tag,\n.token.attr-name,\n.token.namespace,\n.token.deleted {\n\tcolor: #e2777a;\n}\n\n.token.function-name {\n\tcolor: #6196cc;\n}\n\n.token.boolean,\n.token.number,\n.token.function {\n\tcolor: #f08d49;\n}\n\n.token.property,\n.token.class-name,\n.token.constant,\n.token.symbol {\n\tcolor: #f8c555;\n}\n\n.token.selector,\n.token.important,\n.token.atrule,\n.token.keyword,\n.token.builtin {\n\tcolor: #cc99cd;\n}\n\n.token.string,\n.token.char,\n.token.attr-value,\n.token.regex,\n.token.variable {\n\tcolor: #7ec699;\n}\n\n.token.operator,\n.token.entity,\n.token.url {\n\tcolor: #67cdcc;\n}\n\n.token.important,\n.token.bold {\n\tfont-weight: bold;\n}\n.token.italic {\n\tfont-style: italic;\n}\n\n.token.entity {\n\tcursor: help;\n}\n\n.token.inserted {\n\tcolor: green;\n}\n", ""]);
 
 // exports
 
@@ -10440,31 +10464,59 @@ exports = module.exports = __webpack_require__(0)();
 
 
 // module
-exports.push([module.i, ".markdown-body {\n  color: #999;\n}\n.markdown-body table {\n  width: 100%;\n}\n.markdown-body a {\n  color: #4183c4;\n}\n.markdown-body a.absent {\n  color: #c00;\n}\n.markdown-body a.anchor {\n  display: block;\n  padding-left: 30px;\n  margin-left: -30px;\n  cursor: pointer;\n  position: absolute;\n  top: 0;\n  left: 0;\n  bottom: 0;\n}\n.markdown-body a:first-child h1,\n.markdown-body a:first-child h2,\n.markdown-body a:first-child h3,\n.markdown-body a:first-child h4,\n.markdown-body a:first-child h5,\n.markdown-body a:first-child h6 {\n  margin-top: 0;\n  padding-top: 0;\n}\n.markdown-body h1,\n.markdown-body h2,\n.markdown-body h3,\n.markdown-body h4,\n.markdown-body h5,\n.markdown-body h6 {\n  color: #fff;\n  margin: 20px 0 10px;\n  padding: 0;\n  font-weight: bold;\n  -webkit-font-smoothing: antialiased;\n  cursor: text;\n  position: relative;\n}\n.markdown-body h1:hover a.anchor,\n.markdown-body h2:hover a.anchor,\n.markdown-body h3:hover a.anchor,\n.markdown-body h4:hover a.anchor,\n.markdown-body h5:hover a.anchor,\n.markdown-body h6:hover a.anchor {\n  text-decoration: none;\n}\n.markdown-body h1 tt,\n.markdown-body h2 tt,\n.markdown-body h3 tt,\n.markdown-body h4 tt,\n.markdown-body h5 tt,\n.markdown-body h6 tt,\n.markdown-body h1 code,\n.markdown-body h2 code,\n.markdown-body h3 code,\n.markdown-body h4 code,\n.markdown-body h5 code,\n.markdown-body h6 code {\n  font-size: inherit;\n}\n.markdown-body h1 p,\n.markdown-body h2 p,\n.markdown-body h3 p,\n.markdown-body h4 p,\n.markdown-body h5 p,\n.markdown-body h6 p {\n  margin-top: 0;\n}\n.markdown-body h1 {\n  font-size: 28px;\n}\n.markdown-body h2 {\n  font-size: 24px;\n  border-bottom: 1px solid #ccc;\n}\n.markdown-body h3 {\n  font-size: 18px;\n}\n.markdown-body h4 {\n  font-size: 16px;\n}\n.markdown-body h5 {\n  font-size: 14px;\n}\n.markdown-body h6 {\n  color: #777;\n  font-size: 14px;\n}\n.markdown-body p,\n.markdown-body blockquote,\n.markdown-body ul,\n.markdown-body ol,\n.markdown-body dl,\n.markdown-body li,\n.markdown-body table,\n.markdown-body pre {\n  margin: 15px 0;\n}\n.markdown-body hr {\n  border: 0 none;\n  color: #ccc;\n  height: 4px;\n  padding: 0;\n}\n.markdown-body li {\n  margin: 0;\n}\n.markdown-body li p.first {\n  display: inline-block;\n}\n.markdown-body ul,\n.markdown-body ol {\n  padding-left: 30px;\n}\n.markdown-body ul:first-child,\n.markdown-body ol:first-child {\n  margin-top: 0;\n}\n.markdown-body dl {\n  padding: 0;\n}\n.markdown-body dl dt {\n  font-size: 14px;\n  font-weight: bold;\n  font-style: italic;\n  padding: 0;\n  margin: 15px 0 5px;\n}\n.markdown-body dl dt:first-child {\n  padding: 0;\n}\n.markdown-body dl dt > :first-child {\n  margin-top: 0;\n}\n.markdown-body dl dt > :last-child {\n  margin-bottom: 0;\n}\n.markdown-body dl dd {\n  margin: 0 0 15px;\n  padding: 0 15px;\n}\n.markdown-body dl dd > :first-child {\n  margin-top: 0;\n}\n.markdown-body dl dd > :last-child {\n  margin-bottom: 0;\n}\n.markdown-body blockquote {\n  border-left: 4px solid #ddd;\n  padding: 0 15px;\n  color: #777;\n}\n.markdown-body blockquote > :first-child {\n  margin-top: 0;\n}\n.markdown-body blockquote > :last-child {\n  margin-bottom: 0;\n}\n.markdown-body table {\n  padding: 0;\n  border-collapse: collapse;\n}\n.markdown-body table tr {\n  border-top: 1px solid #ccc;\n  background-color: #fff;\n  margin: 0;\n  padding: 0;\n}\n.markdown-body table tr:nth-child(2n) {\n  background-color: #f8f8f8;\n}\n.markdown-body table tr th {\n  font-weight: bold;\n  border: 1px solid #ccc;\n  margin: 0;\n  padding: 6px 13px;\n  background: #ccc;\n}\n.markdown-body table tr td {\n  border: 1px solid #ccc;\n  margin: 0;\n  padding: 6px 13px;\n}\n.markdown-body table tr th:first-child,\n.markdown-body table tr td:first-child {\n  margin-top: 0;\n}\n.markdown-body table tr th:last-child,\n.markdown-body table tr td:last-child {\n  margin-bottom: 0;\n}\n.markdown-body img {\n  max-width: 100%;\n}\n.markdown-body span.frame {\n  display: block;\n  overflow: hidden;\n}\n.markdown-body span.frame > span {\n  border: 1px solid #ddd;\n  display: block;\n  float: left;\n  overflow: hidden;\n  margin: 13px 0 0;\n  padding: 7px;\n  width: auto;\n}\n.markdown-body span.frame span span {\n  clear: both;\n  color: #333;\n  display: block;\n  padding: 5px 0 0;\n}\n.markdown-body span.frame span img {\n  display: block;\n  float: left;\n}\n.markdown-body span .align-center {\n  display: block;\n  overflow: hidden;\n  clear: both;\n}\n.markdown-body span .align-center > span {\n  display: block;\n  overflow: hidden;\n  margin: 13px auto 0;\n  text-align: center;\n}\n.markdown-body span .align-center span img {\n  margin: 0 auto;\n  text-align: center;\n}\n.markdown-body span .align-right {\n  display: block;\n  overflow: hidden;\n  clear: both;\n}\n.markdown-body span .align-right > span {\n  display: block;\n  overflow: hidden;\n  margin: 13px 0 0;\n  text-align: right;\n}\n.markdown-body span .align-right span img {\n  margin: 0;\n  text-align: right;\n}\n.markdown-body span .float-left {\n  display: block;\n  margin-right: 13px;\n  overflow: hidden;\n  float: left;\n}\n.markdown-body span .float-left span {\n  margin: 13px 0 0;\n}\n.markdown-body span .float-right {\n  display: block;\n  margin-left: 13px;\n  overflow: hidden;\n  float: right;\n}\n.markdown-body span .float-right > span {\n  display: block;\n  overflow: hidden;\n  margin: 13px auto 0;\n  text-align: right;\n}\n.markdown-body code,\n.markdown-body tt {\n  margin: 0 2px;\n  padding: 0 5px;\n  white-space: nowrap;\n  border: 1px solid #eaeaea;\n  background-color: #f8f8f8;\n  border-radius: 3px;\n}\n.markdown-body pre code {\n  margin: 0;\n  padding: 0;\n  white-space: pre;\n  border: none;\n  background: transparent;\n}\n.markdown-body .highlight pre {\n  background-color: #f8f8f8;\n  border: 1px solid #ccc;\n  font-size: 13px;\n  line-height: 19px;\n  overflow: auto;\n  padding: 6px 10px;\n  border-radius: 3px;\n}\n.markdown-body pre {\n  border: 1px solid #ccc;\n  font-size: 13px;\n  line-height: 19px;\n  overflow: auto;\n  padding: 6px 10px;\n  border-radius: 3px;\n}\n.markdown-body pre code,\n.markdown-body pre tt {\n  background-color: transparent;\n  border: none;\n}\n.markdown-body sup {\n  font-size: 0.83em;\n  vertical-align: super;\n  line-height: 0;\n}\n.markdown-body * {\n  -webkit-print-color-adjust: exact;\n}\n@media screen and (min-width: 914px) {\n  .markdown-body body {\n    width: 854px;\n    margin0: auto;\n  }\n}\n@media print {\n  .markdown-body table,\n  .markdown-body pre {\n    page-break-inside: avoid;\n  }\n  .markdown-body pre {\n    word-wrap: break-word;\n  }\n}\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nbody {\n  padding: 20px;\n  color: #999;\n  background-color: #19232e;\n}\n", ""]);
 
 // exports
 
 
 /***/ }),
 /* 19 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-module.exports = "\n<section>\n  <a href=\"https://github.com/dafrok/san-transition\"><img style=\"position: absolute; top: 0; right: 0; border: 0;\" src=\"https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67\" alt=\"Fork me on GitHub\" data-canonical-src=\"https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png\"></a>\n  <div class=\"markdown-body\">\n    <doc></doc>\n  </div>\n</section>\n";
+exports = module.exports = __webpack_require__(0)();
+// imports
+
+
+// module
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nh1 * {\n  margin-right: 10px;\n  vertical-align: middle;\n}\n\n.try {\n  font-size: 0;\n  background-color: #334959;\n  color: white;\n  margin-bottom: 10px;\n  padding: 10px;\n}\n\n.try button {\n  background: #c7a31a;\n  color: #fff;\n  border-radius: 3px;\n  border: 0;\n  outline: 0;\n  width: 150px;\n  text-align: center;\n  margin-right: 10px;\n}\n\n.try div, .try button {\n  display: inline-block;\n  vertical-align: middle;\n  font-size: 14px;\n}\n\n.try button:hover {\n  background-color: #a88500;\n}\n\n.fade-enter-active, .fade-leave {\n  position: absolute;\n  opacity: 1;\n  transform: translate(0, 0);\n  transition: all .5s;\n  height: 20px;\n  line-height: 20px;\n}\n.fade-enter, .fade-leave-active {\n  opacity: 0;\n  transform: translate(100px, 0);\n}\n\n.expand-enter-active, .expand-leave {\n  position: absolute;\n  transition: all .5s ease;\n  height: 20px;\n  line-height: 20px;\n  overflow: hidden;\n}\n.expand-enter, .expand-leave-active {\n  height: 0;\n  opacity: 0;\n}\n\n\n.keyframes-leave {\n  transform: scale(0);\n  animation: in .5s;\n}\n.keyframes-enter-active {\n  height: 20px;\n  line-height: 20px;\n  animation: in .5s;\n}\n.keyframes-leave-active {\n  animation: out .5s;\n}\n\n@keyframes in {\n  0% {\n    transform: scale(0)\n  }\n  50% {\n    transform: scale(1.5)\n  }\n  100% {\n    transform: scale(1)\n  }\n}\n\n@keyframes out {\n  0% {\n    transform: scale(1)\n  }\n  50% {\n    transform: scale(1.5)\n  }\n  100% {\n    transform: scale(0)\n  }\n}\n", ""]);
+
+// exports
+
 
 /***/ }),
 /* 20 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-module.exports = "\n<div>\n  <slot></slot>\n</div>\n";
+exports = module.exports = __webpack_require__(0)();
+// imports
+
+
+// module
+exports.push([module.i, ".markdown-body {\n  color: #999;\n}\n.markdown-body table {\n  width: 100%;\n}\n.markdown-body a {\n  color: #4183c4;\n}\n.markdown-body a.absent {\n  color: #c00;\n}\n.markdown-body a.anchor {\n  display: block;\n  padding-left: 30px;\n  margin-left: -30px;\n  cursor: pointer;\n  position: absolute;\n  top: 0;\n  left: 0;\n  bottom: 0;\n}\n.markdown-body a:first-child h1,\n.markdown-body a:first-child h2,\n.markdown-body a:first-child h3,\n.markdown-body a:first-child h4,\n.markdown-body a:first-child h5,\n.markdown-body a:first-child h6 {\n  margin-top: 0;\n  padding-top: 0;\n}\n.markdown-body h1,\n.markdown-body h2,\n.markdown-body h3,\n.markdown-body h4,\n.markdown-body h5,\n.markdown-body h6 {\n  color: #fff;\n  margin: 20px 0 10px;\n  padding: 0;\n  font-weight: bold;\n  -webkit-font-smoothing: antialiased;\n  cursor: text;\n  position: relative;\n}\n.markdown-body h1:hover a.anchor,\n.markdown-body h2:hover a.anchor,\n.markdown-body h3:hover a.anchor,\n.markdown-body h4:hover a.anchor,\n.markdown-body h5:hover a.anchor,\n.markdown-body h6:hover a.anchor {\n  text-decoration: none;\n}\n.markdown-body h1 tt,\n.markdown-body h2 tt,\n.markdown-body h3 tt,\n.markdown-body h4 tt,\n.markdown-body h5 tt,\n.markdown-body h6 tt,\n.markdown-body h1 code,\n.markdown-body h2 code,\n.markdown-body h3 code,\n.markdown-body h4 code,\n.markdown-body h5 code,\n.markdown-body h6 code {\n  font-size: inherit;\n}\n.markdown-body h1 p,\n.markdown-body h2 p,\n.markdown-body h3 p,\n.markdown-body h4 p,\n.markdown-body h5 p,\n.markdown-body h6 p {\n  margin-top: 0;\n}\n.markdown-body h1 {\n  font-size: 28px;\n}\n.markdown-body h2 {\n  font-size: 24px;\n  border-bottom: 1px solid #ccc;\n}\n.markdown-body h3 {\n  font-size: 18px;\n}\n.markdown-body h4 {\n  font-size: 16px;\n}\n.markdown-body h5 {\n  font-size: 14px;\n}\n.markdown-body h6 {\n  color: #777;\n  font-size: 14px;\n}\n.markdown-body p,\n.markdown-body blockquote,\n.markdown-body ul,\n.markdown-body ol,\n.markdown-body dl,\n.markdown-body li,\n.markdown-body table,\n.markdown-body pre {\n  margin: 15px 0;\n}\n.markdown-body hr {\n  border: 0 none;\n  color: #ccc;\n  height: 4px;\n  padding: 0;\n}\n.markdown-body li {\n  margin: 0;\n}\n.markdown-body li p.first {\n  display: inline-block;\n}\n.markdown-body ul,\n.markdown-body ol {\n  padding-left: 30px;\n}\n.markdown-body ul:first-child,\n.markdown-body ol:first-child {\n  margin-top: 0;\n}\n.markdown-body dl {\n  padding: 0;\n}\n.markdown-body dl dt {\n  font-size: 14px;\n  font-weight: bold;\n  font-style: italic;\n  padding: 0;\n  margin: 15px 0 5px;\n}\n.markdown-body dl dt:first-child {\n  padding: 0;\n}\n.markdown-body dl dt > :first-child {\n  margin-top: 0;\n}\n.markdown-body dl dt > :last-child {\n  margin-bottom: 0;\n}\n.markdown-body dl dd {\n  margin: 0 0 15px;\n  padding: 0 15px;\n}\n.markdown-body dl dd > :first-child {\n  margin-top: 0;\n}\n.markdown-body dl dd > :last-child {\n  margin-bottom: 0;\n}\n.markdown-body blockquote {\n  border-left: 4px solid #ddd;\n  padding: 0 15px;\n  color: #777;\n}\n.markdown-body blockquote > :first-child {\n  margin-top: 0;\n}\n.markdown-body blockquote > :last-child {\n  margin-bottom: 0;\n}\n.markdown-body table {\n  padding: 0;\n  border-collapse: collapse;\n}\n.markdown-body table tr {\n  border-top: 1px solid #ccc;\n  background-color: #fff;\n  margin: 0;\n  padding: 0;\n}\n.markdown-body table tr:nth-child(2n) {\n  background-color: #f8f8f8;\n}\n.markdown-body table tr th {\n  font-weight: bold;\n  border: 1px solid #ccc;\n  margin: 0;\n  padding: 6px 13px;\n  background: #ccc;\n}\n.markdown-body table tr td {\n  border: 1px solid #ccc;\n  margin: 0;\n  padding: 6px 13px;\n}\n.markdown-body table tr th:first-child,\n.markdown-body table tr td:first-child {\n  margin-top: 0;\n}\n.markdown-body table tr th:last-child,\n.markdown-body table tr td:last-child {\n  margin-bottom: 0;\n}\n.markdown-body img {\n  max-width: 100%;\n}\n.markdown-body span.frame {\n  display: block;\n  overflow: hidden;\n}\n.markdown-body span.frame > span {\n  border: 1px solid #ddd;\n  display: block;\n  float: left;\n  overflow: hidden;\n  margin: 13px 0 0;\n  padding: 7px;\n  width: auto;\n}\n.markdown-body span.frame span span {\n  clear: both;\n  color: #333;\n  display: block;\n  padding: 5px 0 0;\n}\n.markdown-body span.frame span img {\n  display: block;\n  float: left;\n}\n.markdown-body span .align-center {\n  display: block;\n  overflow: hidden;\n  clear: both;\n}\n.markdown-body span .align-center > span {\n  display: block;\n  overflow: hidden;\n  margin: 13px auto 0;\n  text-align: center;\n}\n.markdown-body span .align-center span img {\n  margin: 0 auto;\n  text-align: center;\n}\n.markdown-body span .align-right {\n  display: block;\n  overflow: hidden;\n  clear: both;\n}\n.markdown-body span .align-right > span {\n  display: block;\n  overflow: hidden;\n  margin: 13px 0 0;\n  text-align: right;\n}\n.markdown-body span .align-right span img {\n  margin: 0;\n  text-align: right;\n}\n.markdown-body span .float-left {\n  display: block;\n  margin-right: 13px;\n  overflow: hidden;\n  float: left;\n}\n.markdown-body span .float-left span {\n  margin: 13px 0 0;\n}\n.markdown-body span .float-right {\n  display: block;\n  margin-left: 13px;\n  overflow: hidden;\n  float: right;\n}\n.markdown-body span .float-right > span {\n  display: block;\n  overflow: hidden;\n  margin: 13px auto 0;\n  text-align: right;\n}\n.markdown-body code,\n.markdown-body tt {\n  margin: 0 2px;\n  padding: 0 5px;\n  white-space: nowrap;\n  border: 1px solid #eaeaea;\n  background-color: #f8f8f8;\n  border-radius: 3px;\n}\n.markdown-body pre code {\n  margin: 0;\n  padding: 0;\n  white-space: pre;\n  border: none;\n  background: transparent;\n}\n.markdown-body .highlight pre {\n  background-color: #f8f8f8;\n  border: 1px solid #ccc;\n  font-size: 13px;\n  line-height: 19px;\n  overflow: auto;\n  padding: 6px 10px;\n  border-radius: 3px;\n}\n.markdown-body pre {\n  border: 1px solid #ccc;\n  font-size: 13px;\n  line-height: 19px;\n  overflow: auto;\n  padding: 6px 10px;\n  border-radius: 3px;\n}\n.markdown-body pre code,\n.markdown-body pre tt {\n  background-color: transparent;\n  border: none;\n}\n.markdown-body sup {\n  font-size: 0.83em;\n  vertical-align: super;\n  line-height: 0;\n}\n.markdown-body * {\n  -webkit-print-color-adjust: exact;\n}\n@media screen and (min-width: 914px) {\n  .markdown-body body {\n    width: 854px;\n    margin0: auto;\n  }\n}\n@media print {\n  .markdown-body table,\n  .markdown-body pre {\n    page-break-inside: avoid;\n  }\n  .markdown-body pre {\n    word-wrap: break-word;\n  }\n}\n", ""]);
+
+// exports
+
 
 /***/ }),
 /* 21 */
 /***/ (function(module, exports) {
 
-module.exports = "<div><h1 id=\"-img-src-https-ecomfe-github-io-san-img-logo-colorful-svg-height-28px-span-san-transition-span-\"><img src=\"https://ecomfe.github.io/san/img/logo-colorful.svg\" height=\"28px\"><span>San Transition</span></h1>\n<p>High order component factory for generating <a href=\"//github.com/ecomfe/san\">san</a> components with transition effects.</p>\n<h2 id=\"get-start\">Get Start</h2>\n<h3 id=\"installation\">Installation</h3>\n<pre><code class=\"lang-bash\">$ npm install --save san-transition\n</code></pre>\n<h3 id=\"usage\">Usage</h3>\n<pre><code class=\"lang-html\">&lt;template&gt;\n  &lt;div&gt;\n    &lt;transition-layer&gt;A component with transition effects.&lt;/transition-layer&gt;\n  &lt;div&gt;\n&lt;/template&gt;\n\n&lt;script&gt;\nimport {transition} from &#39;san-transition&#39;\nimport {YourComponent} from &#39;YOUR_SAN_COMPONENT&#39;\n\nexport default {\n  components: {\n    &#39;transition-layer&#39;: transition(&#39;fade&#39;)(YourComponent)\n  }\n}\n&lt;/script&gt;\n\n&lt;style&gt;\n.fade-enter-active, .fade-leave {\n  opacity: 1;\n  transform: translate(0, 0);\n  transition: all .5s;\n}\n.fade-enter, .fade-leave-active {\n  opacity: 0;\n  transform: translate(100px, 0);\n}\n&lt;/style&gt;\n</code></pre>\n<h2 id=\"api\">API</h2>\n<h3 id=\"transition\">transition</h3>\n<ul>\n<li>Arguments<ul>\n<li>{None, String, Object} hook id</li>\n</ul>\n</li>\n<li><p>Usage</p>\n<pre><code class=\"lang-javascript\">// register default hooks\n// the same as `transition(&#39;san&#39;)(YourComponent)`\ntransition()(YourComponent)\n\n// register named hooks\ntransition(&#39;foo&#39;)(YourComponent)\n\n// register custom hooks\ntransition({\n  enter: &#39;custom-enter-hook&#39;\n  enterActive: &#39;custom-enter-active-hook&#39;,\n  leave: &#39;custom-leave-hook&#39;,\n  leaveActive: &#39;custom-leave-active-hook&#39;\n})(YourComponent)\n</code></pre>\n</li>\n</ul>\n<h3 id=\"transitiongroup-uncompleted-\">transitionGroup (uncompleted)</h3>\n<p>Coming soon...</p>\n<h2 id=\"try-it-out\">Try It Out</h2>\n<div class=\"try\">\n  <button on-click=\"toggleLayer('expand')\">Toggle Expand</button>\n  <layer-expand s-if=\"isShow.expand\">Component with expand effect</layer-expand>\n</div>\n<div class=\"try\">\n  <button on-click=\"toggleLayer('fade')\">Toggle Fade</button>\n  <layer-fade s-if=\"isShow.fade\">Component with fade effect</layer-fade>\n</div>\n\n<div class=\"try\">\n  <button on-click=\"toggleLayer('keyframes')\">Toggle Keyframes</button>\n  <layer-keyframes s-if=\"isShow.keyframes\">Component with animation keyframes</layer-keyframes>\n</div>\n\n<div class=\"try\">\n  <button on-click=\"toggleLayer('ifElse')\">Toggle s-if / s-else</button>\n  <layer-fade s-if=\"isShow.ifElse\">Component with s-if</layer-fade>\n  <layer-expand s-else>Component with s-else</layer-expand>\n</div>\n</div>";
+module.exports = "\n<section>\n  <a href=\"https://github.com/dafrok/san-transition\"><img style=\"position: absolute; top: 0; right: 0; border: 0;\" src=\"https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67\" alt=\"Fork me on GitHub\" data-canonical-src=\"https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png\"></a>\n  <div class=\"markdown-body\">\n    <doc></doc>\n  </div>\n</section>\n";
 
 /***/ }),
 /* 22 */
+/***/ (function(module, exports) {
+
+module.exports = "\n<div>\n  <slot></slot>\n</div>\n";
+
+/***/ }),
+/* 23 */
+/***/ (function(module, exports) {
+
+module.exports = "<div><h1 id=\"-img-src-https-ecomfe-github-io-san-img-logo-colorful-svg-height-28px-span-san-transition-span-\"><img src=\"https://ecomfe.github.io/san/img/logo-colorful.svg\" height=\"28px\"><span>San Transition</span></h1>\n<p>High order component factory for generating <a href=\"//github.com/ecomfe/san\">san</a> components with transition effects.</p>\n<h2 id=\"get-start\">Get Start</h2>\n<h3 id=\"installation\">Installation</h3>\n<pre><code class=\"lang-bash\">$ npm install --save san-transition\n</code></pre>\n<h3 id=\"usage\">Usage</h3>\n<pre><code class=\"lang-html\">&lt;template&gt;\n  &lt;div&gt;\n    &lt;transition-layer&gt;A component with transition effects.&lt;/transition-layer&gt;\n  &lt;div&gt;\n&lt;/template&gt;\n\n&lt;script&gt;\nimport {transition} from &#39;san-transition&#39;\nimport {YourComponent} from &#39;YOUR_SAN_COMPONENT&#39;\n\nexport default {\n  components: {\n    &#39;transition-layer&#39;: transition(&#39;fade&#39;)(YourComponent)\n  }\n}\n&lt;/script&gt;\n\n&lt;style&gt;\n.fade-enter-active, .fade-leave {\n  opacity: 1;\n  transform: translate(0, 0);\n  transition: all .5s;\n}\n.fade-enter, .fade-leave-active {\n  opacity: 0;\n  transform: translate(100px, 0);\n}\n&lt;/style&gt;\n</code></pre>\n<h2 id=\"api\">API</h2>\n<h3 id=\"transition\">transition</h3>\n<ul>\n<li>Arguments<ul>\n<li><strong>{None, String, Object}</strong> hook id</li>\n</ul>\n</li>\n<li><p>Usage</p>\n<pre><code class=\"lang-javascript\">// register default hooks\n// the same as `transition(&#39;san&#39;)(YourComponent)`\ntransition()(YourComponent)\n\n// register named hooks\ntransition(&#39;foo&#39;)(YourComponent)\n\n// register custom hooks\ntransition({\n  enter: &#39;custom-enter-hook&#39;\n  enterActive: &#39;custom-enter-active-hook&#39;,\n  leave: &#39;custom-leave-hook&#39;,\n  leaveActive: &#39;custom-leave-active-hook&#39;\n})(YourComponent)\n</code></pre>\n</li>\n</ul>\n<h3 id=\"transitiongroup-uncompleted-\">transitionGroup (uncompleted)</h3>\n<p>Coming soon...</p>\n<h2 id=\"try-it-out\">Try It Out</h2>\n<div class=\"try\">\n  <button on-click=\"toggleLayer('expand')\">Toggle Expand</button>\n  <layer-expand s-if=\"isShow.expand\">Component with expand effect</layer-expand>\n</div>\n<div class=\"try\">\n  <button on-click=\"toggleLayer('fade')\">Toggle Fade</button>\n  <layer-fade s-if=\"isShow.fade\">Component with fade effect</layer-fade>\n</div>\n\n<div class=\"try\">\n  <button on-click=\"toggleLayer('keyframes')\">Toggle Keyframes</button>\n  <layer-keyframes s-if=\"isShow.keyframes\">Component with animation keyframes</layer-keyframes>\n</div>\n\n<div class=\"try\">\n  <button on-click=\"toggleLayer('ifElse')\">Toggle s-if / s-else</button>\n  <layer-fade s-if=\"isShow.ifElse\">Component with s-if</layer-fade>\n  <layer-expand s-else>Component with s-else</layer-expand>\n</div>\n</div>";
+
+/***/ }),
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {
@@ -11266,7 +11318,7 @@ Prism.languages.js = Prism.languages.javascript;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
-/* 23 */
+/* 25 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -11456,18 +11508,18 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 24 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __san_script__, __san_template__
 var __san_styles__ = {}
-__webpack_require__(28)
-__san_script__ = __webpack_require__(14)
+__webpack_require__(30)
+__san_script__ = __webpack_require__(15)
 if (__san_script__ &&
     __san_script__.__esModule &&
     Object.keys(__san_script__).length > 1) {
   console.warn("[san-loader] docs/components/Doc.san: named exports in *.san files are ignored.")}
-__san_template__ = __webpack_require__(21)
+__san_template__ = __webpack_require__(23)
 var __san_proto__ = {}
 if (__san_script__) {
   __san_proto__ = __san_script__.__esModule
@@ -11489,12 +11541,12 @@ __san_exports__.computed[key] = function () { return module }
 
 
 /***/ }),
-/* 25 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __san_script__, __san_template__
 var __san_styles__ = {}
-__san_template__ = __webpack_require__(20)
+__san_template__ = __webpack_require__(22)
 var __san_proto__ = {}
 if (__san_script__) {
   __san_proto__ = __san_script__.__esModule
@@ -11516,7 +11568,7 @@ __san_exports__.computed[key] = function () { return module }
 
 
 /***/ }),
-/* 26 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
@@ -11706,16 +11758,16 @@ __san_exports__.computed[key] = function () { return module }
     attachTo.clearImmediate = clearImmediate;
 }(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), __webpack_require__(23)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), __webpack_require__(25)))
 
 /***/ }),
-/* 27 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(16);
+var content = __webpack_require__(18);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(1)(content, {});
@@ -11735,13 +11787,13 @@ if(false) {
 }
 
 /***/ }),
-/* 28 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(17);
+var content = __webpack_require__(19);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(1)(content, {});
@@ -11761,7 +11813,7 @@ if(false) {
 }
 
 /***/ }),
-/* 29 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var apply = Function.prototype.apply;
@@ -11814,7 +11866,7 @@ exports._unrefActive = exports.active = function(item) {
 };
 
 // setimmediate attaches itself to the global object
-__webpack_require__(26);
+__webpack_require__(28);
 exports.setImmediate = setImmediate;
 exports.clearImmediate = clearImmediate;
 
