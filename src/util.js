@@ -15,3 +15,21 @@ export const clearParentTimeout = parent => {
   clearTimeout(parent.leavingTimeout)
   clearTimeout(parent.enteringTimeout)
 }
+
+export const prepareEnter = (parent, hooks) => {
+  const {transitionEl} = parent
+  parent.isEntering = true
+  parent.isLeaving = false
+  transitionEl.classList.add(hooks.enterActive)
+  transitionEl.classList.remove(hooks.leave)
+  transitionEl.classList.remove(hooks.leaveActive)
+}
+
+export const prepareLeave = (parent, hooks) => {
+  const {transitionEl} = parent
+  parent.isEntering = false
+  parent.isLeaving = true
+  transitionEl.classList.remove(hooks.enter)
+  transitionEl.classList.remove(hooks.enterActive)
+  transitionEl.classList.add(hooks.leave)
+}

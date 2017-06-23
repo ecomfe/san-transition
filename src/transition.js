@@ -1,4 +1,4 @@
-import {getTimeout, clearParentTimeout} from './util.js'
+import {prepareEnter, prepareLeave, getTimeout, clearParentTimeout} from './util.js'
 
 export default (prop = 'san') => Component => {
   class Target extends Component {
@@ -32,7 +32,7 @@ export default (prop = 'san') => Component => {
     clearParentTimeout(parent)
     el.classList.add(hooks.enter)
     parent.isEntering = true
-    parent.transformEl = el
+    parent.transitionEl = el
     const transitionHandler = () => {
       el.classList.remove(hooks.enter)
       parent.enteringTimeout = setTimeout(() => {
@@ -50,11 +50,7 @@ export default (prop = 'san') => Component => {
     // entering
     const {parent} = this
     if (parent.isLeaving) {
-      parent.isEntering = true
-      parent.isLeaving = false
-      parent.transformEl.classList.add(hooks.enterActive)
-      parent.transformEl.classList.remove(hooks.leave)
-      parent.transformEl.classList.remove(hooks.leaveActive)
+      prepareEnter(parent, hooks)
     } else {
       attach.apply(this, arguments)
     }
@@ -72,12 +68,8 @@ export default (prop = 'san') => Component => {
         if (child) {
           if (parent.isLeaving) {
             // entering
-            const el = this.transformEl
-            parent.isEntering = true
-            parent.isLeaving = false
-            parent.transformEl.classList.add(hooks.enterActive)
-            parent.transformEl.classList.remove(hooks.leave)
-            parent.transformEl.classList.remove(hooks.leaveActive)
+            const el = this.transitionEl
+            prepareEnter(parent, hooks)
             parent.enteringTimeout = setTimeout(() => {
               parent.isEntering = false
               updateView.call(this, changes)
@@ -87,11 +79,10 @@ export default (prop = 'san') => Component => {
         updateView.call(this, changes)
       } else {
         // leaving
-        const el = this.transformEl
+        const el = this.transitionEl
         clearParentTimeout(parent)
         if (!parent.isLeaving) {
-          parent.isEntering = false
-          parent.isLeaving = true
+          prepareLeave(parent, hooks)
           const leaveHandler = e => {
             if (parent.isLeaving) {
               _disposeChilds.call(this)
@@ -102,9 +93,6 @@ export default (prop = 'san') => Component => {
             el.classList.add(hooks.leaveActive)
             parent.leavingTimeout = setTimeout(leaveHandler, getTimeout(el))
           }
-          el.classList.remove(hooks.enter)
-          el.classList.remove(hooks.enterActive)
-          el.classList.add(hooks.leave)
           requestAnimationFrame(transitionHandler)
         }
       }
