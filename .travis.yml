@@ -3,8 +3,6 @@ node_js:
   - "6"
 branches:
   only: master
-script:
-  # - npm run build:docs
 after_script:
   - cd dist
   - git init
