@@ -77,26 +77,26 @@ Coming soon...
 
 ### Default Hooks
 
-<iframe height='300' scrolling='no' title='San Transition - Default' src='//codepen.io/Dafrok/embed/pwravg/?height=300&theme-id=dark&default-tab=js,result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true' style='width: 100%;'>See the Pen <a href='https://codepen.io/Dafrok/pen/pwravg/'>San Transition - Default</a> by Dafrok (<a href='https://codepen.io/Dafrok'>@Dafrok</a>) on <a href='https://codepen.io'>CodePen</a>.
+<iframe height='300' width="100%" scrolling='no' title='San Transition - Default' src='//codepen.io/Dafrok/embed/pwravg/?height=300&theme-id=dark&default-tab=js,result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true'>See the Pen <a href='https://codepen.io/Dafrok/pen/pwravg/'>San Transition - Default</a> by Dafrok (<a href='https://codepen.io/Dafrok'>@Dafrok</a>) on <a href='https://codepen.io'>CodePen</a>.
 </iframe>
 
 ### Named Hooks
 
-<iframe height='300' scrolling='no' title='San Transition - Named' src='//codepen.io/Dafrok/embed/VWzQWV/?height=300&theme-id=dark&default-tab=js,result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true' style='width: 100%;'>See the Pen <a href='https://codepen.io/Dafrok/pen/VWzQWV/'>San Transition - Named</a> by Dafrok (<a href='https://codepen.io/Dafrok'>@Dafrok</a>) on <a href='https://codepen.io'>CodePen</a>.
+<iframe height='300' width="100%" scrolling='no' title='San Transition - Named' src='//codepen.io/Dafrok/embed/VWzQWV/?height=300&theme-id=dark&default-tab=js,result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true'>See the Pen <a href='https://codepen.io/Dafrok/pen/VWzQWV/'>San Transition - Named</a> by Dafrok (<a href='https://codepen.io/Dafrok'>@Dafrok</a>) on <a href='https://codepen.io'>CodePen</a>.
 </iframe>
 
 ### Custom Hooks
 
-<iframe height='300' scrolling='no' title='San Transition - Custom' src='//codepen.io/Dafrok/embed/xrLYYz/?height=300&theme-id=dark&default-tab=js,result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true' style='width: 100%;'>See the Pen <a href='https://codepen.io/Dafrok/pen/xrLYYz/'>San Transition - Custom Hooks</a> by Dafrok (<a href='https://codepen.io/Dafrok'>@Dafrok</a>) on <a href='https://codepen.io'>CodePen</a>.
+<iframe height='300' width="100%" scrolling='no' title='San Transition - Custom' src='//codepen.io/Dafrok/embed/xrLYYz/?height=300&theme-id=dark&default-tab=js,result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true'>See the Pen <a href='https://codepen.io/Dafrok/pen/xrLYYz/'>San Transition - Custom Hooks</a> by Dafrok (<a href='https://codepen.io/Dafrok'>@Dafrok</a>) on <a href='https://codepen.io'>CodePen</a>.
 </iframe>
 
 ### Keyframe Animation Transition
 
-<iframe height='300' scrolling='no' title='San Transition - Animation' src='//codepen.io/Dafrok/embed/rwzJqJ/?height=300&theme-id=dark&default-tab=js,result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true' style='width: 100%;'>See the Pen <a href='https://codepen.io/Dafrok/pen/rwzJqJ/'>San Transition - Animation</a> by Dafrok (<a href='https://codepen.io/Dafrok'>@Dafrok</a>) on <a href='https://codepen.io'>CodePen</a>.
+<iframe height='300' width="100%" scrolling='no' title='San Transition - Animation' src='//codepen.io/Dafrok/embed/rwzJqJ/?height=300&theme-id=dark&default-tab=js,result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true'>See the Pen <a href='https://codepen.io/Dafrok/pen/rwzJqJ/'>San Transition - Animation</a> by Dafrok (<a href='https://codepen.io/Dafrok'>@Dafrok</a>) on <a href='https://codepen.io'>CodePen</a>.
 </iframe>
 
 ### Working with s-if & s-else expression
-<iframe height='300' scrolling='no' title='San Transition - if  / else' src='//codepen.io/Dafrok/embed/dRzmbB/?height=300&theme-id=dark&default-tab=js,result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true' style='width: 100%;'>See the Pen <a href='https://codepen.io/Dafrok/pen/dRzmbB/'>dRzmbB</a> by Dafrok (<a href='https://codepen.io/Dafrok'>@Dafrok</a>) on <a href='https://codepen.io'>CodePen</a>.
+<iframe height='300' width="100%" scrolling='no' title='San Transition - if  / else' src='//codepen.io/Dafrok/embed/dRzmbB/?height=300&theme-id=dark&default-tab=js,result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true'>See the Pen <a href='https://codepen.io/Dafrok/pen/dRzmbB/'>dRzmbB</a> by Dafrok (<a href='https://codepen.io/Dafrok'>@Dafrok</a>) on <a href='https://codepen.io'>CodePen</a>.
 </iframe>
 </template>
 
