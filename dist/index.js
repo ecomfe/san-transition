@@ -8138,7 +8138,7 @@ function parseANodeFromEl(el) {
     // #[end]
 })(this);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(25).setImmediate))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(28).setImmediate))
 
 /***/ }),
 /* 3 */
@@ -8173,13 +8173,13 @@ module.exports = g;
 
 var __san_script__, __san_template__
 var __san_styles__ = {}
-__webpack_require__(23)
+__webpack_require__(26)
 __san_script__ = __webpack_require__(10)
 if (__san_script__ &&
     __san_script__.__esModule &&
     Object.keys(__san_script__).length > 1) {
   console.warn("[san-loader] docs\\components\\App.san: named exports in *.san files are ignored.")}
-__san_template__ = __webpack_require__(17)
+__san_template__ = __webpack_require__(18)
 var __san_proto__ = {}
 if (__san_script__) {
   __san_proto__ = __san_script__.__esModule
@@ -9766,7 +9766,7 @@ exports['default'] = EventQueue;
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(12);
+var content = __webpack_require__(13);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(1)(content, {});
@@ -9792,7 +9792,7 @@ if(false) {
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(13);
+var content = __webpack_require__(14);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(1)(content, {});
@@ -9818,7 +9818,7 @@ if(false) {
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(16);
+var content = __webpack_require__(17);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(1)(content, {});
@@ -9880,7 +9880,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _Doc = __webpack_require__(21);
+var _Doc = __webpack_require__(23);
 
 var _Doc2 = _interopRequireDefault(_Doc);
 
@@ -9922,25 +9922,16 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _prismjs = __webpack_require__(19);
+var _prismjs = __webpack_require__(21);
 
 var _prismjs2 = _interopRequireDefault(_prismjs);
 
+var _try = __webpack_require__(24);
+
+var _try2 = _interopRequireDefault(_try);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = {
-  attach: function attach() {
-    _prismjs2.default.highlightAll();
-  }
-};
-// </script>
-//
-// <style>
-// h1 * {
-//   margin-right: 10px;
-//   vertical-align: middle;
-// }
-// </style>
 // <template lang="md">
 // # <img src="https://ecomfe.github.io/san/img/logo-colorful.svg" height="28px"><span>San Transition</span>
 //
@@ -9950,8 +9941,16 @@ exports.default = {
 //
 // ### Installation
 //
+// #### NPM
+//
 // ```bash
 // $ npm install --save san-transition
+// ```
+//
+// #### CDN
+//
+// ```html
+// <script src="//unpkg.com/san-transition"></script>
 // ```
 //
 // ### Usage
@@ -10020,34 +10019,81 @@ exports.default = {
 //
 // ### Default Hooks
 //
-// <iframe height='300' width="100%" scrolling='no' title='San Transition - Default' src='//codepen.io/Dafrok/embed/pwravg/?height=300&theme-id=dark&default-tab=js,result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true'>See the Pen <a href='https://codepen.io/Dafrok/pen/pwravg/'>San Transition - Default</a> by Dafrok (<a href='https://codepen.io/Dafrok'>@Dafrok</a>) on <a href='https://codepen.io'>CodePen</a>.
-// </iframe>
+// <try penId="pwravg" title="Default Hooks"></try>
 //
 // ### Named Hooks
 //
-// <iframe height='300' width="100%" scrolling='no' title='San Transition - Named' src='//codepen.io/Dafrok/embed/VWzQWV/?height=300&theme-id=dark&default-tab=js,result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true'>See the Pen <a href='https://codepen.io/Dafrok/pen/VWzQWV/'>San Transition - Named</a> by Dafrok (<a href='https://codepen.io/Dafrok'>@Dafrok</a>) on <a href='https://codepen.io'>CodePen</a>.
-// </iframe>
+// <try penId="VWzQWV" title="Named Hooks"></try>
 //
 // ### Custom Hooks
 //
-// <iframe height='300' width="100%" scrolling='no' title='San Transition - Custom' src='//codepen.io/Dafrok/embed/xrLYYz/?height=300&theme-id=dark&default-tab=js,result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true'>See the Pen <a href='https://codepen.io/Dafrok/pen/xrLYYz/'>San Transition - Custom Hooks</a> by Dafrok (<a href='https://codepen.io/Dafrok'>@Dafrok</a>) on <a href='https://codepen.io'>CodePen</a>.
-// </iframe>
+// <try penId="xrLYYz" title="Custom Hooks"></try>
 //
 // ### Keyframe Animation Transition
 //
-// <iframe height='300' width="100%" scrolling='no' title='San Transition - Animation' src='//codepen.io/Dafrok/embed/rwzJqJ/?height=300&theme-id=dark&default-tab=js,result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true'>See the Pen <a href='https://codepen.io/Dafrok/pen/rwzJqJ/'>San Transition - Animation</a> by Dafrok (<a href='https://codepen.io/Dafrok'>@Dafrok</a>) on <a href='https://codepen.io'>CodePen</a>.
-// </iframe>
+// <try penId="rwzJqJ" title="Keyframe Animation Transition"></try>
 //
 // ### Working with s-if & s-else expression
-// <iframe height='300' width="100%" scrolling='no' title='San Transition - if  / else' src='//codepen.io/Dafrok/embed/dRzmbB/?height=300&theme-id=dark&default-tab=js,result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true'>See the Pen <a href='https://codepen.io/Dafrok/pen/dRzmbB/'>dRzmbB</a> by Dafrok (<a href='https://codepen.io/Dafrok'>@Dafrok</a>) on <a href='https://codepen.io'>CodePen</a>.
-// </iframe>
+//
+// <try penId="rwzJqJ" title="Working with s-if & s-else expression"></try>
 // </template>
 //
 //
 // <script>
+exports.default = {
+  components: {
+    try: _try2.default
+  },
+  attach: function attach() {
+    _prismjs2.default.highlightAll();
+  }
+};
+// </script>
+//
+// <style>
+// h1 * {
+//   margin-right: 10px;
+//   vertical-align: middle;
+// }
+// </style>
 
 /***/ }),
 /* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(global) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+// <template>
+// <iframe
+//   height="{{height || '300'}}"
+//   width="100%"
+//   scrolling="no"
+//   title="{{title}}"
+//   src="//codepen.io/Dafrok/embed/{{penId}}/?height=300&theme-id=dark&default-tab={{tab}}&embed-version=2"
+//   frameborder="no"
+//   allowtransparency="true"
+//   allowfullscreen="true">
+//   See the Pen <a href="https://codepen.io/Dafrok/pen/{{penId}}/">{{penId}}</a> by Dafrok (<a href="https://codepen.io/Dafrok">@Dafrok</a>) on <a href="https://codepen.io">CodePen</a>.
+// </iframe>
+// </template>
+//
+// <script>
+exports.default = {
+  initData: function initData() {
+    return {
+      tab: global.screen.width >= 800 ? 'js,result' : 'result'
+    };
+  }
+};
+// </script>
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
+
+/***/ }),
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(0)();
@@ -10061,7 +10107,7 @@ exports.push([module.i, "/*! normalize.css v6.0.0 | MIT License | github.com/nec
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(0)();
@@ -10075,7 +10121,7 @@ exports.push([module.i, "/**\n * prism.js tomorrow night eighties for JavaScript
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(0)();
@@ -10089,20 +10135,6 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\r\nbody {\r\n  p
 
 
 /***/ }),
-/* 15 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(0)();
-// imports
-
-
-// module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\r\nh1 * {\r\n  margin-right: 10px;\r\n  vertical-align: middle;\r\n}\r\n", ""]);
-
-// exports
-
-
-/***/ }),
 /* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10111,25 +10143,45 @@ exports = module.exports = __webpack_require__(0)();
 
 
 // module
-exports.push([module.i, ".markdown-body {\n  color: #999;\n}\n.markdown-body table {\n  width: 100%;\n}\n.markdown-body a {\n  color: #4183c4;\n}\n.markdown-body a.absent {\n  color: #c00;\n}\n.markdown-body a.anchor {\n  display: block;\n  padding-left: 30px;\n  margin-left: -30px;\n  cursor: pointer;\n  position: absolute;\n  top: 0;\n  left: 0;\n  bottom: 0;\n}\n.markdown-body a:first-child h1,\n.markdown-body a:first-child h2,\n.markdown-body a:first-child h3,\n.markdown-body a:first-child h4,\n.markdown-body a:first-child h5,\n.markdown-body a:first-child h6 {\n  margin-top: 0;\n  padding-top: 0;\n}\n.markdown-body h1,\n.markdown-body h2,\n.markdown-body h3,\n.markdown-body h4,\n.markdown-body h5,\n.markdown-body h6 {\n  color: #fff;\n  margin: 20px 0 10px;\n  padding: 0;\n  font-weight: bold;\n  -webkit-font-smoothing: antialiased;\n  cursor: text;\n  position: relative;\n}\n.markdown-body h1:hover a.anchor,\n.markdown-body h2:hover a.anchor,\n.markdown-body h3:hover a.anchor,\n.markdown-body h4:hover a.anchor,\n.markdown-body h5:hover a.anchor,\n.markdown-body h6:hover a.anchor {\n  text-decoration: none;\n}\n.markdown-body h1 tt,\n.markdown-body h2 tt,\n.markdown-body h3 tt,\n.markdown-body h4 tt,\n.markdown-body h5 tt,\n.markdown-body h6 tt,\n.markdown-body h1 code,\n.markdown-body h2 code,\n.markdown-body h3 code,\n.markdown-body h4 code,\n.markdown-body h5 code,\n.markdown-body h6 code {\n  font-size: inherit;\n}\n.markdown-body h1 p,\n.markdown-body h2 p,\n.markdown-body h3 p,\n.markdown-body h4 p,\n.markdown-body h5 p,\n.markdown-body h6 p {\n  margin-top: 0;\n}\n.markdown-body h1 {\n  font-size: 28px;\n}\n.markdown-body h2 {\n  font-size: 24px;\n  border-bottom: 1px solid #ccc;\n}\n.markdown-body h3 {\n  font-size: 18px;\n}\n.markdown-body h4 {\n  font-size: 16px;\n}\n.markdown-body h5 {\n  font-size: 14px;\n}\n.markdown-body h6 {\n  color: #777;\n  font-size: 14px;\n}\n.markdown-body p,\n.markdown-body blockquote,\n.markdown-body ul,\n.markdown-body ol,\n.markdown-body dl,\n.markdown-body li,\n.markdown-body table,\n.markdown-body pre {\n  margin: 15px 0;\n}\n.markdown-body hr {\n  border: 0 none;\n  color: #ccc;\n  height: 4px;\n  padding: 0;\n}\n.markdown-body li {\n  margin: 0;\n}\n.markdown-body li p.first {\n  display: inline-block;\n}\n.markdown-body ul,\n.markdown-body ol {\n  padding-left: 30px;\n}\n.markdown-body ul:first-child,\n.markdown-body ol:first-child {\n  margin-top: 0;\n}\n.markdown-body dl {\n  padding: 0;\n}\n.markdown-body dl dt {\n  font-size: 14px;\n  font-weight: bold;\n  font-style: italic;\n  padding: 0;\n  margin: 15px 0 5px;\n}\n.markdown-body dl dt:first-child {\n  padding: 0;\n}\n.markdown-body dl dt > :first-child {\n  margin-top: 0;\n}\n.markdown-body dl dt > :last-child {\n  margin-bottom: 0;\n}\n.markdown-body dl dd {\n  margin: 0 0 15px;\n  padding: 0 15px;\n}\n.markdown-body dl dd > :first-child {\n  margin-top: 0;\n}\n.markdown-body dl dd > :last-child {\n  margin-bottom: 0;\n}\n.markdown-body blockquote {\n  border-left: 4px solid #ddd;\n  padding: 0 15px;\n  color: #777;\n}\n.markdown-body blockquote > :first-child {\n  margin-top: 0;\n}\n.markdown-body blockquote > :last-child {\n  margin-bottom: 0;\n}\n.markdown-body table {\n  padding: 0;\n  border-collapse: collapse;\n}\n.markdown-body table tr {\n  border-top: 1px solid #ccc;\n  background-color: #fff;\n  margin: 0;\n  padding: 0;\n}\n.markdown-body table tr:nth-child(2n) {\n  background-color: #f8f8f8;\n}\n.markdown-body table tr th {\n  font-weight: bold;\n  border: 1px solid #ccc;\n  margin: 0;\n  padding: 6px 13px;\n  background: #ccc;\n}\n.markdown-body table tr td {\n  border: 1px solid #ccc;\n  margin: 0;\n  padding: 6px 13px;\n}\n.markdown-body table tr th:first-child,\n.markdown-body table tr td:first-child {\n  margin-top: 0;\n}\n.markdown-body table tr th:last-child,\n.markdown-body table tr td:last-child {\n  margin-bottom: 0;\n}\n.markdown-body img {\n  max-width: 100%;\n}\n.markdown-body span.frame {\n  display: block;\n  overflow: hidden;\n}\n.markdown-body span.frame > span {\n  border: 1px solid #ddd;\n  display: block;\n  float: left;\n  overflow: hidden;\n  margin: 13px 0 0;\n  padding: 7px;\n  width: auto;\n}\n.markdown-body span.frame span span {\n  clear: both;\n  color: #333;\n  display: block;\n  padding: 5px 0 0;\n}\n.markdown-body span.frame span img {\n  display: block;\n  float: left;\n}\n.markdown-body span .align-center {\n  display: block;\n  overflow: hidden;\n  clear: both;\n}\n.markdown-body span .align-center > span {\n  display: block;\n  overflow: hidden;\n  margin: 13px auto 0;\n  text-align: center;\n}\n.markdown-body span .align-center span img {\n  margin: 0 auto;\n  text-align: center;\n}\n.markdown-body span .align-right {\n  display: block;\n  overflow: hidden;\n  clear: both;\n}\n.markdown-body span .align-right > span {\n  display: block;\n  overflow: hidden;\n  margin: 13px 0 0;\n  text-align: right;\n}\n.markdown-body span .align-right span img {\n  margin: 0;\n  text-align: right;\n}\n.markdown-body span .float-left {\n  display: block;\n  margin-right: 13px;\n  overflow: hidden;\n  float: left;\n}\n.markdown-body span .float-left span {\n  margin: 13px 0 0;\n}\n.markdown-body span .float-right {\n  display: block;\n  margin-left: 13px;\n  overflow: hidden;\n  float: right;\n}\n.markdown-body span .float-right > span {\n  display: block;\n  overflow: hidden;\n  margin: 13px auto 0;\n  text-align: right;\n}\n.markdown-body code,\n.markdown-body tt {\n  margin: 0 2px;\n  padding: 0 5px;\n  white-space: nowrap;\n  border: 1px solid #eaeaea;\n  background-color: #f8f8f8;\n  border-radius: 3px;\n}\n.markdown-body pre code {\n  margin: 0;\n  padding: 0;\n  white-space: pre;\n  border: none;\n  background: transparent;\n}\n.markdown-body .highlight pre {\n  background-color: #f8f8f8;\n  border: 1px solid #ccc;\n  font-size: 13px;\n  line-height: 19px;\n  overflow: auto;\n  padding: 6px 10px;\n  border-radius: 3px;\n}\n.markdown-body pre {\n  border: 1px solid #ccc;\n  font-size: 13px;\n  line-height: 19px;\n  overflow: auto;\n  padding: 6px 10px;\n  border-radius: 3px;\n}\n.markdown-body pre code,\n.markdown-body pre tt {\n  background-color: transparent;\n  border: none;\n}\n.markdown-body sup {\n  font-size: 0.83em;\n  vertical-align: super;\n  line-height: 0;\n}\n.markdown-body * {\n  -webkit-print-color-adjust: exact;\n}\n@media screen and (min-width: 914px) {\n  .markdown-body body {\n    width: 854px;\n    margin0: auto;\n  }\n}\n@media print {\n  .markdown-body table,\n  .markdown-body pre {\n    page-break-inside: avoid;\n  }\n  .markdown-body pre {\n    word-wrap: break-word;\n  }\n}\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\r\nh1 * {\r\n  margin-right: 10px;\r\n  vertical-align: middle;\r\n}\r\n", ""]);
 
 // exports
 
 
 /***/ }),
 /* 17 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-module.exports = "\r\n<section>\r\n  <a href=\"https://github.com/dafrok/san-transition\"><img style=\"position: absolute; top: 0; right: 0; border: 0;\" src=\"https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67\" alt=\"Fork me on GitHub\" data-canonical-src=\"https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png\"></a>\r\n  <div class=\"markdown-body\">\r\n    <doc></doc>\r\n  </div>\r\n</section>\r\n";
+exports = module.exports = __webpack_require__(0)();
+// imports
+
+
+// module
+exports.push([module.i, ".markdown-body {\n  color: #999;\n}\n.markdown-body table {\n  width: 100%;\n}\n.markdown-body a {\n  color: #4183c4;\n}\n.markdown-body a.absent {\n  color: #c00;\n}\n.markdown-body a.anchor {\n  display: block;\n  padding-left: 30px;\n  margin-left: -30px;\n  cursor: pointer;\n  position: absolute;\n  top: 0;\n  left: 0;\n  bottom: 0;\n}\n.markdown-body a:first-child h1,\n.markdown-body a:first-child h2,\n.markdown-body a:first-child h3,\n.markdown-body a:first-child h4,\n.markdown-body a:first-child h5,\n.markdown-body a:first-child h6 {\n  margin-top: 0;\n  padding-top: 0;\n}\n.markdown-body h1,\n.markdown-body h2,\n.markdown-body h3,\n.markdown-body h4,\n.markdown-body h5,\n.markdown-body h6 {\n  color: #fff;\n  margin: 20px 0 10px;\n  padding: 0;\n  font-weight: bold;\n  -webkit-font-smoothing: antialiased;\n  cursor: text;\n  position: relative;\n}\n.markdown-body h1:hover a.anchor,\n.markdown-body h2:hover a.anchor,\n.markdown-body h3:hover a.anchor,\n.markdown-body h4:hover a.anchor,\n.markdown-body h5:hover a.anchor,\n.markdown-body h6:hover a.anchor {\n  text-decoration: none;\n}\n.markdown-body h1 tt,\n.markdown-body h2 tt,\n.markdown-body h3 tt,\n.markdown-body h4 tt,\n.markdown-body h5 tt,\n.markdown-body h6 tt,\n.markdown-body h1 code,\n.markdown-body h2 code,\n.markdown-body h3 code,\n.markdown-body h4 code,\n.markdown-body h5 code,\n.markdown-body h6 code {\n  font-size: inherit;\n}\n.markdown-body h1 p,\n.markdown-body h2 p,\n.markdown-body h3 p,\n.markdown-body h4 p,\n.markdown-body h5 p,\n.markdown-body h6 p {\n  margin-top: 0;\n}\n.markdown-body h4,\n.markdown-body h5,\n.markdown-body h6 {\n  font-weight: 400;\n}\n.markdown-body h1 {\n  font-size: 28px;\n}\n.markdown-body h2 {\n  font-size: 24px;\n  border-bottom: 1px solid #ccc;\n}\n.markdown-body h3 {\n  font-size: 18px;\n}\n.markdown-body h4 {\n  font-size: 16px;\n}\n.markdown-body h5 {\n  font-size: 14px;\n}\n.markdown-body h6 {\n  color: #777;\n  font-size: 14px;\n}\n.markdown-body p,\n.markdown-body blockquote,\n.markdown-body ul,\n.markdown-body ol,\n.markdown-body dl,\n.markdown-body li,\n.markdown-body table,\n.markdown-body pre {\n  margin: 15px 0;\n}\n.markdown-body hr {\n  border: 0 none;\n  color: #ccc;\n  height: 4px;\n  padding: 0;\n}\n.markdown-body li {\n  margin: 0;\n}\n.markdown-body li p.first {\n  display: inline-block;\n}\n.markdown-body ul,\n.markdown-body ol {\n  padding-left: 30px;\n}\n.markdown-body ul:first-child,\n.markdown-body ol:first-child {\n  margin-top: 0;\n}\n.markdown-body dl {\n  padding: 0;\n}\n.markdown-body dl dt {\n  font-size: 14px;\n  font-weight: bold;\n  font-style: italic;\n  padding: 0;\n  margin: 15px 0 5px;\n}\n.markdown-body dl dt:first-child {\n  padding: 0;\n}\n.markdown-body dl dt > :first-child {\n  margin-top: 0;\n}\n.markdown-body dl dt > :last-child {\n  margin-bottom: 0;\n}\n.markdown-body dl dd {\n  margin: 0 0 15px;\n  padding: 0 15px;\n}\n.markdown-body dl dd > :first-child {\n  margin-top: 0;\n}\n.markdown-body dl dd > :last-child {\n  margin-bottom: 0;\n}\n.markdown-body blockquote {\n  border-left: 4px solid #ddd;\n  padding: 0 15px;\n  color: #777;\n}\n.markdown-body blockquote > :first-child {\n  margin-top: 0;\n}\n.markdown-body blockquote > :last-child {\n  margin-bottom: 0;\n}\n.markdown-body table {\n  padding: 0;\n  border-collapse: collapse;\n}\n.markdown-body table tr {\n  border-top: 1px solid #ccc;\n  background-color: #fff;\n  margin: 0;\n  padding: 0;\n}\n.markdown-body table tr:nth-child(2n) {\n  background-color: #f8f8f8;\n}\n.markdown-body table tr th {\n  font-weight: bold;\n  border: 1px solid #ccc;\n  margin: 0;\n  padding: 6px 13px;\n  background: #ccc;\n}\n.markdown-body table tr td {\n  border: 1px solid #ccc;\n  margin: 0;\n  padding: 6px 13px;\n}\n.markdown-body table tr th:first-child,\n.markdown-body table tr td:first-child {\n  margin-top: 0;\n}\n.markdown-body table tr th:last-child,\n.markdown-body table tr td:last-child {\n  margin-bottom: 0;\n}\n.markdown-body img {\n  max-width: 100%;\n}\n.markdown-body span.frame {\n  display: block;\n  overflow: hidden;\n}\n.markdown-body span.frame > span {\n  border: 1px solid #ddd;\n  display: block;\n  float: left;\n  overflow: hidden;\n  margin: 13px 0 0;\n  padding: 7px;\n  width: auto;\n}\n.markdown-body span.frame span span {\n  clear: both;\n  color: #333;\n  display: block;\n  padding: 5px 0 0;\n}\n.markdown-body span.frame span img {\n  display: block;\n  float: left;\n}\n.markdown-body span .align-center {\n  display: block;\n  overflow: hidden;\n  clear: both;\n}\n.markdown-body span .align-center > span {\n  display: block;\n  overflow: hidden;\n  margin: 13px auto 0;\n  text-align: center;\n}\n.markdown-body span .align-center span img {\n  margin: 0 auto;\n  text-align: center;\n}\n.markdown-body span .align-right {\n  display: block;\n  overflow: hidden;\n  clear: both;\n}\n.markdown-body span .align-right > span {\n  display: block;\n  overflow: hidden;\n  margin: 13px 0 0;\n  text-align: right;\n}\n.markdown-body span .align-right span img {\n  margin: 0;\n  text-align: right;\n}\n.markdown-body span .float-left {\n  display: block;\n  margin-right: 13px;\n  overflow: hidden;\n  float: left;\n}\n.markdown-body span .float-left span {\n  margin: 13px 0 0;\n}\n.markdown-body span .float-right {\n  display: block;\n  margin-left: 13px;\n  overflow: hidden;\n  float: right;\n}\n.markdown-body span .float-right > span {\n  display: block;\n  overflow: hidden;\n  margin: 13px auto 0;\n  text-align: right;\n}\n.markdown-body code,\n.markdown-body tt {\n  margin: 0 2px;\n  padding: 0 5px;\n  white-space: nowrap;\n  border: 1px solid #eaeaea;\n  background-color: #f8f8f8;\n  border-radius: 3px;\n}\n.markdown-body pre code {\n  margin: 0;\n  padding: 0;\n  white-space: pre;\n  border: none;\n  background: transparent;\n}\n.markdown-body .highlight pre {\n  background-color: #f8f8f8;\n  border: 1px solid #ccc;\n  font-size: 13px;\n  line-height: 19px;\n  overflow: auto;\n  padding: 6px 10px;\n  border-radius: 3px;\n}\n.markdown-body pre {\n  border: 1px solid #ccc;\n  font-size: 13px;\n  line-height: 19px;\n  overflow: auto;\n  padding: 6px 10px;\n  border-radius: 3px;\n}\n.markdown-body pre code,\n.markdown-body pre tt {\n  background-color: transparent;\n  border: none;\n}\n.markdown-body sup {\n  font-size: 0.83em;\n  vertical-align: super;\n  line-height: 0;\n}\n.markdown-body * {\n  -webkit-print-color-adjust: exact;\n}\n@media screen and (min-width: 914px) {\n  .markdown-body body {\n    width: 854px;\n    margin0: auto;\n  }\n}\n@media print {\n  .markdown-body table,\n  .markdown-body pre {\n    page-break-inside: avoid;\n  }\n  .markdown-body pre {\n    word-wrap: break-word;\n  }\n}\n", ""]);
+
+// exports
+
 
 /***/ }),
 /* 18 */
 /***/ (function(module, exports) {
 
-module.exports = "<div><h1><img src=\"https://ecomfe.github.io/san/img/logo-colorful.svg\" height=\"28px\"><span>San Transition</span></h1>\n<p>High order component factory for generating <a href=\"//github.com/ecomfe/san\">san</a> components with transition effects.</p>\n<h2>Get Start</h2>\n<h3>Installation</h3>\n<pre><code class=\"language-bash\">$ npm install --save san-transition\n</code></pre>\n<h3>Usage</h3>\n<pre><code class=\"language-html\">&lt;template&gt;\n  &lt;div&gt;\n    &lt;transition-layer&gt;A component with transition effects.&lt;/transition-layer&gt;\n  &lt;div&gt;\n&lt;/template&gt;\n\n&lt;script&gt;\nimport {transition} from 'san-transition'\nimport {YourComponent} from 'YOUR_SAN_COMPONENT'\n\nexport default {\n  components: {\n    'transition-layer': transition('fade')(YourComponent)\n  }\n}\n&lt;/script&gt;\n\n&lt;style&gt;\n.fade-enter-active, .fade-leave {\n  opacity: 1;\n  transform: translate(0, 0);\n  transition: all .5s;\n}\n.fade-enter, .fade-leave-active {\n  opacity: 0;\n  transform: translate(100px, 0);\n}\n&lt;/style&gt;\n\n</code></pre>\n<h2>API</h2>\n<h3>transition</h3>\n<ul>\n<li>Arguments\n<ul>\n<li><strong>{None, String, Object}</strong> hook id</li>\n</ul>\n</li>\n<li>Usage<pre><code class=\"language-javascript\">// register default hooks\n// the same as `transition('san')(YourComponent)`\ntransition()(YourComponent)\n\n// register named hooks\ntransition('foo')(YourComponent)\n\n// register custom hooks\ntransition({\n  enter: 'custom-enter-hook'\n  enterActive: 'custom-enter-active-hook',\n  leave: 'custom-leave-hook',\n  leaveActive: 'custom-leave-active-hook'\n})(YourComponent)\n</code></pre>\n</li>\n</ul>\n<h3>transitionGroup (uncompleted)</h3>\n<p>Coming soon...</p>\n<h2>Try It Out</h2>\n<h3>Default Hooks</h3>\n<iframe height='300' width=\"100%\" scrolling='no' title='San Transition - Default' src='//codepen.io/Dafrok/embed/pwravg/?height=300&theme-id=dark&default-tab=js,result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true'>See the Pen <a href='https://codepen.io/Dafrok/pen/pwravg/'>San Transition - Default</a> by Dafrok (<a href='https://codepen.io/Dafrok'>@Dafrok</a>) on <a href='https://codepen.io'>CodePen</a>.\n</iframe>\n<h3>Named Hooks</h3>\n<iframe height='300' width=\"100%\" scrolling='no' title='San Transition - Named' src='//codepen.io/Dafrok/embed/VWzQWV/?height=300&theme-id=dark&default-tab=js,result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true'>See the Pen <a href='https://codepen.io/Dafrok/pen/VWzQWV/'>San Transition - Named</a> by Dafrok (<a href='https://codepen.io/Dafrok'>@Dafrok</a>) on <a href='https://codepen.io'>CodePen</a>.\n</iframe>\n<h3>Custom Hooks</h3>\n<iframe height='300' width=\"100%\" scrolling='no' title='San Transition - Custom' src='//codepen.io/Dafrok/embed/xrLYYz/?height=300&theme-id=dark&default-tab=js,result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true'>See the Pen <a href='https://codepen.io/Dafrok/pen/xrLYYz/'>San Transition - Custom Hooks</a> by Dafrok (<a href='https://codepen.io/Dafrok'>@Dafrok</a>) on <a href='https://codepen.io'>CodePen</a>.\n</iframe>\n<h3>Keyframe Animation Transition</h3>\n<iframe height='300' width=\"100%\" scrolling='no' title='San Transition - Animation' src='//codepen.io/Dafrok/embed/rwzJqJ/?height=300&theme-id=dark&default-tab=js,result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true'>See the Pen <a href='https://codepen.io/Dafrok/pen/rwzJqJ/'>San Transition - Animation</a> by Dafrok (<a href='https://codepen.io/Dafrok'>@Dafrok</a>) on <a href='https://codepen.io'>CodePen</a>.\n</iframe>\n<h3>Working with s-if &amp; s-else expression</h3>\n<iframe height='300' width=\"100%\" scrolling='no' title='San Transition - if  / else' src='//codepen.io/Dafrok/embed/dRzmbB/?height=300&theme-id=dark&default-tab=js,result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true'>See the Pen <a href='https://codepen.io/Dafrok/pen/dRzmbB/'>dRzmbB</a> by Dafrok (<a href='https://codepen.io/Dafrok'>@Dafrok</a>) on <a href='https://codepen.io'>CodePen</a>.\n</iframe>\n</div>";
+module.exports = "\r\n<section>\r\n  <a href=\"https://github.com/dafrok/san-transition\"><img style=\"position: absolute; top: 0; right: 0; border: 0;\" src=\"https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67\" alt=\"Fork me on GitHub\" data-canonical-src=\"https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png\"></a>\r\n  <div class=\"markdown-body\">\r\n    <doc></doc>\r\n  </div>\r\n</section>\r\n";
 
 /***/ }),
 /* 19 */
+/***/ (function(module, exports) {
+
+module.exports = "\r\n<iframe\r\n  height=\"{{height || '300'}}\"\r\n  width=\"100%\"\r\n  scrolling=\"no\"\r\n  title=\"{{title}}\"\r\n  src=\"//codepen.io/Dafrok/embed/{{penId}}/?height=300&theme-id=dark&default-tab={{tab}}&embed-version=2\"\r\n  frameborder=\"no\"\r\n  allowtransparency=\"true\"\r\n  allowfullscreen=\"true\">\r\n  See the Pen <a href=\"https://codepen.io/Dafrok/pen/{{penId}}/\">{{penId}}</a> by Dafrok (<a href=\"https://codepen.io/Dafrok\">@Dafrok</a>) on <a href=\"https://codepen.io\">CodePen</a>.\r\n</iframe>\r\n";
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports) {
+
+module.exports = "<div><h1><img src=\"https://ecomfe.github.io/san/img/logo-colorful.svg\" height=\"28px\"><span>San Transition</span></h1>\n<p>High order component factory for generating <a href=\"//github.com/ecomfe/san\">san</a> components with transition effects.</p>\n<h2>Get Start</h2>\n<h3>Installation</h3>\n<h4>NPM</h4>\n<pre><code class=\"language-bash\">$ npm install --save san-transition\n</code></pre>\n<h4>CDN</h4>\n<pre><code class=\"language-html\">&lt;script src=&quot;//unpkg.com/san-transition&quot;&gt;&lt;/script&gt;\n</code></pre>\n<h3>Usage</h3>\n<pre><code class=\"language-html\">&lt;template&gt;\n  &lt;div&gt;\n    &lt;transition-layer&gt;A component with transition effects.&lt;/transition-layer&gt;\n  &lt;div&gt;\n&lt;/template&gt;\n\n&lt;script&gt;\nimport {transition} from 'san-transition'\nimport {YourComponent} from 'YOUR_SAN_COMPONENT'\n\nexport default {\n  components: {\n    'transition-layer': transition('fade')(YourComponent)\n  }\n}\n&lt;/script&gt;\n\n&lt;style&gt;\n.fade-enter-active, .fade-leave {\n  opacity: 1;\n  transform: translate(0, 0);\n  transition: all .5s;\n}\n.fade-enter, .fade-leave-active {\n  opacity: 0;\n  transform: translate(100px, 0);\n}\n&lt;/style&gt;\n\n</code></pre>\n<h2>API</h2>\n<h3>transition</h3>\n<ul>\n<li>Arguments\n<ul>\n<li><strong>{None, String, Object}</strong> hook id</li>\n</ul>\n</li>\n<li>Usage<pre><code class=\"language-javascript\">// register default hooks\n// the same as `transition('san')(YourComponent)`\ntransition()(YourComponent)\n\n// register named hooks\ntransition('foo')(YourComponent)\n\n// register custom hooks\ntransition({\n  enter: 'custom-enter-hook'\n  enterActive: 'custom-enter-active-hook',\n  leave: 'custom-leave-hook',\n  leaveActive: 'custom-leave-active-hook'\n})(YourComponent)\n</code></pre>\n</li>\n</ul>\n<h3>transitionGroup (uncompleted)</h3>\n<p>Coming soon...</p>\n<h2>Try It Out</h2>\n<h3>Default Hooks</h3>\n<p><try penId=\"pwravg\" title=\"Default Hooks\"></try></p>\n<h3>Named Hooks</h3>\n<p><try penId=\"VWzQWV\" title=\"Named Hooks\"></try></p>\n<h3>Custom Hooks</h3>\n<p><try penId=\"xrLYYz\" title=\"Custom Hooks\"></try></p>\n<h3>Keyframe Animation Transition</h3>\n<p><try penId=\"rwzJqJ\" title=\"Keyframe Animation Transition\"></try></p>\n<h3>Working with s-if &amp; s-else expression</h3>\n<p><try penId=\"rwzJqJ\" title=\"Working with s-if & s-else expression\"></try></p>\n</div>";
+
+/***/ }),
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {
@@ -10931,7 +10983,7 @@ Prism.languages.js = Prism.languages.javascript;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
-/* 20 */
+/* 22 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -11121,18 +11173,18 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 21 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __san_script__, __san_template__
 var __san_styles__ = {}
-__webpack_require__(24)
+__webpack_require__(27)
 __san_script__ = __webpack_require__(11)
 if (__san_script__ &&
     __san_script__.__esModule &&
     Object.keys(__san_script__).length > 1) {
   console.warn("[san-loader] docs\\components\\Doc.san: named exports in *.san files are ignored.")}
-__san_template__ = __webpack_require__(18)
+__san_template__ = __webpack_require__(20)
 var __san_proto__ = {}
 if (__san_script__) {
   __san_proto__ = __san_script__.__esModule
@@ -11154,7 +11206,39 @@ __san_exports__.computed[key] = function () { return module }
 
 
 /***/ }),
-/* 22 */
+/* 24 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __san_script__, __san_template__
+var __san_styles__ = {}
+__san_script__ = __webpack_require__(12)
+if (__san_script__ &&
+    __san_script__.__esModule &&
+    Object.keys(__san_script__).length > 1) {
+  console.warn("[san-loader] docs\\components\\try.san: named exports in *.san files are ignored.")}
+__san_template__ = __webpack_require__(19)
+var __san_proto__ = {}
+if (__san_script__) {
+  __san_proto__ = __san_script__.__esModule
+    ? __san_script__['default']
+    : __san_script__
+}
+if (__san_template__) {
+  __san_proto__.template = __san_template__
+}
+var san = __webpack_require__(2)
+var __san_exports__ = san.defineComponent(__san_proto__)
+module.exports = __san_exports__
+if (module.exports.__esModule) module.exports = module.exports['default']
+if (!__san_exports__.computed) __san_exports__.computed = {}
+Object.keys(__san_styles__).forEach(function (key) {
+var module = __san_styles__[key]
+__san_exports__.computed[key] = function () { return module }
+})
+
+
+/***/ }),
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
@@ -11344,16 +11428,16 @@ __san_exports__.computed[key] = function () { return module }
     attachTo.clearImmediate = clearImmediate;
 }(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), __webpack_require__(20)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), __webpack_require__(22)))
 
 /***/ }),
-/* 23 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(14);
+var content = __webpack_require__(15);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(1)(content, {});
@@ -11373,13 +11457,13 @@ if(false) {
 }
 
 /***/ }),
-/* 24 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(15);
+var content = __webpack_require__(16);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(1)(content, {});
@@ -11399,7 +11483,7 @@ if(false) {
 }
 
 /***/ }),
-/* 25 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var apply = Function.prototype.apply;
@@ -11452,7 +11536,7 @@ exports._unrefActive = exports.active = function(item) {
 };
 
 // setimmediate attaches itself to the global object
-__webpack_require__(22);
+__webpack_require__(25);
 exports.setImmediate = setImmediate;
 exports.clearImmediate = clearImmediate;
 

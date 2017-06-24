@@ -1,0 +1,23 @@
+<template>
+<iframe
+  height="{{height || '300'}}"
+  width="100%"
+  scrolling="no"
+  title="{{title}}"
+  src="//codepen.io/Dafrok/embed/{{penId}}/?height=300&theme-id=dark&default-tab={{tab}}&embed-version=2"
+  frameborder="no"
+  allowtransparency="true"
+  allowfullscreen="true">
+  See the Pen <a href="https://codepen.io/Dafrok/pen/{{penId}}/">{{penId}}</a> by Dafrok (<a href="https://codepen.io/Dafrok">@Dafrok</a>) on <a href="https://codepen.io">CodePen</a>.
+</iframe>
+</template>
+
+<script>
+export default {
+  initData () {
+    return {
+      tab: global.screen.width >= 800 ? 'js,result' : 'result'
+    }
+  }
+}
+</script>

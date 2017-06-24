@@ -7,8 +7,16 @@ High order component factory for generating [san](//github.com/ecomfe/san) compo
 
 ### Installation
 
+#### NPM
+
 ```bash
 $ npm install --save san-transition
+```
+
+#### CDN
+
+```html
+<script src="//unpkg.com/san-transition"></script>
 ```
 
 ### Usage
@@ -77,34 +85,34 @@ Coming soon...
 
 ### Default Hooks
 
-<iframe height='300' width="100%" scrolling='no' title='San Transition - Default' src='//codepen.io/Dafrok/embed/pwravg/?height=300&theme-id=dark&default-tab=js,result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true'>See the Pen <a href='https://codepen.io/Dafrok/pen/pwravg/'>San Transition - Default</a> by Dafrok (<a href='https://codepen.io/Dafrok'>@Dafrok</a>) on <a href='https://codepen.io'>CodePen</a>.
-</iframe>
+<try penId="pwravg" title="Default Hooks"></try>
 
 ### Named Hooks
 
-<iframe height='300' width="100%" scrolling='no' title='San Transition - Named' src='//codepen.io/Dafrok/embed/VWzQWV/?height=300&theme-id=dark&default-tab=js,result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true'>See the Pen <a href='https://codepen.io/Dafrok/pen/VWzQWV/'>San Transition - Named</a> by Dafrok (<a href='https://codepen.io/Dafrok'>@Dafrok</a>) on <a href='https://codepen.io'>CodePen</a>.
-</iframe>
+<try penId="VWzQWV" title="Named Hooks"></try>
 
 ### Custom Hooks
 
-<iframe height='300' width="100%" scrolling='no' title='San Transition - Custom' src='//codepen.io/Dafrok/embed/xrLYYz/?height=300&theme-id=dark&default-tab=js,result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true'>See the Pen <a href='https://codepen.io/Dafrok/pen/xrLYYz/'>San Transition - Custom Hooks</a> by Dafrok (<a href='https://codepen.io/Dafrok'>@Dafrok</a>) on <a href='https://codepen.io'>CodePen</a>.
-</iframe>
+<try penId="xrLYYz" title="Custom Hooks"></try>
 
 ### Keyframe Animation Transition
 
-<iframe height='300' width="100%" scrolling='no' title='San Transition - Animation' src='//codepen.io/Dafrok/embed/rwzJqJ/?height=300&theme-id=dark&default-tab=js,result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true'>See the Pen <a href='https://codepen.io/Dafrok/pen/rwzJqJ/'>San Transition - Animation</a> by Dafrok (<a href='https://codepen.io/Dafrok'>@Dafrok</a>) on <a href='https://codepen.io'>CodePen</a>.
-</iframe>
+<try penId="rwzJqJ" title="Keyframe Animation Transition"></try>
 
 ### Working with s-if & s-else expression
-<iframe height='300' width="100%" scrolling='no' title='San Transition - if  / else' src='//codepen.io/Dafrok/embed/dRzmbB/?height=300&theme-id=dark&default-tab=js,result&embed-version=2' frameborder='no' allowtransparency='true' allowfullscreen='true'>See the Pen <a href='https://codepen.io/Dafrok/pen/dRzmbB/'>dRzmbB</a> by Dafrok (<a href='https://codepen.io/Dafrok'>@Dafrok</a>) on <a href='https://codepen.io'>CodePen</a>.
-</iframe>
+
+<try penId="rwzJqJ" title="Working with s-if & s-else expression"></try>
 </template>
 
 
 <script>
 import Prism from 'prismjs'
+import Try from './try.san'
 
 export default {
+  components: {
+    try: Try
+  },
   attach () {
     Prism.highlightAll()
   }
