@@ -49,7 +49,7 @@ export default {
 ### transition
 
 - Arguments
-  - {None, String, Object} hook id
+  - {None, String, Object} hook name
 - Usage
   ```javascript
   // register default hooks
@@ -71,3 +71,10 @@ export default {
 ### transitionGroup (uncompleted)
 
 Coming soon...
+
+## CSS Hooks
+
+- **enter**
+- **enter-active**
+- **leave**
+- **leave-active**
