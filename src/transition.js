@@ -28,7 +28,7 @@ export default (prop = 'san') => Component => {
       }, getTimeout(el))
     }
     el.classList.add(hooks.enterActive)
-    requestAnimationFrame(transitionHandler)
+    setImmediate(transitionHandler)
 
     attached && attached.call(this)
   }
@@ -79,7 +79,7 @@ export default (prop = 'san') => Component => {
             el.classList.add(hooks.leaveActive)
             parent.leavingTimeout = setTimeout(leaveHandler, getTimeout(el))
           }
-          requestAnimationFrame(transitionHandler)
+          setImmediate(transitionHandler)
         }
       }
     }
