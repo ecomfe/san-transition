@@ -11,6 +11,8 @@ export const getTimeout = el => {
   return Math.max(getTime(transDuration, transDelay), getTime(aniDuration, aniDelay))
 }
 
+export const afterNextFrame = fn => requestAnimationFrame(() => requestAnimationFrame(fn))
+
 export const clearParentTimeout = parent => {
   clearTimeout(parent.leavingTimeout)
   clearTimeout(parent.enteringTimeout)

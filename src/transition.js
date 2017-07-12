@@ -1,4 +1,4 @@
-import {getHooks, prepareEnter, prepareLeave, getTimeout, clearParentTimeout} from './util.js'
+import {getHooks, prepareEnter, prepareLeave, getTimeout, clearParentTimeout, afterNextFrame} from './util.js'
 
 export default (prop = 'san') => Component => {
   class Target extends Component {
@@ -28,7 +28,7 @@ export default (prop = 'san') => Component => {
       }, getTimeout(el))
     }
     el.classList.add(hooks.enterActive)
-    setImmediate(transitionHandler)
+    afterNextFrame(transitionHandler)
 
     attached && attached.call(this)
   }
@@ -79,7 +79,7 @@ export default (prop = 'san') => Component => {
             el.classList.add(hooks.leaveActive)
             parent.leavingTimeout = setTimeout(leaveHandler, getTimeout(el))
           }
-          setImmediate(transitionHandler)
+          afterNextFrame(transitionHandler)
         }
       }
     }
