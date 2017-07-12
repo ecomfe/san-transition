@@ -411,7 +411,7 @@ function updateLink(linkElement, obj) {
 //     // require('./util/data-types.js');
 //     // require('./util/create-data-types-checker.js');
 //     // require('./parser/walker');
-//     // require('./parser/a-node');
+//     // require('./parser/create-a-node');
 //     // require('./parser/parse-template');
 //     // require('./runtime/change-expr-compare');
 //     // require('./runtime/data-change-type');
@@ -2337,7 +2337,7 @@ function parseText(source) {
 // var parseText = require('./parse-text');
 
 /**
- * 模板解析生成的抽象节点
+ * 创建模板解析生成的抽象节点
  *
  * @class
  * @param {Object=} options 节点参数
@@ -2345,28 +2345,23 @@ function parseText(source) {
  * @param {ANode=} options.parent 父节点
  * @param {boolean=} options.isText 是否文本节点
  */
-function ANode(options) {
+function createANode(options) {
     options = options || {};
 
     if (options.isText) {
-        this.isText = 1;
-        this.text = options.text;
-        this.textExpr = parseText(options.text);
+        options.textExpr = parseText(options.text);
     }
     else {
-        this.directives = options.directives || new IndexedList();
-        this.props = options.props || new IndexedList();
-        this.events = options.events || [];
-        this.childs = options.childs || [];
-        this.tagName = options.tagName;
-        this.givenSlots = options.givenSlots;
-        this.binds = options.binds;
+        options.directives = options.directives || new IndexedList();
+        options.props = options.props || new IndexedList();
+        options.events = options.events || [];
+        options.childs = options.childs || [];
     }
 
-    this.parent = options.parent;
+    return options;
 }
 
-// exports = module.exports = ANode;
+// exports = module.exports = createANode;
 
 
 /**
@@ -2585,21 +2580,12 @@ function integrateProp(aNode, name, value) {
     }
 
     // parse normal prop
-    aNode.props.push(textPropExtra({
+    var prop = {
         name: name,
         expr: parseText(value),
         raw: value
-    }));
-}
+    };
 
-/**
- * 为text类型的属性绑定附加额外的行为，用于一些特殊需求，比如class中插值的自动展开
- *
- * @inner
- * @param {Object} prop 绑定信息
- * @return {Object}
- */
-function textPropExtra(prop) {
     // 这里不能把只有一个插值的属性抽取
     // 因为插值里的值可能是html片段，容易被注入
     // 组件的数据绑定在组件init时做抽取
@@ -2618,8 +2604,9 @@ function textPropExtra(prop) {
             break;
     }
 
-    return prop;
+    aNode.props.push(prop);
 }
+
 
 // exports = module.exports = integrateAttr;
 
@@ -2629,7 +2616,8 @@ function textPropExtra(prop) {
  * @author errorrik(errorrik@gmail.com)
  */
 
-// var ANode = require('./a-node');
+
+// var createANode = require('./create-a-node');
 // var Walker = require('./walker');
 // var ExprType = require('./expr-type');
 // var integrateAttr = require('./integrate-attr');
@@ -2642,7 +2630,7 @@ function textPropExtra(prop) {
  * @return {ANode}
  */
 function parseTemplate(source) {
-    var rootNode = new ANode();
+    var rootNode = createANode();
 
     if (typeof source !== 'string') {
         return rootNode;
@@ -2681,7 +2669,7 @@ function parseTemplate(source) {
             walker.go(1);
         }
         else if (!tagEnd) {
-            var aElement = new ANode({
+            var aElement = createANode({
                 tagName: tagName,
                 parent: currentNode
             });
@@ -2770,7 +2758,7 @@ function parseTemplate(source) {
      */
     function pushTextNode(text) {
         if (text) {
-            currentNode.childs.push(new ANode({
+            currentNode.childs.push(createANode({
                 isText: 1,
                 text: text,
                 parent: currentNode
@@ -2888,7 +2876,7 @@ function escapeHTML(source) {
         return '';
     }
 
-    return String(source).replace(/[&<>"']/g, htmlFilterReplacer);
+    return ('' + source).replace(/[&<>"']/g, htmlFilterReplacer);
 }
 
 // exports = module.exports = escapeHTML;
@@ -3010,7 +2998,7 @@ function evalExpr(expr, data, owner, escapeInterpHtml) {
 
         case ExprType.TERTIARY:
             return evalExpr(
-                evalExpr(expr.segs[0], data, owner) ? expr.segs[1] : expr.segs[2],
+                expr.segs[evalExpr(expr.segs[0], data, owner) ? 1 : 2],
                 data,
                 owner
             );
@@ -3730,8 +3718,11 @@ Node.prototype._toAttached = function () {
         child._toAttached();
     });
 
-    if (!this.lifeCycle.is('attached')) {
+    if (!this.lifeCycle.is('created')) {
         this._toPhase('created');
+    }
+
+    if (!this.lifeCycle.is('attached')) {
         if (this._attached) {
             this._attached();
         }
@@ -3801,7 +3792,7 @@ function genStumpHTML(node, buf) {
 // var each = require('../util/each');
 // var Node = require('./node');
 // var genStumpHTML = require('./gen-stump-html');
-// var ANode = require('../parser/a-node');
+// var createANode = require('../parser/create-a-node');
 // var changeExprCompare = require('../runtime/change-expr-compare');
 // var removeEl = require('../browser/remove-el');
 // var ieOldThan9 = require('../browser/ie-old-than-9');
@@ -3831,7 +3822,7 @@ TextNode.prototype._init = function (options) {
     // #[begin] reverse
     // from el
     if (this.el) {
-        this.aNode = new ANode({
+        this.aNode = createANode({
             isText: 1,
             text: this.el.data.replace('s-ts:', '')
         });
@@ -3872,23 +3863,22 @@ TextNode.prototype.genHTML = function (buf) {
  * 刷新文本节点的内容
  */
 TextNode.prototype.update = function () {
+    var me = this;
+
     if (!this._located) {
-        var index = -1;
-        var me = this;
         each(this.parent.childs, function (child, i) {
             if (child === me) {
-                index = i;
+                me._prev = me.parent.childs[i - 1];
                 return false;
             }
         });
 
-        this._prev = this.parent.childs[index - 1];
         this._located = 1;
     }
 
 
     var parentEl = this.parent._getEl();
-    var insertBeforeEl = this._prev && this._prev._getEl().nextSibling || parentEl.firstChild;
+    var insertBeforeEl = me._prev && me._prev._getEl().nextSibling || parentEl.firstChild;
     var startRemoveEl = insertBeforeEl;
 
     while (startRemoveEl && !/^_san_/.test(startRemoveEl.id)) {
@@ -3901,8 +3891,8 @@ TextNode.prototype.update = function () {
     if (insertBeforeEl) {
         insertBeforeEl.insertAdjacentHTML('beforebegin', text);
     }
-    else if (this._prev) {
-        this._prev._getEl().insertAdjacentHTML('afterend', text);
+    else if (me._prev) {
+        me._prev._getEl().insertAdjacentHTML('afterend', text);
     }
     else {
         parentEl.innerHTML = text;
@@ -4504,9 +4494,7 @@ Element.prototype._attached = function () {
     });
 };
 
-function bindOutputer(bindInfo) {
-    getPropHandler(this, bindInfo.name).output(this, bindInfo);
-}
+
 
 /**
  * 处理自身变化时双绑的逻辑
@@ -4522,7 +4510,10 @@ Element.prototype._initSelfChanger = function () {
         }
 
         var el = me._getEl();
-        var outputer = bind(bindOutputer, me, bindInfo);
+        function outputer() {
+            getPropHandler(me, bindInfo.name).output(me, bindInfo);
+        };
+
         switch (bindInfo.name) {
             case 'value':
                 switch (me.tagName) {
@@ -4603,9 +4594,12 @@ Element.prototype._attach = function (parentEl, beforeEl) {
         }
     }
 
-    var buf = new StringBuffer();
-    genElementChildsHTML(this, buf);
-    this.el.innerHTML = buf.toString();
+    if (!this._contentReady) {
+        var buf = new StringBuffer();
+        genElementChildsHTML(this, buf);
+        this.el.innerHTML = buf.toString();
+        this._contentReady = 1;
+    }
 };
 
 /**
@@ -4683,12 +4677,12 @@ Element.prototype.updateView = function (changes) {
     }
 };
 
-Element.prototype.updateChilds = function (changes) {
+Element.prototype.updateChilds = function (changes, slotChildsName) {
     each(this.childs, function (child) {
         child.updateView(changes);
     });
 
-    each(this.slotChilds, function (child) {
+    each(this[slotChildsName || 'slotChilds'], function (child) {
         Element.prototype.updateChilds.call(child, changes);
     });
 };
@@ -4965,7 +4959,7 @@ function isStump(element) {
 // var createNode = require('./create-node');
 // var createNodeByEl = require('./create-node-by-el');
 // var parseTemplate = require('../parser/parse-template');
-// var ANode = require('../parser/a-node');
+// var createANode = require('../parser/create-a-node');
 // var ieOldThan9 = require('../browser/ie-old-than-9');
 // var removeEl = require('../browser/remove-el');
 // var escapeHTML = require('../runtime/escape-html');
@@ -4994,7 +4988,7 @@ inherits(IfDirective, Element);
  */
 function createIfDirectiveChild(ifElement) {
     var aNode = ifElement.aNode;
-    var childANode = new ANode({
+    var childANode = createANode({
         childs: aNode.childs,
         props: aNode.props,
         events: aNode.events,
@@ -5135,7 +5129,7 @@ IfDirective.prototype._pushChildANode = empty;
 IfDirective.prototype._attached = function () {
     // 移除节点桩元素前面的空白 FEFF 字符
     if (ieOldThan9 && this._getEl()) {
-        var headingBlank = this.el.previousSibling;
+        var headingBlank = this._getEl().previousSibling;
 
         if (headingBlank && headingBlank.nodeType === 3) {
             var textProp = typeof headingBlank.textContent === 'string'
@@ -5170,7 +5164,7 @@ IfDirective.prototype._attached = function () {
 // var createNode = require('./create-node');
 // var createNodeByEl = require('./create-node-by-el');
 // var parseTemplate = require('../parser/parse-template');
-// var ANode = require('../parser/a-node');
+// var createANode = require('../parser/create-a-node');
 // var ExprType = require('../parser/expr-type');
 // var parseExpr = require('../parser/parse-expr');
 // var Data = require('../runtime/data');
@@ -5371,7 +5365,7 @@ ForDirective.prototype._init = function (options) {
     }
     // #[end]
 
-    this.itemANode = new ANode({
+    this.itemANode = createANode({
         childs: aNode.childs,
         props: aNode.props,
         events: aNode.events,
@@ -5575,7 +5569,7 @@ ForDirective.prototype.updateView = function (changes) {
 ForDirective.prototype._attached = function () {
     // 移除节点桩元素前面的空白 FEFF 字符
     if (ieOldThan9 && this._getEl()) {
-        var headingBlank = this.el.previousSibling;
+        var headingBlank = this._getEl().previousSibling;
 
         if (headingBlank && headingBlank.nodeType === 3) {
             var textProp = typeof headingBlank.textContent === 'string'
@@ -5637,7 +5631,7 @@ emitDevtool.start = function (main) {
 // var Element = require('./element');
 // var IndexedList = require('../util/indexed-list');
 // var ExprType = require('../parser/expr-type');
-// var ANode = require('../parser/a-node');
+// var createANode = require('../parser/create-a-node');
 // var parseExpr = require('../parser/parse-expr');
 // var parseText = require('../parser/parse-text');
 // var parseTemplate = require('../parser/parse-template');
@@ -5666,6 +5660,7 @@ emitDevtool.start = function (main) {
 function Component(options) {
     this.dataChanges = [];
     this.listeners = {};
+    this.ownSlotChilds = [];
 
     Element.call(this, options);
 }
@@ -5795,7 +5790,7 @@ Component.prototype.init = function (options) {
             givenSlots[slotName].push(child);
         });
 
-        this.aNode = new ANode({
+        this.aNode = createANode({
             tagName: protoANode.tagName || givenANode.tagName,
             givenSlots: givenSlots,
 
@@ -5827,8 +5822,16 @@ Component.prototype.init = function (options) {
         )
     );
 
+    Element.prototype._init.call(this, options);
+
+    postComponentBinds(this.binds);
+    this.scope && this.binds.each(function (bind) {
+        me.data.set(bind.name, me.evalExpr(bind.expr));
+    });
+
     // #[begin] error
-    // 只在开发版本中进行属性校验
+    // 在初始化 + 数据绑定后，开始数据校验
+    // NOTE: 只在开发版本中进行属性校验
     var dataTypes = this.dataTypes || this.constructor.dataTypes;
     if (dataTypes) {
         var dataTypeChecker = createDataTypesChecker(
@@ -5839,13 +5842,6 @@ Component.prototype.init = function (options) {
         this.data.checkDataTypes();
     }
     // #[end]
-
-    Element.prototype._init.call(this, options);
-
-    postComponentBinds(this.binds);
-    this.scope && this.binds.each(function (bind) {
-        me.data.set(bind.name, me.evalExpr(bind.expr));
-    });
 
     this.computedDeps = {};
     for (var expr in this.computed) {
@@ -5897,25 +5893,25 @@ Component.prototype._calcComputed = function (computedExpr) {
     this.data.set(computedExpr, this.computed[computedExpr].call({
         data: {
             get: bind(function (expr) {
-                if (expr) {
-                    if (!computedDeps[expr]) {
-                        computedDeps[expr] = 1;
+                // #[begin] error
+                if (!expr) {
+                    throw new Error('[SAN ERROR] call get method in computed need argument');
+                }
+                // #[end]
 
-                        if (this.computed[expr]) {
-                            this._calcComputed(expr);
-                        }
+                if (!computedDeps[expr]) {
+                    computedDeps[expr] = 1;
 
-                        this.watch(expr, function () {
-                            this._calcComputed(computedExpr);
-                        });
+                    if (this.computed[expr]) {
+                        this._calcComputed(expr);
                     }
 
-                    return this.data.get(expr);
+                    this.watch(expr, function () {
+                        this._calcComputed(computedExpr);
+                    });
                 }
 
-                // #[begin] error
-                throw new Error('[SAN ERROR] call get method in computed need argument');
-                // #[end]
+                return this.data.get(expr);
             }, this)
         }
     }));
@@ -5954,11 +5950,15 @@ Component.prototype.ref = function (name) {
     var refComponent;
     var owner = this;
 
-    function childsTraversal(element) {
-        each(element.slotChilds, function (slotChild) {
+    function slotChildsTraversal(childs) {
+        each(childs, function (slotChild) {
             childsTraversal(slotChild);
             return !refComponent;
         });
+    }
+
+    function childsTraversal(element) {
+        slotChildsTraversal(element.slotChilds);
 
         each(element.childs, function (child) {
             if (isComponent(child)) {
@@ -5968,8 +5968,11 @@ Component.prototype.ref = function (name) {
                 ) {
                     refComponent = child;
                 }
+
+                slotChildsTraversal(child.slotChilds);
             }
-            else if (child instanceof Element) {
+
+            if (!refComponent && child instanceof Element) {
                 childsTraversal(child);
             }
 
@@ -5977,8 +5980,8 @@ Component.prototype.ref = function (name) {
         });
     }
 
-
     childsTraversal(this);
+    slotChildsTraversal(this.ownSlotChilds);
 
     return refComponent;
 };
@@ -6022,7 +6025,7 @@ Component.prototype._compile = function () {
 
     // pre compile template
     if (!proto.hasOwnProperty('_compiled')) {
-        proto.aNode = new ANode();
+        proto.aNode = createANode();
 
         var tpl = ComponentClass.template || proto.template;
         if (tpl) {
@@ -6116,6 +6119,10 @@ Component.prototype.updateView = function (changes) {
         });
     });
 
+    each(this.slotChilds, function (child) {
+        Element.prototype.updateChilds.call(child, changes);
+    });
+
 
     var dataChanges = me.dataChanges;
     if (dataChanges.length) {
@@ -6133,7 +6140,7 @@ Component.prototype.updateView = function (changes) {
             });
         });
 
-        this.updateChilds(dataChanges);
+        this.updateChilds(dataChanges, 'ownSlotChilds');
 
         this._toPhase('updated');
 
@@ -6222,6 +6229,8 @@ Component.prototype.watch = function (dataName, listener) {
  */
 Component.prototype._dispose = function () {
     Element.prototype._dispose.call(this);
+
+    this.ownSlotChilds = null;
 
     this.data.unlisten();
     this.dataChanger = null;
@@ -6421,7 +6430,7 @@ function kebab2camel(source) {
  */
 
 // var kebab2camel = require('../util/kebab2camel');
-
+// var IndexedList = require('../util/indexed-list');
 
 /**
  * 将 binds 的 name 从 kebabcase 转换成 camelcase
@@ -6458,7 +6467,7 @@ function camelComponentBinds(binds) {
 // var Element = require('./element');
 // var isComponent = require('./is-component');
 // var Component = require('./component');
-// var ANode = require('../parser/a-node');
+// var createANode = require('../parser/create-a-node');
 // var serializeStump = require('./serialize-stump');
 // var genElementChildsHTML = require('./gen-element-childs-html');
 
@@ -6485,7 +6494,7 @@ SlotElement.prototype._init = function (options) {
     var literalOwner = options.owner;
     var nameBind = options.aNode.props.get('name');
     this.name = nameBind ? nameBind.raw : '____';
-    var aNode = new ANode();
+    var aNode = createANode();
 
     // #[begin] reverse
     if (options.el) {
@@ -6499,14 +6508,11 @@ SlotElement.prototype._init = function (options) {
     // #[end]
         var givenSlots = literalOwner.aNode.givenSlots;
         var givenChilds = givenSlots && givenSlots[this.name];
+        aNode.childs = givenChilds || options.aNode.childs.slice(0);
 
         if (givenChilds) {
-            aNode.childs = givenChilds;
             options.owner = literalOwner.owner;
             options.scope = literalOwner.scope;
-        }
-        else {
-            aNode.childs = options.aNode.childs.slice(0);
         }
     // #[begin] reverse
     }
@@ -6516,14 +6522,14 @@ SlotElement.prototype._init = function (options) {
     options.aNode = aNode;
     Node.prototype._init.call(this, options);
 
-
     var parent = this.parent;
     while (parent) {
-        if (parent === this.owner
-            || !(parent instanceof SlotElement)
-                && !isComponent(parent)
-                && parent.owner === this.owner
-        ) {
+        if (parent === this.owner) {
+            parent.ownSlotChilds.push(this);
+            break;
+        }
+
+        if (!(parent instanceof SlotElement) && parent.owner === this.owner) {
             parent.slotChilds.push(this);
             break;
         }
@@ -6607,7 +6613,7 @@ SlotElement.prototype._pushChildANode = Element.prototype._pushChildANode;
  */
 
 // var each = require('../util/each');
-// var ANode = require('./a-node');
+// var createANode = require('./create-a-node');
 // var integrateAttr = require('./integrate-attr');
 
 // #[begin] reverse
@@ -6618,7 +6624,7 @@ SlotElement.prototype._pushChildANode = Element.prototype._pushChildANode;
  * @return {ANode}
  */
 function parseANodeFromEl(el) {
-    var aNode = new ANode();
+    var aNode = createANode();
     aNode.tagName = el.tagName.toLowerCase();
 
     each(
@@ -7076,6 +7082,7 @@ function parseANodeFromEl(el) {
 // var serializeStump = require('./serialize-stump');
 // var ExprType = require('../parser/expr-type');
 // var parseExpr = require('../parser/parse-expr');
+// var createANode = require('../parser/create-a-node');
 // var CompileSourceBuffer = require('./compile-source-buffer');
 // var compileExprSource = require('./compile-expr-source');
 // var postComponentBinds = require('./post-component-binds');
@@ -7155,7 +7162,7 @@ function parseANodeFromEl(el) {
 //      * @param {Component} owner 所属组件实例环境
 //      */
 //     compileIf: function (aNode, sourceBuffer, owner) {
-//         var ifElementANode = new ANode({
+//         var ifElementANode = createANode({
 //             childs: aNode.childs,
 //             props: aNode.props,
 //             events: aNode.events,
@@ -7186,7 +7193,7 @@ function parseANodeFromEl(el) {
 //         sourceBuffer.joinString(serializeStump('if', serializeANode(aNode)));
 // 
 //         if (elseANode) {
-//             var elseElementANode = new ANode({
+//             var elseElementANode = createANode({
 //                 childs: elseANode.childs,
 //                 props: elseANode.props,
 //                 events: elseANode.events,
@@ -7224,7 +7231,7 @@ function parseANodeFromEl(el) {
 //      * @param {Component} owner 所属组件实例环境
 //      */
 //     compileFor: function (aNode, sourceBuffer, owner) {
-//         var forElementANode = new ANode({
+//         var forElementANode = createANode({
 //             childs: aNode.childs,
 //             props: aNode.props,
 //             events: aNode.events,
@@ -7776,7 +7783,7 @@ function parseANodeFromEl(el) {
 //  * @inner
 //  */
 // function componentCompilePreCode() {
-//     var $version = '3.1.1';
+//     var $version = '3.1.3';
 // 
 //     function extend(target, source) {
 //         if (source) {
@@ -8017,7 +8024,7 @@ function parseANodeFromEl(el) {
          *
          * @type {string}
          */
-        version: '3.1.1',
+        version: '3.1.3',
 
         // #[begin] devtool
         /**
@@ -8036,8 +8043,15 @@ function parseANodeFromEl(el) {
 //          * @return {function(Object):string}
 //          */
 //         compileToRenderer: function (ComponentClass) {
-//             var code = compileJSSource(ComponentClass);
-//             return (new Function('return ' + code))();
+//             var renderer = ComponentClass.__ssrRenderer;
+// 
+//             if (!renderer) {
+//                 var code = compileJSSource(ComponentClass);
+//                 renderer = (new Function('return ' + code))();
+//                 ComponentClass.__ssrRenderer = renderer;
+//             }
+// 
+//             return renderer;
 //         },
 // 
 //         /**
@@ -9859,7 +9873,6 @@ __webpack_require__(8);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 _sanRouter.router.setMode('hash');
-// import Prism from 'prismjs'
 
 _sanRouter.router.add({
   rule: '/',
@@ -10004,16 +10017,21 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //   // register custom hooks
 //   transition({
-//     enter: 'custom-enter-hook'
-//     enterActive: 'custom-enter-active-hook',
-//     leave: 'custom-leave-hook',
-//     leaveActive: 'custom-leave-active-hook'
+//     in: 'custom-transition-in-hook'
+//     out: 'custom-transition-out-hook',
+//     live: 'custom-live-hook',
 //   })(YourComponent)
 //   ```
 //
 // ### transitionGroup (uncompleted)
 //
 // Coming soon...
+//
+// ## CSS Hooks
+//
+// - **in** - Applies when the component attaches DOM tree and removes in the next frame immediately.
+// - **out** - Applies when the component will dispose.
+// - **live** - Applies between the next frame of ***in*** hook deactives and ***out*** hook actives.
 //
 // ## Try It Out
 //
@@ -10143,7 +10161,7 @@ exports = module.exports = __webpack_require__(0)();
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\r\nh1 * {\r\n  margin-right: 10px;\r\n  vertical-align: middle;\r\n}\r\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\r\nh1 * {\r\n  margin-right: 10px;\r\n  vertical-align: middle;\r\n}\r\n", ""]);
 
 // exports
 
@@ -10178,7 +10196,7 @@ module.exports = "\r\n<iframe\r\n  height=\"{{height || '300'}}\"\r\n  width=\"1
 /* 20 */
 /***/ (function(module, exports) {
 
-module.exports = "<div><h1><img src=\"https://ecomfe.github.io/san/img/logo-colorful.svg\" height=\"28px\"><span>San Transition</span></h1>\n<p>High order component factory for generating <a href=\"//github.com/ecomfe/san\">san</a> components with transition effects.</p>\n<h2>Get Start</h2>\n<h3>Installation</h3>\n<h4>NPM</h4>\n<pre><code class=\"language-bash\">$ npm install --save san-transition\n</code></pre>\n<h4>CDN</h4>\n<pre><code class=\"language-html\">&lt;script src=&quot;//unpkg.com/san-transition&quot;&gt;&lt;/script&gt;\n</code></pre>\n<h3>Usage</h3>\n<pre><code class=\"language-html\">&lt;template&gt;\n  &lt;div&gt;\n    &lt;transition-layer&gt;A component with transition effects.&lt;/transition-layer&gt;\n  &lt;div&gt;\n&lt;/template&gt;\n\n&lt;script&gt;\nimport {transition} from 'san-transition'\nimport {YourComponent} from 'YOUR_SAN_COMPONENT'\n\nexport default {\n  components: {\n    'transition-layer': transition('fade')(YourComponent)\n  }\n}\n&lt;/script&gt;\n\n&lt;style&gt;\n.fade-enter-active, .fade-leave {\n  opacity: 1;\n  transform: translate(0, 0);\n  transition: all .5s;\n}\n.fade-enter, .fade-leave-active {\n  opacity: 0;\n  transform: translate(100px, 0);\n}\n&lt;/style&gt;\n\n</code></pre>\n<h2>API</h2>\n<h3>transition</h3>\n<ul>\n<li>Arguments\n<ul>\n<li><strong>{None, String, Object}</strong> hook id</li>\n</ul>\n</li>\n<li>Usage<pre><code class=\"language-javascript\">// register default hooks\n// the same as `transition('san')(YourComponent)`\ntransition()(YourComponent)\n\n// register named hooks\ntransition('foo')(YourComponent)\n\n// register custom hooks\ntransition({\n  enter: 'custom-enter-hook'\n  enterActive: 'custom-enter-active-hook',\n  leave: 'custom-leave-hook',\n  leaveActive: 'custom-leave-active-hook'\n})(YourComponent)\n</code></pre>\n</li>\n</ul>\n<h3>transitionGroup (uncompleted)</h3>\n<p>Coming soon...</p>\n<h2>Try It Out</h2>\n<h3>Default Hooks</h3>\n<p><try penId=\"pwravg\" title=\"Default Hooks\"></try></p>\n<h3>Named Hooks</h3>\n<p><try penId=\"VWzQWV\" title=\"Named Hooks\"></try></p>\n<h3>Custom Hooks</h3>\n<p><try penId=\"xrLYYz\" title=\"Custom Hooks\"></try></p>\n<h3>Keyframe Animation Transition</h3>\n<p><try penId=\"rwzJqJ\" title=\"Keyframe Animation Transition\"></try></p>\n<h3>Working with s-if &amp; s-else expression</h3>\n<p><try penId=\"dRzmbB\" title=\"Working with s-if & s-else expression\"></try></p>\n</div>";
+module.exports = "<div><h1><img src=\"https://ecomfe.github.io/san/img/logo-colorful.svg\" height=\"28px\"><span>San Transition</span></h1>\n<p>High order component factory for generating <a href=\"//github.com/ecomfe/san\">san</a> components with transition effects.</p>\n<h2>Get Start</h2>\n<h3>Installation</h3>\n<h4>NPM</h4>\n<pre><code class=\"language-bash\">$ npm install --save san-transition\n</code></pre>\n<h4>CDN</h4>\n<pre><code class=\"language-html\">&lt;script src=&quot;//unpkg.com/san-transition&quot;&gt;&lt;/script&gt;\n</code></pre>\n<h3>Usage</h3>\n<pre><code class=\"language-html\">&lt;template&gt;\n  &lt;div&gt;\n    &lt;transition-layer&gt;A component with transition effects.&lt;/transition-layer&gt;\n  &lt;div&gt;\n&lt;/template&gt;\n\n&lt;script&gt;\nimport {transition} from 'san-transition'\nimport {YourComponent} from 'YOUR_SAN_COMPONENT'\n\nexport default {\n  components: {\n    'transition-layer': transition('fade')(YourComponent)\n  }\n}\n&lt;/script&gt;\n\n&lt;style&gt;\n.fade-enter-active, .fade-leave {\n  opacity: 1;\n  transform: translate(0, 0);\n  transition: all .5s;\n}\n.fade-enter, .fade-leave-active {\n  opacity: 0;\n  transform: translate(100px, 0);\n}\n&lt;/style&gt;\n\n</code></pre>\n<h2>API</h2>\n<h3>transition</h3>\n<ul>\n<li>Arguments\n<ul>\n<li><strong>{None, String, Object}</strong> hook id</li>\n</ul>\n</li>\n<li>Usage<pre><code class=\"language-javascript\">// register default hooks\n// the same as `transition('san')(YourComponent)`\ntransition()(YourComponent)\n\n// register named hooks\ntransition('foo')(YourComponent)\n\n// register custom hooks\ntransition({\n  in: 'custom-transition-in-hook'\n  out: 'custom-transition-out-hook',\n  live: 'custom-live-hook',\n})(YourComponent)\n</code></pre>\n</li>\n</ul>\n<h3>transitionGroup (uncompleted)</h3>\n<p>Coming soon...</p>\n<h2>CSS Hooks</h2>\n<ul>\n<li><strong>in</strong> - Applies when the component attaches DOM tree and removes in the next frame immediately.</li>\n<li><strong>out</strong> - Applies when the component will dispose.</li>\n<li><strong>live</strong> - Applies between the next frame of <strong><em>in</em></strong> hook deactives and <strong><em>out</em></strong> hook actives.</li>\n</ul>\n<h2>Try It Out</h2>\n<h3>Default Hooks</h3>\n<p><try penId=\"pwravg\" title=\"Default Hooks\"></try></p>\n<h3>Named Hooks</h3>\n<p><try penId=\"VWzQWV\" title=\"Named Hooks\"></try></p>\n<h3>Custom Hooks</h3>\n<p><try penId=\"xrLYYz\" title=\"Custom Hooks\"></try></p>\n<h3>Keyframe Animation Transition</h3>\n<p><try penId=\"rwzJqJ\" title=\"Keyframe Animation Transition\"></try></p>\n<h3>Working with s-if &amp; s-else expression</h3>\n<p><try penId=\"dRzmbB\" title=\"Working with s-if & s-else expression\"></try></p>\n</div>";
 
 /***/ }),
 /* 21 */
