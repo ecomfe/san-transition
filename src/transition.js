@@ -18,16 +18,16 @@ export default (prop = 'san') => Component => {
     // entering
     const {el, parent} = this
     clearParentTimeout(parent)
-    el.classList.add(hooks.enter)
+    el.classList.add(hooks.in)
     parent.isEntering = true
     parent.transitionEl = el
     const transitionHandler = () => {
-      el.classList.remove(hooks.enter)
+      el.classList.remove(hooks.in)
       parent.enteringTimeout = setTimeout(() => {
         parent.isEntering = false
       }, getTimeout(el))
     }
-    el.classList.add(hooks.enterActive)
+    el.classList.add(hooks.live)
     afterNextFrame(transitionHandler)
 
     attached && attached.call(this)
@@ -76,9 +76,10 @@ export default (prop = 'san') => Component => {
             }
           }
           const transitionHandler = () => {
-            el.classList.add(hooks.leaveActive)
+            el.classList.remove(hooks.live)
             parent.leavingTimeout = setTimeout(leaveHandler, getTimeout(el))
           }
+          el.classList.add(hooks.out)
           afterNextFrame(transitionHandler)
         }
       }

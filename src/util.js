@@ -22,30 +22,27 @@ export const prepareEnter = (parent, hooks) => {
   const {transitionEl} = parent
   parent.isEntering = true
   parent.isLeaving = false
-  transitionEl.classList.add(hooks.enterActive)
-  transitionEl.classList.remove(hooks.leave)
-  transitionEl.classList.remove(hooks.leaveActive)
+  transitionEl.classList.add(hooks.live)
+  transitionEl.classList.remove(hooks.out)
 }
 
 export const prepareLeave = (parent, hooks) => {
   const {transitionEl} = parent
   parent.isEntering = false
   parent.isLeaving = true
-  transitionEl.classList.remove(hooks.enter)
-  transitionEl.classList.remove(hooks.enterActive)
-  transitionEl.classList.add(hooks.leave)
+  transitionEl.classList.remove(hooks.in)
+  transitionEl.classList.remove(hooks.live)
+  transitionEl.classList.add(hooks.out)
 }
 
 export const getHooks = prop => typeof prop === 'object'
   ? {
-    enter: prop.enter || 'san-enter',
-    enterActive: prop.enterActive || 'san-enter-active',
-    leave: prop.leave || 'san-leave',
-    leaveActive: prop.leaveActive || 'san-leave-active'
+    in: prop.in || 'san-in',
+    out: prop.out || 'san-out',
+    live: prop.leave || 'san-live'
   }
   : {
-    enter: `${prop}-enter`,
-    enterActive: `${prop}-enter-active`,
-    leave: `${prop}-leave`,
-    leaveActive: `${prop}-leave-active`
+    in: `${prop}-in`,
+    out: `${prop}-out`,
+    live: `${prop}-live`
   }

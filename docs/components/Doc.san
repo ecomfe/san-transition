@@ -70,16 +70,21 @@ export default {
 
   // register custom hooks
   transition({
-    enter: 'custom-enter-hook'
-    enterActive: 'custom-enter-active-hook',
-    leave: 'custom-leave-hook',
-    leaveActive: 'custom-leave-active-hook'
+    in: 'custom-transition-in-hook'
+    out: 'custom-transition-out-hook',
+    live: 'custom-live-hook',
   })(YourComponent)
   ```
 
 ### transitionGroup (uncompleted)
 
 Coming soon...
+
+## CSS Hooks
+
+- **in** - Applies when the component attaches DOM tree and removes in the next frame immediately.
+- **out** - Applies when the component will dispose.
+- **live** - Applies between the next frame of ***in*** hook deactives and ***out*** hook actives.
 
 ## Try It Out
 

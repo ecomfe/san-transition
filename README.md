@@ -74,7 +74,6 @@ Coming soon...
 
 ## CSS Hooks
 
-- **enter** Applies when the component attaches DOM tree and removes in the next frame immediately.
-- **enter-active** Applies in the next frame of **enter** hook, removes when the **leave** hook applies.
-- **leave** Applies when the component will be disposed.
-- **leave-active** Applies in the next frame of **leave** hook.
+- **in** - Applies when the component attaches DOM tree and removes in the next frame immediately.
+- **out** - Applies when the component will dispose.
+- **live** - Applies between the next frame of `in` hook deactives and `out` hook actives.
