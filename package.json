@@ -2,6 +2,11 @@
   "name": "san-transition",
   "version": "0.1.1",
   "description": "High order component factory for generating san components with transition effects.",
+  "keywords": [
+    "san",
+    "transition",
+    "san-transition"
+  ],
   "main": "index.js",
   "directories": {
     "doc": "docs"
