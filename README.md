@@ -61,10 +61,9 @@ export default {
 
   // register custom hooks
   transition({
-    enter: 'custom-enter-hook'
-    enterActive: 'custom-enter-active-hook',
-    leave: 'custom-leave-hook',
-    leaveActive: 'custom-leave-active-hook'
+    in: 'custom-transition-in-hook'
+    out: 'custom-transition-out-hook',
+    live: 'custom-live-hook',
   })(YourComponent)
   ```
 
