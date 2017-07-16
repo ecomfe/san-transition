@@ -8192,7 +8192,7 @@ __san_script__ = __webpack_require__(10)
 if (__san_script__ &&
     __san_script__.__esModule &&
     Object.keys(__san_script__).length > 1) {
-  console.warn("[san-loader] docs\\components\\App.san: named exports in *.san files are ignored.")}
+  console.warn("[san-loader] docs/components/App.san: named exports in *.san files are ignored.")}
 __san_template__ = __webpack_require__(18)
 var __san_proto__ = {}
 if (__san_script__) {
@@ -9987,12 +9987,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // </script>
 //
 // <style>
-// .fade-enter-active, .fade-leave {
+// .fade-live {
 //   opacity: 1;
 //   transform: translate(0, 0);
 //   transition: all .5s;
 // }
-// .fade-enter, .fade-leave-active {
+// .fade-in, .fade-out {
 //   opacity: 0;
 //   transform: translate(100px, 0);
 // }
@@ -10147,7 +10147,7 @@ exports = module.exports = __webpack_require__(0)();
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\r\nbody {\r\n  padding: 20px;\r\n  color: #999;\r\n  background-color: #19232e;\r\n}\r\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nbody {\n  padding: 20px;\n  color: #999;\n  background-color: #19232e;\n}\n", ""]);
 
 // exports
 
@@ -10161,7 +10161,7 @@ exports = module.exports = __webpack_require__(0)();
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\r\nh1 * {\r\n  margin-right: 10px;\r\n  vertical-align: middle;\r\n}\r\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nh1 * {\n  margin-right: 10px;\n  vertical-align: middle;\n}\n", ""]);
 
 // exports
 
@@ -10184,19 +10184,19 @@ exports.push([module.i, ".markdown-body {\n  color: #999;\n}\n.markdown-body tab
 /* 18 */
 /***/ (function(module, exports) {
 
-module.exports = "\r\n<section>\r\n  <a href=\"https://github.com/dafrok/san-transition\"><img style=\"position: absolute; top: 0; right: 0; border: 0;\" src=\"https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67\" alt=\"Fork me on GitHub\" data-canonical-src=\"https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png\"></a>\r\n  <div class=\"markdown-body\">\r\n    <doc></doc>\r\n  </div>\r\n</section>\r\n";
+module.exports = "\n<section>\n  <a href=\"https://github.com/dafrok/san-transition\"><img style=\"position: absolute; top: 0; right: 0; border: 0;\" src=\"https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67\" alt=\"Fork me on GitHub\" data-canonical-src=\"https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png\"></a>\n  <div class=\"markdown-body\">\n    <doc></doc>\n  </div>\n</section>\n";
 
 /***/ }),
 /* 19 */
 /***/ (function(module, exports) {
 
-module.exports = "\r\n<iframe\r\n  height=\"{{height || '300'}}\"\r\n  width=\"100%\"\r\n  scrolling=\"no\"\r\n  title=\"{{title}}\"\r\n  src=\"//codepen.io/Dafrok/embed/{{penId}}/?height=300&theme-id=dark&default-tab={{tab}}&embed-version=2\"\r\n  frameborder=\"no\"\r\n  allowtransparency=\"true\"\r\n  allowfullscreen=\"true\">\r\n  See the Pen <a href=\"https://codepen.io/Dafrok/pen/{{penId}}/\">{{penId}}</a> by Dafrok (<a href=\"https://codepen.io/Dafrok\">@Dafrok</a>) on <a href=\"https://codepen.io\">CodePen</a>.\r\n</iframe>\r\n";
+module.exports = "\n<iframe\n  height=\"{{height || '300'}}\"\n  width=\"100%\"\n  scrolling=\"no\"\n  title=\"{{title}}\"\n  src=\"//codepen.io/Dafrok/embed/{{penId}}/?height=300&theme-id=dark&default-tab={{tab}}&embed-version=2\"\n  frameborder=\"no\"\n  allowtransparency=\"true\"\n  allowfullscreen=\"true\">\n  See the Pen <a href=\"https://codepen.io/Dafrok/pen/{{penId}}/\">{{penId}}</a> by Dafrok (<a href=\"https://codepen.io/Dafrok\">@Dafrok</a>) on <a href=\"https://codepen.io\">CodePen</a>.\n</iframe>\n";
 
 /***/ }),
 /* 20 */
 /***/ (function(module, exports) {
 
-module.exports = "<div><h1><img src=\"https://ecomfe.github.io/san/img/logo-colorful.svg\" height=\"28px\"><span>San Transition</span></h1>\n<p>High order component factory for generating <a href=\"//github.com/ecomfe/san\">san</a> components with transition effects.</p>\n<h2>Get Start</h2>\n<h3>Installation</h3>\n<h4>NPM</h4>\n<pre><code class=\"language-bash\">$ npm install --save san-transition\n</code></pre>\n<h4>CDN</h4>\n<pre><code class=\"language-html\">&lt;script src=&quot;//unpkg.com/san-transition&quot;&gt;&lt;/script&gt;\n</code></pre>\n<h3>Usage</h3>\n<pre><code class=\"language-html\">&lt;template&gt;\n  &lt;div&gt;\n    &lt;transition-layer&gt;A component with transition effects.&lt;/transition-layer&gt;\n  &lt;div&gt;\n&lt;/template&gt;\n\n&lt;script&gt;\nimport {transition} from 'san-transition'\nimport {YourComponent} from 'YOUR_SAN_COMPONENT'\n\nexport default {\n  components: {\n    'transition-layer': transition('fade')(YourComponent)\n  }\n}\n&lt;/script&gt;\n\n&lt;style&gt;\n.fade-enter-active, .fade-leave {\n  opacity: 1;\n  transform: translate(0, 0);\n  transition: all .5s;\n}\n.fade-enter, .fade-leave-active {\n  opacity: 0;\n  transform: translate(100px, 0);\n}\n&lt;/style&gt;\n\n</code></pre>\n<h2>API</h2>\n<h3>transition</h3>\n<ul>\n<li>Arguments\n<ul>\n<li><strong>{None, String, Object}</strong> hook id</li>\n</ul>\n</li>\n<li>Usage<pre><code class=\"language-javascript\">// register default hooks\n// the same as `transition('san')(YourComponent)`\ntransition()(YourComponent)\n\n// register named hooks\ntransition('foo')(YourComponent)\n\n// register custom hooks\ntransition({\n  in: 'custom-transition-in-hook'\n  out: 'custom-transition-out-hook',\n  live: 'custom-live-hook',\n})(YourComponent)\n</code></pre>\n</li>\n</ul>\n<h3>transitionGroup (uncompleted)</h3>\n<p>Coming soon...</p>\n<h2>CSS Hooks</h2>\n<ul>\n<li><strong>in</strong> - Applies when the component attaches DOM tree and removes in the next frame immediately.</li>\n<li><strong>out</strong> - Applies when the component will dispose.</li>\n<li><strong>live</strong> - Applies between the next frame of <strong><em>in</em></strong> hook deactives and <strong><em>out</em></strong> hook actives.</li>\n</ul>\n<h2>Try It Out</h2>\n<h3>Default Hooks</h3>\n<p><try penId=\"pwravg\" title=\"Default Hooks\"></try></p>\n<h3>Named Hooks</h3>\n<p><try penId=\"VWzQWV\" title=\"Named Hooks\"></try></p>\n<h3>Custom Hooks</h3>\n<p><try penId=\"xrLYYz\" title=\"Custom Hooks\"></try></p>\n<h3>Keyframe Animation Transition</h3>\n<p><try penId=\"rwzJqJ\" title=\"Keyframe Animation Transition\"></try></p>\n<h3>Working with s-if &amp; s-else expression</h3>\n<p><try penId=\"dRzmbB\" title=\"Working with s-if & s-else expression\"></try></p>\n</div>";
+module.exports = "<div><h1 id=\"-img-src-https-ecomfe-github-io-san-img-logo-colorful-svg-height-28px-span-san-transition-span-\"><img src=\"https://ecomfe.github.io/san/img/logo-colorful.svg\" height=\"28px\"><span>San Transition</span></h1>\n<p>High order component factory for generating <a href=\"//github.com/ecomfe/san\">san</a> components with transition effects.</p>\n<h2 id=\"get-start\">Get Start</h2>\n<h3 id=\"installation\">Installation</h3>\n<h4 id=\"npm\">NPM</h4>\n<pre><code class=\"lang-bash\">$ npm install --save san-transition\n</code></pre>\n<h4 id=\"cdn\">CDN</h4>\n<pre><code class=\"lang-html\">&lt;script src=&quot;//unpkg.com/san-transition&quot;&gt;&lt;/script&gt;\n</code></pre>\n<h3 id=\"usage\">Usage</h3>\n<pre><code class=\"lang-html\">&lt;template&gt;\n  &lt;div&gt;\n    &lt;transition-layer&gt;A component with transition effects.&lt;/transition-layer&gt;\n  &lt;div&gt;\n&lt;/template&gt;\n\n&lt;script&gt;\nimport {transition} from &#39;san-transition&#39;\nimport {YourComponent} from &#39;YOUR_SAN_COMPONENT&#39;\n\nexport default {\n  components: {\n    &#39;transition-layer&#39;: transition(&#39;fade&#39;)(YourComponent)\n  }\n}\n&lt;/script&gt;\n\n&lt;style&gt;\n.fade-live {\n  opacity: 1;\n  transform: translate(0, 0);\n  transition: all .5s;\n}\n.fade-in, .fade-out {\n  opacity: 0;\n  transform: translate(100px, 0);\n}\n&lt;/style&gt;\n</code></pre>\n<h2 id=\"api\">API</h2>\n<h3 id=\"transition\">transition</h3>\n<ul>\n<li>Arguments<ul>\n<li><strong>{None, String, Object}</strong> hook id</li>\n</ul>\n</li>\n<li><p>Usage</p>\n<pre><code class=\"lang-javascript\">// register default hooks\n// the same as `transition(&#39;san&#39;)(YourComponent)`\ntransition()(YourComponent)\n\n// register named hooks\ntransition(&#39;foo&#39;)(YourComponent)\n\n// register custom hooks\ntransition({\n  in: &#39;custom-transition-in-hook&#39;\n  out: &#39;custom-transition-out-hook&#39;,\n  live: &#39;custom-live-hook&#39;,\n})(YourComponent)\n</code></pre>\n</li>\n</ul>\n<h3 id=\"transitiongroup-uncompleted-\">transitionGroup (uncompleted)</h3>\n<p>Coming soon...</p>\n<h2 id=\"css-hooks\">CSS Hooks</h2>\n<ul>\n<li><strong>in</strong> - Applies when the component attaches DOM tree and removes in the next frame immediately.</li>\n<li><strong>out</strong> - Applies when the component will dispose.</li>\n<li><strong>live</strong> - Applies between the next frame of <strong><em>in</em></strong> hook deactives and <strong><em>out</em></strong> hook actives.</li>\n</ul>\n<h2 id=\"try-it-out\">Try It Out</h2>\n<h3 id=\"default-hooks\">Default Hooks</h3>\n<try penId=\"pwravg\" title=\"Default Hooks\"></try>\n\n<h3 id=\"named-hooks\">Named Hooks</h3>\n<try penId=\"VWzQWV\" title=\"Named Hooks\"></try>\n\n<h3 id=\"custom-hooks\">Custom Hooks</h3>\n<try penId=\"xrLYYz\" title=\"Custom Hooks\"></try>\n\n<h3 id=\"keyframe-animation-transition\">Keyframe Animation Transition</h3>\n<try penId=\"rwzJqJ\" title=\"Keyframe Animation Transition\"></try>\n\n<h3 id=\"working-with-s-if-s-else-expression\">Working with s-if &amp; s-else expression</h3>\n<try penId=\"dRzmbB\" title=\"Working with s-if & s-else expression\"></try>\n</div>";
 
 /***/ }),
 /* 21 */
@@ -11201,7 +11201,7 @@ __san_script__ = __webpack_require__(11)
 if (__san_script__ &&
     __san_script__.__esModule &&
     Object.keys(__san_script__).length > 1) {
-  console.warn("[san-loader] docs\\components\\Doc.san: named exports in *.san files are ignored.")}
+  console.warn("[san-loader] docs/components/Doc.san: named exports in *.san files are ignored.")}
 __san_template__ = __webpack_require__(20)
 var __san_proto__ = {}
 if (__san_script__) {
@@ -11233,7 +11233,7 @@ __san_script__ = __webpack_require__(12)
 if (__san_script__ &&
     __san_script__.__esModule &&
     Object.keys(__san_script__).length > 1) {
-  console.warn("[san-loader] docs\\components\\try.san: named exports in *.san files are ignored.")}
+  console.warn("[san-loader] docs/components/try.san: named exports in *.san files are ignored.")}
 __san_template__ = __webpack_require__(19)
 var __san_proto__ = {}
 if (__san_script__) {
