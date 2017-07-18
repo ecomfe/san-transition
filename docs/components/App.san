@@ -9,10 +9,11 @@
 
 <script>
 import Doc from './Doc.san'
+import {transition} from '@/index.js'
 
 export default {
   components: {
-    'doc': Doc
+    doc: transition()(Doc)
   }
 }
 </script>
@@ -22,5 +23,14 @@ body {
   padding: 20px;
   color: #999;
   background-color: #19232e;
+}
+.san-live {
+  opacity: 1;
+  transition: all 1s ease-out;
+  transform: translate(0, 0);
+}
+.san-in, .san-out {
+  opacity: 0;
+  transform: translate(0, 100px);
 }
 </style>

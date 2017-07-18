@@ -8152,7 +8152,7 @@ function parseANodeFromEl(el) {
     // #[end]
 })(this);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(28).setImmediate))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(32).setImmediate))
 
 /***/ }),
 /* 3 */
@@ -8187,13 +8187,13 @@ module.exports = g;
 
 var __san_script__, __san_template__
 var __san_styles__ = {}
-__webpack_require__(26)
-__san_script__ = __webpack_require__(10)
+__webpack_require__(30)
+__san_script__ = __webpack_require__(14)
 if (__san_script__ &&
     __san_script__.__esModule &&
     Object.keys(__san_script__).length > 1) {
   console.warn("[san-loader] docs/components/App.san: named exports in *.san files are ignored.")}
-__san_template__ = __webpack_require__(18)
+__san_template__ = __webpack_require__(22)
 var __san_proto__ = {}
 if (__san_script__) {
   __san_proto__ = __san_script__.__esModule
@@ -9780,7 +9780,7 @@ exports['default'] = EventQueue;
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(13);
+var content = __webpack_require__(17);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(1)(content, {});
@@ -9806,7 +9806,7 @@ if(false) {
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(14);
+var content = __webpack_require__(18);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(1)(content, {});
@@ -9832,7 +9832,7 @@ if(false) {
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(17);
+var content = __webpack_require__(21);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(1)(content, {});
@@ -9892,37 +9892,20 @@ _sanRouter.router.start();
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.transitionGroup = exports.transition = undefined;
 
-var _Doc = __webpack_require__(23);
+var _transition = __webpack_require__(12);
 
-var _Doc2 = _interopRequireDefault(_Doc);
+var _transition2 = _interopRequireDefault(_transition);
+
+var _transitionGroup = __webpack_require__(11);
+
+var _transitionGroup2 = _interopRequireDefault(_transitionGroup);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = {
-  components: {
-    'doc': _Doc2.default
-  }
-  // </script>
-  //
-  // <style>
-  // body {
-  //   padding: 20px;
-  //   color: #999;
-  //   background-color: #19232e;
-  // }
-  // </style>
-
-}; // <template>
-// <section>
-//   <a href="https://github.com/dafrok/san-transition"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"></a>
-//   <div class="markdown-body">
-//     <doc></doc>
-//   </div>
-// </section>
-// </template>
-//
-// <script>
+exports.transition = _transition2.default;
+exports.transitionGroup = _transitionGroup2.default;
 
 /***/ }),
 /* 11 */
@@ -9935,11 +9918,309 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _prismjs = __webpack_require__(21);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+// todos: transition group
+
+exports.default = function () {
+  var prop = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'san';
+  return function (Component) {
+    var Target = function (_Component) {
+      _inherits(Target, _Component);
+
+      function Target() {
+        _classCallCheck(this, Target);
+
+        return _possibleConstructorReturn(this, (Target.__proto__ || Object.getPrototypeOf(Target)).apply(this, arguments));
+      }
+
+      return Target;
+    }(Component);
+
+    return Target;
+  };
+};
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _util = __webpack_require__(13);
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+exports.default = function () {
+  var prop = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'san';
+  return function (Component) {
+    var Target = function (_Component) {
+      _inherits(Target, _Component);
+
+      function Target() {
+        _classCallCheck(this, Target);
+
+        return _possibleConstructorReturn(this, (Target.__proto__ || Object.getPrototypeOf(Target)).apply(this, arguments));
+      }
+
+      return Target;
+    }(Component);
+
+    var _Target$prototype = Target.prototype,
+        attached = _Target$prototype.attached,
+        attach = _Target$prototype.attach,
+        inited = _Target$prototype.inited;
+
+    // define css hooks name
+
+    var hooks = (0, _util.getHooks)(prop
+
+    // define transition flags
+    );Target.prototype.isEntering = false;
+    Target.prototype.isLeaving = false;
+
+    // override attached lifecycle
+    Target.prototype.attached = function () {
+      // entering
+      var el = this.el,
+          parent = this.parent;
+
+      (0, _util.clearParentTimeout)(parent);
+      el.classList.add(hooks.in);
+      parent.isEntering = true;
+      parent.transitionEl = el;
+      var transitionHandler = function transitionHandler() {
+        el.classList.remove(hooks.in);
+        parent.enteringTimeout = setTimeout(function () {
+          parent.isEntering = false;
+        }, (0, _util.getTimeout)(el));
+      };
+      el.classList.add(hooks.live);
+      (0, _util.afterNextFrame)(transitionHandler);
+
+      attached && attached.call(this);
+    };
+
+    // override attach function
+    Target.prototype.attach = function () {
+      // entering
+      var parent = this.parent;
+
+      if (parent.isLeaving) {
+        (0, _util.prepareEnter)(parent, hooks);
+      } else {
+        attach.apply(this, arguments);
+      }
+    };
+
+    // override inited lifecycle
+    Target.prototype.inited = function () {
+      var parent = this.parent;
+      var updateView = parent.updateView,
+          _disposeChilds = parent._disposeChilds;
+
+      // override updateView function
+
+      parent.updateView = function (changes) {
+        var _this2 = this;
+
+        var child = this.childs[0];
+        var el = this.transitionEl;
+        if (this.evalExpr(this.cond)) {
+          if (child && parent.isLeaving) {
+            // entering
+            (0, _util.prepareEnter)(parent, hooks);
+            parent.enteringTimeout = setTimeout(function () {
+              parent.isEntering = false;
+              updateView.call(_this2, changes);
+            }, (0, _util.getTimeout)(el));
+          } else {
+            updateView.call(this, changes);
+          }
+        } else {
+          // leaving
+          (0, _util.clearParentTimeout)(parent);
+          if (!parent.isLeaving) {
+            (0, _util.prepareLeave)(parent, hooks);
+            var leaveHandler = function leaveHandler(e) {
+              if (parent.isLeaving) {
+                _disposeChilds.call(_this2);
+                parent.isLeaving = false;
+              }
+            };
+            var transitionHandler = function transitionHandler() {
+              el.classList.remove(hooks.live);
+              parent.leavingTimeout = setTimeout(leaveHandler, (0, _util.getTimeout)(el));
+            };
+            el.classList.add(hooks.out);
+            (0, _util.afterNextFrame)(transitionHandler);
+          }
+        }
+      };
+      inited && inited.call(this);
+    };
+
+    return Target;
+  };
+};
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var getTime = function getTime(duration, delay) {
+  return Math.max.apply(undefined, duration.map(function (str, i) {
+    return getFloat(str) + parseFloat(delay[i]);
+  }));
+};
+
+var getFloat = function getFloat(str) {
+  return (parseFloat(str) || 0) * 1000;
+};
+
+var getTimeout = exports.getTimeout = function getTimeout(el) {
+  var style = getComputedStyle(el);
+  var transDuration = style.transitionDuration.split(',');
+  var transDelay = style.transitionDelay.split(',');
+  var aniDuration = style.animationDuration.split(',');
+  var aniDelay = style.animationDelay.split(',');
+  return Math.max(getTime(transDuration, transDelay), getTime(aniDuration, aniDelay));
+};
+
+var afterNextFrame = exports.afterNextFrame = function afterNextFrame(fn) {
+  return requestAnimationFrame(function () {
+    return requestAnimationFrame(fn);
+  });
+};
+
+var clearParentTimeout = exports.clearParentTimeout = function clearParentTimeout(parent) {
+  clearTimeout(parent.leavingTimeout);
+  clearTimeout(parent.enteringTimeout);
+};
+
+var prepareEnter = exports.prepareEnter = function prepareEnter(parent, hooks) {
+  var transitionEl = parent.transitionEl;
+
+  parent.isEntering = true;
+  parent.isLeaving = false;
+  transitionEl.classList.add(hooks.live);
+  transitionEl.classList.remove(hooks.out);
+};
+
+var prepareLeave = exports.prepareLeave = function prepareLeave(parent, hooks) {
+  var transitionEl = parent.transitionEl;
+
+  parent.isEntering = false;
+  parent.isLeaving = true;
+  transitionEl.classList.remove(hooks.in);
+  transitionEl.classList.remove(hooks.live);
+  transitionEl.classList.add(hooks.out);
+};
+
+var getHooks = exports.getHooks = function getHooks(prop) {
+  return (typeof prop === 'undefined' ? 'undefined' : _typeof(prop)) === 'object' ? {
+    in: prop.in || 'san-in',
+    out: prop.out || 'san-out',
+    live: prop.leave || 'san-live'
+  } : {
+    in: prop + '-in',
+    out: prop + '-out',
+    live: prop + '-live'
+  };
+};
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _Doc = __webpack_require__(27);
+
+var _Doc2 = _interopRequireDefault(_Doc);
+
+var _index = __webpack_require__(10);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// <template>
+// <section>
+//   <a href="https://github.com/dafrok/san-transition"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"></a>
+//   <div class="markdown-body">
+//     <doc></doc>
+//   </div>
+// </section>
+// </template>
+//
+// <script>
+exports.default = {
+  components: {
+    doc: (0, _index.transition)()(_Doc2.default)
+  }
+  // </script>
+  //
+  // <style>
+  // body {
+  //   padding: 20px;
+  //   color: #999;
+  //   background-color: #19232e;
+  // }
+  // .san-live {
+  //   opacity: 1;
+  //   transition: all 1s ease-out;
+  //   transform: translate(0, 0);
+  // }
+  // .san-in, .san-out {
+  //   opacity: 0;
+  //   transform: translate(0, 100px);
+  // }
+  // </style>
+
+};
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _prismjs = __webpack_require__(25);
 
 var _prismjs2 = _interopRequireDefault(_prismjs);
 
-var _try = __webpack_require__(24);
+var _try = __webpack_require__(28);
 
 var _try2 = _interopRequireDefault(_try);
 
@@ -10076,7 +10357,7 @@ exports.default = {
 // </style>
 
 /***/ }),
-/* 12 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10111,7 +10392,7 @@ exports.default = {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
-/* 13 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(0)();
@@ -10125,7 +10406,7 @@ exports.push([module.i, "/*! normalize.css v6.0.0 | MIT License | github.com/nec
 
 
 /***/ }),
-/* 14 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(0)();
@@ -10139,7 +10420,7 @@ exports.push([module.i, "/**\n * prism.js tomorrow night eighties for JavaScript
 
 
 /***/ }),
-/* 15 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(0)();
@@ -10147,13 +10428,13 @@ exports = module.exports = __webpack_require__(0)();
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nbody {\n  padding: 20px;\n  color: #999;\n  background-color: #19232e;\n}\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nbody {\n  padding: 20px;\n  color: #999;\n  background-color: #19232e;\n}\n.san-live {\n  opacity: 1;\n  transition: all 1s ease-out;\n  transform: translate(0, 0);\n}\n.san-in, .san-out {\n  opacity: 0;\n  transform: translate(0, 100px);\n}\n", ""]);
 
 // exports
 
 
 /***/ }),
-/* 16 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(0)();
@@ -10167,7 +10448,7 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 
 
 /***/ }),
-/* 17 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(0)();
@@ -10181,25 +10462,25 @@ exports.push([module.i, ".markdown-body {\n  color: #999;\n}\n.markdown-body tab
 
 
 /***/ }),
-/* 18 */
+/* 22 */
 /***/ (function(module, exports) {
 
 module.exports = "\n<section>\n  <a href=\"https://github.com/dafrok/san-transition\"><img style=\"position: absolute; top: 0; right: 0; border: 0;\" src=\"https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67\" alt=\"Fork me on GitHub\" data-canonical-src=\"https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png\"></a>\n  <div class=\"markdown-body\">\n    <doc></doc>\n  </div>\n</section>\n";
 
 /***/ }),
-/* 19 */
+/* 23 */
 /***/ (function(module, exports) {
 
 module.exports = "\n<iframe\n  height=\"{{height || '300'}}\"\n  width=\"100%\"\n  scrolling=\"no\"\n  title=\"{{title}}\"\n  src=\"//codepen.io/Dafrok/embed/{{penId}}/?height=300&theme-id=dark&default-tab={{tab}}&embed-version=2\"\n  frameborder=\"no\"\n  allowtransparency=\"true\"\n  allowfullscreen=\"true\">\n  See the Pen <a href=\"https://codepen.io/Dafrok/pen/{{penId}}/\">{{penId}}</a> by Dafrok (<a href=\"https://codepen.io/Dafrok\">@Dafrok</a>) on <a href=\"https://codepen.io\">CodePen</a>.\n</iframe>\n";
 
 /***/ }),
-/* 20 */
+/* 24 */
 /***/ (function(module, exports) {
 
 module.exports = "<div><h1 id=\"-img-src-https-ecomfe-github-io-san-img-logo-colorful-svg-height-28px-span-san-transition-span-\"><img src=\"https://ecomfe.github.io/san/img/logo-colorful.svg\" height=\"28px\"><span>San Transition</span></h1>\n<p>High order component factory for generating <a href=\"//github.com/ecomfe/san\">san</a> components with transition effects.</p>\n<h2 id=\"get-start\">Get Start</h2>\n<h3 id=\"installation\">Installation</h3>\n<h4 id=\"npm\">NPM</h4>\n<pre><code class=\"lang-bash\">$ npm install --save san-transition\n</code></pre>\n<h4 id=\"cdn\">CDN</h4>\n<pre><code class=\"lang-html\">&lt;script src=&quot;//unpkg.com/san-transition&quot;&gt;&lt;/script&gt;\n</code></pre>\n<h3 id=\"usage\">Usage</h3>\n<pre><code class=\"lang-html\">&lt;template&gt;\n  &lt;div&gt;\n    &lt;transition-layer&gt;A component with transition effects.&lt;/transition-layer&gt;\n  &lt;div&gt;\n&lt;/template&gt;\n\n&lt;script&gt;\nimport {transition} from &#39;san-transition&#39;\nimport {YourComponent} from &#39;YOUR_SAN_COMPONENT&#39;\n\nexport default {\n  components: {\n    &#39;transition-layer&#39;: transition(&#39;fade&#39;)(YourComponent)\n  }\n}\n&lt;/script&gt;\n\n&lt;style&gt;\n.fade-live {\n  opacity: 1;\n  transform: translate(0, 0);\n  transition: all .5s;\n}\n.fade-in, .fade-out {\n  opacity: 0;\n  transform: translate(100px, 0);\n}\n&lt;/style&gt;\n</code></pre>\n<h2 id=\"api\">API</h2>\n<h3 id=\"transition\">transition</h3>\n<ul>\n<li>Arguments<ul>\n<li><strong>{None, String, Object}</strong> hook id</li>\n</ul>\n</li>\n<li><p>Usage</p>\n<pre><code class=\"lang-javascript\">// register default hooks\n// the same as `transition(&#39;san&#39;)(YourComponent)`\ntransition()(YourComponent)\n\n// register named hooks\ntransition(&#39;foo&#39;)(YourComponent)\n\n// register custom hooks\ntransition({\n  in: &#39;custom-transition-in-hook&#39;\n  out: &#39;custom-transition-out-hook&#39;,\n  live: &#39;custom-live-hook&#39;,\n})(YourComponent)\n</code></pre>\n</li>\n</ul>\n<h3 id=\"transitiongroup-uncompleted-\">transitionGroup (uncompleted)</h3>\n<p>Coming soon...</p>\n<h2 id=\"css-hooks\">CSS Hooks</h2>\n<ul>\n<li><strong>in</strong> - Applies when the component attaches DOM tree and removes in the next frame immediately.</li>\n<li><strong>out</strong> - Applies when the component will dispose.</li>\n<li><strong>live</strong> - Applies between the next frame of <strong><em>in</em></strong> hook deactives and <strong><em>out</em></strong> hook actives.</li>\n</ul>\n<h2 id=\"try-it-out\">Try It Out</h2>\n<h3 id=\"default-hooks\">Default Hooks</h3>\n<try penId=\"pwravg\" title=\"Default Hooks\"></try>\n\n<h3 id=\"named-hooks\">Named Hooks</h3>\n<try penId=\"VWzQWV\" title=\"Named Hooks\"></try>\n\n<h3 id=\"custom-hooks\">Custom Hooks</h3>\n<try penId=\"xrLYYz\" title=\"Custom Hooks\"></try>\n\n<h3 id=\"keyframe-animation-transition\">Keyframe Animation Transition</h3>\n<try penId=\"rwzJqJ\" title=\"Keyframe Animation Transition\"></try>\n\n<h3 id=\"working-with-s-if-s-else-expression\">Working with s-if &amp; s-else expression</h3>\n<try penId=\"dRzmbB\" title=\"Working with s-if & s-else expression\"></try>\n</div>";
 
 /***/ }),
-/* 21 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {
@@ -11001,7 +11282,7 @@ Prism.languages.js = Prism.languages.javascript;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
-/* 22 */
+/* 26 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -11191,18 +11472,18 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 23 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __san_script__, __san_template__
 var __san_styles__ = {}
-__webpack_require__(27)
-__san_script__ = __webpack_require__(11)
+__webpack_require__(31)
+__san_script__ = __webpack_require__(15)
 if (__san_script__ &&
     __san_script__.__esModule &&
     Object.keys(__san_script__).length > 1) {
   console.warn("[san-loader] docs/components/Doc.san: named exports in *.san files are ignored.")}
-__san_template__ = __webpack_require__(20)
+__san_template__ = __webpack_require__(24)
 var __san_proto__ = {}
 if (__san_script__) {
   __san_proto__ = __san_script__.__esModule
@@ -11224,17 +11505,17 @@ __san_exports__.computed[key] = function () { return module }
 
 
 /***/ }),
-/* 24 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __san_script__, __san_template__
 var __san_styles__ = {}
-__san_script__ = __webpack_require__(12)
+__san_script__ = __webpack_require__(16)
 if (__san_script__ &&
     __san_script__.__esModule &&
     Object.keys(__san_script__).length > 1) {
   console.warn("[san-loader] docs/components/try.san: named exports in *.san files are ignored.")}
-__san_template__ = __webpack_require__(19)
+__san_template__ = __webpack_require__(23)
 var __san_proto__ = {}
 if (__san_script__) {
   __san_proto__ = __san_script__.__esModule
@@ -11256,7 +11537,7 @@ __san_exports__.computed[key] = function () { return module }
 
 
 /***/ }),
-/* 25 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
@@ -11446,16 +11727,16 @@ __san_exports__.computed[key] = function () { return module }
     attachTo.clearImmediate = clearImmediate;
 }(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), __webpack_require__(22)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), __webpack_require__(26)))
 
 /***/ }),
-/* 26 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(15);
+var content = __webpack_require__(19);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(1)(content, {});
@@ -11475,13 +11756,13 @@ if(false) {
 }
 
 /***/ }),
-/* 27 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(16);
+var content = __webpack_require__(20);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(1)(content, {});
@@ -11501,7 +11782,7 @@ if(false) {
 }
 
 /***/ }),
-/* 28 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var apply = Function.prototype.apply;
@@ -11554,7 +11835,7 @@ exports._unrefActive = exports.active = function(item) {
 };
 
 // setimmediate attaches itself to the global object
-__webpack_require__(25);
+__webpack_require__(29);
 exports.setImmediate = setImmediate;
 exports.clearImmediate = clearImmediate;
 
