@@ -53,7 +53,7 @@ export default (prop = 'san') => Component => {
     parent.updateView = function (changes) {
       const child = this.childs[0]
       const el = this.transitionEl
-      if (this.evalExpr(this.cond)) {
+      if (!this.cond || this.evalExpr(this.cond)) {
         if (child && parent.isLeaving) {
           // entering
           prepareEnter(parent, hooks)

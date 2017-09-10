@@ -1,6 +1,6 @@
 <template lang="pug">
 section
-  //- include:markdown-it(html) ./doc.md
+  include:markdown-it(html) ./doc.md
 </template>
 
 
