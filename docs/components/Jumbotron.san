@@ -1,0 +1,19 @@
+<template>
+<header>
+  <img src="https://ecomfe.github.io/san/img/logo-colorful.svg" class="logo">
+  <h1>San Transition</h1>
+  <p>High order component factory for generating <a href="//github.com/ecomfe/san">san</a> components with transition effects.</p>
+</header>
+</template>
+
+<style lang="stylus">
+.index
+  header
+    text-align center
+    padding 50px 0
+    background-color #001a23
+    overflow hidden
+    perspective 800px
+    .logo
+      height 220px
+</style>

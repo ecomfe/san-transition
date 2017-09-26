@@ -1,0 +1,59 @@
+<template>
+<section class="index">
+  <jumbotron></jumbotron>
+  <navigator></navigator>
+</section>
+</template>
+
+<script>
+import {router, Link} from 'san-router'
+import Jumbotron from '../components/Jumbotron.san'
+import Navigator from '../components/Nav.san'
+import {transition} from '@/index.js'
+
+export default {
+  components: {
+    'jumbotron': Jumbotron,
+    'router-link': Link,
+    'navigator': Navigator
+  }
+}
+</script>
+
+<style lang="stylus">
+body
+  color: #999
+  background-color #19232e
+  margin 0
+  padding 0
+h1, a
+  color white
+a
+  text-decoration none
+  &:hover
+    text-decoration underline
+
+.logo
+  animation logo 2s infinite
+
+.san {
+  transition: all .2s ease-out;
+  opacity: 1;
+  transform: translate(0, 0);
+}
+.san-live, .san-in, .san-out {
+  width: 100%;
+  top: 0;
+  position: absolute;
+}
+.san-in, .san-out {
+  opacity: 0;
+  transform: translate(-100%, 0);
+}
+
+@keyframes logo
+  0%
+    transform rotate3d(0, 1, 0, 0deg)
+  100%
+    transform rotate3d(0, 1, 0, 360deg)
+</style>

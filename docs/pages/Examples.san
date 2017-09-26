@@ -1,0 +1,17 @@
+<template lang="pug">
+section
+  app-header
+  debug
+</template>
+
+<script>
+import AppHeader from '../components/AppHeader.san'
+import Debug from '../components/Debug.san'
+
+export default {
+  components: {
+    'app-header': AppHeader,
+    'debug': Debug
+  }
+}
+</script>

@@ -1,0 +1,16 @@
+<template lang="pug">
+section
+  app-header
+  article.markdown-body
+    include:markdown-it(html) ../components/API.md
+</template>
+
+<script>
+import AppHeader from '../components/AppHeader.san'
+
+export default {
+  components: {
+    'app-header': AppHeader
+  }
+}
+</script>

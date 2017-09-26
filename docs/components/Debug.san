@@ -1,0 +1,82 @@
+<template>
+<section>
+  <button on-click="toggle">Toggle</button>
+  <transition-layer class="transition-layer" s-if="isLive">Transition Layer</transition-layer>
+</section>
+</template>
+
+<script>
+import san from 'san'
+import {transition} from '@/index.js'
+
+const TransitionLayer = san.defineComponent({
+  template: `<div><slot></slot></div>`
+})
+
+export default {
+  components: {
+    'transition-layer': transition('animation')(TransitionLayer)
+  },
+  initData () {
+    return {
+      isLive: true
+    }
+  },
+  toggle () {
+    this.data.set('isLive', !this.data.get('isLive'))
+  }
+}
+</script>
+
+<style>
+button {
+  background: white;
+  box-shadow: 0 0 1px gray;
+}
+.animation-out {
+  animation: go-out 0.5s;
+}
+.animation-live {
+  transition: all .5s ease-out;
+  border: 1px solid white;
+  width: 100px;
+  height: 100px;
+  animation: come-in 0.5s;
+}
+@keyframes come-in {
+  0% {
+    transform: scale(0) translate(-100px, 0) rotate(360deg);
+  }
+  50% {
+    transform: scale(1.2) translate(-50px, 0) rotate(-90deg);
+  }
+  100% {
+    transform: scale(1) translate(0, 0) rotate(0deg);
+  }
+}
+@keyframes go-out {
+  0% {
+    transform: scale(1) translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.2) translate(50px, 0) rotate(90deg);
+  }
+  100% {
+    transform: scale(0) translate(100px, 0) rotate(-360deg);
+  }
+}
+
+.toggle-in {
+  opacity: 0;
+  transform: translate(50px, 0);
+}
+.toggle-out {
+  opacity: 0;
+  transform: translate(-50px, 0);
+}
+.toggle-live {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+</style>

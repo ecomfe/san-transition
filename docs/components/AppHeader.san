@@ -1,0 +1,31 @@
+<template lang="pug">
+header.app-header
+  a(href="https://github.com/dafrok/san-transition")
+  h1
+    img(src="https://ecomfe.github.io/san/img/logo-colorful.svg" class="logo")
+    span San Transition
+  navigator
+</template>
+
+<script>
+import Navigator from '../components/Nav.san'
+
+export default {
+  components: {
+    'navigator': Navigator
+  }
+}
+</script>
+
+<style lang="stylus">
+.app-header
+  background-color #001a23
+  overflow hidden
+  h1
+    padding 0 20px
+    img, span
+      vertical-align middle
+    .logo
+      height 36px
+      margin-right 10px
+</style>

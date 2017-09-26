@@ -14,6 +14,9 @@ export const getTimeout = el => {
 export const afterNextFrame = fn => requestAnimationFrame(() => requestAnimationFrame(fn))
 
 export const clearParentTimeout = parent => {
+  if (!parent) {
+    return
+  }
   clearTimeout(parent.leavingTimeout)
   clearTimeout(parent.enteringTimeout)
 }
@@ -46,3 +49,9 @@ export const getHooks = prop => typeof prop === 'object'
     out: `${prop}-out`,
     live: `${prop}-live`
   }
+
+export const addHook = (el, hook) => el.classList.add(hook)
+export const removeHook = (el, hook) => el.classList.remove(hook)
+
+export const disableEl = el => el.style.pointerEvents = 'none'
+export const enableEl = el => el.style.pointerEvents = ''

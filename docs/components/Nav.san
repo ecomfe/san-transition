@@ -1,0 +1,45 @@
+<template>
+  <nav>
+    <router-link s-for="route in routes" class="{{activeRoute === route.path ? 'active' : ''}}" to="{{route.path}}">{{route.name}}</router-link>
+  </nav>  
+</template>
+
+<script>
+import {router, Link} from 'san-router'
+
+export default {
+  initData () {
+    return {
+      routes: [
+        {name: 'Home', path: '/'},
+        {name: 'Get Start', path: '/start'},
+        {name: 'API', path: '/api'},
+        {name: 'Examples', path: '/examples'}
+      ],
+      activeRoute: router.locator.current
+    }
+  },
+  components: {
+    'router-link': Link
+  }
+}
+</script>
+
+<style lang="stylus">
+nav
+  background-color #334959
+  a 
+    display inline-block
+    padding 8px 30px
+    &.active
+      color #001a23
+      background-color #9ee0fe
+      &:hover
+        color white
+    &:hover
+      text-decoration none
+      color #9ee0fe
+.index
+  nav
+    text-align center
+</style>
