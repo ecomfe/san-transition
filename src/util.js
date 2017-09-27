@@ -13,14 +13,6 @@ export const getTimeout = el => {
 
 export const afterNextFrame = fn => requestAnimationFrame(() => requestAnimationFrame(fn))
 
-export const clearParentTimeout = parent => {
-  if (!parent) {
-    return
-  }
-  clearTimeout(parent.leavingTimeout)
-  clearTimeout(parent.enteringTimeout)
-}
-
 export const prepareEnter = (parent, hooks) => {
   const {transitionEl} = parent
   parent.isEntering = true
@@ -40,18 +32,20 @@ export const prepareLeave = (parent, hooks) => {
 
 export const getHooks = prop => typeof prop === 'object'
   ? {
-    in: prop.in || 'san-in',
-    out: prop.out || 'san-out',
-    live: prop.leave || 'san-live'
+    beforeEnter: prop.beforeEnter || 'san-before-enter',
+    enter: prop.enter || 'san-enter',
+    beforeLeave: prop.beforeLeave || 'san-before-leave',
+    leave: prop.leave || 'san-leave'
   }
   : {
-    in: `${prop}-in`,
-    out: `${prop}-out`,
-    live: `${prop}-live`
+    beforeEnter: `${prop}-before-enter`,
+    enter: `${prop}-enter`,
+    beforeLeave: `${prop}-before-leave`,
+    leave: `${prop}-leave`
   }
 
 export const addHook = (el, hook) => el.classList.add(hook)
 export const removeHook = (el, hook) => el.classList.remove(hook)
 
-export const disableEl = el => el.style.pointerEvents = 'none'
-export const enableEl = el => el.style.pointerEvents = ''
+export const disableEl = el => { el.style.pointerEvents = 'none' }
+export const enableEl = el => { el.style.pointerEvents = '' }

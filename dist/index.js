@@ -63,319 +63,11 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 9);
+/******/ 	return __webpack_require__(__webpack_require__.s = 16);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports) {
-
-/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-// css base code, injected by the css-loader
-module.exports = function() {
-	var list = [];
-
-	// return the list of modules as css string
-	list.toString = function toString() {
-		var result = [];
-		for(var i = 0; i < this.length; i++) {
-			var item = this[i];
-			if(item[2]) {
-				result.push("@media " + item[2] + "{" + item[1] + "}");
-			} else {
-				result.push(item[1]);
-			}
-		}
-		return result.join("");
-	};
-
-	// import a list of modules into the list
-	list.i = function(modules, mediaQuery) {
-		if(typeof modules === "string")
-			modules = [[null, modules, ""]];
-		var alreadyImportedModules = {};
-		for(var i = 0; i < this.length; i++) {
-			var id = this[i][0];
-			if(typeof id === "number")
-				alreadyImportedModules[id] = true;
-		}
-		for(i = 0; i < modules.length; i++) {
-			var item = modules[i];
-			// skip already imported module
-			// this implementation is not 100% perfect for weird media query combinations
-			//  when a module is imported multiple times with different media queries.
-			//  I hope this will never occur (Hey this way we have smaller bundles)
-			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
-				if(mediaQuery && !item[2]) {
-					item[2] = mediaQuery;
-				} else if(mediaQuery) {
-					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
-				}
-				list.push(item);
-			}
-		}
-	};
-	return list;
-};
-
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports) {
-
-/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-var stylesInDom = {},
-	memoize = function(fn) {
-		var memo;
-		return function () {
-			if (typeof memo === "undefined") memo = fn.apply(this, arguments);
-			return memo;
-		};
-	},
-	isOldIE = memoize(function() {
-		return /msie [6-9]\b/.test(self.navigator.userAgent.toLowerCase());
-	}),
-	getHeadElement = memoize(function () {
-		return document.head || document.getElementsByTagName("head")[0];
-	}),
-	singletonElement = null,
-	singletonCounter = 0,
-	styleElementsInsertedAtTop = [];
-
-module.exports = function(list, options) {
-	if(typeof DEBUG !== "undefined" && DEBUG) {
-		if(typeof document !== "object") throw new Error("The style-loader cannot be used in a non-browser environment");
-	}
-
-	options = options || {};
-	// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
-	// tags it will allow on a page
-	if (typeof options.singleton === "undefined") options.singleton = isOldIE();
-
-	// By default, add <style> tags to the bottom of <head>.
-	if (typeof options.insertAt === "undefined") options.insertAt = "bottom";
-
-	var styles = listToStyles(list);
-	addStylesToDom(styles, options);
-
-	return function update(newList) {
-		var mayRemove = [];
-		for(var i = 0; i < styles.length; i++) {
-			var item = styles[i];
-			var domStyle = stylesInDom[item.id];
-			domStyle.refs--;
-			mayRemove.push(domStyle);
-		}
-		if(newList) {
-			var newStyles = listToStyles(newList);
-			addStylesToDom(newStyles, options);
-		}
-		for(var i = 0; i < mayRemove.length; i++) {
-			var domStyle = mayRemove[i];
-			if(domStyle.refs === 0) {
-				for(var j = 0; j < domStyle.parts.length; j++)
-					domStyle.parts[j]();
-				delete stylesInDom[domStyle.id];
-			}
-		}
-	};
-}
-
-function addStylesToDom(styles, options) {
-	for(var i = 0; i < styles.length; i++) {
-		var item = styles[i];
-		var domStyle = stylesInDom[item.id];
-		if(domStyle) {
-			domStyle.refs++;
-			for(var j = 0; j < domStyle.parts.length; j++) {
-				domStyle.parts[j](item.parts[j]);
-			}
-			for(; j < item.parts.length; j++) {
-				domStyle.parts.push(addStyle(item.parts[j], options));
-			}
-		} else {
-			var parts = [];
-			for(var j = 0; j < item.parts.length; j++) {
-				parts.push(addStyle(item.parts[j], options));
-			}
-			stylesInDom[item.id] = {id: item.id, refs: 1, parts: parts};
-		}
-	}
-}
-
-function listToStyles(list) {
-	var styles = [];
-	var newStyles = {};
-	for(var i = 0; i < list.length; i++) {
-		var item = list[i];
-		var id = item[0];
-		var css = item[1];
-		var media = item[2];
-		var sourceMap = item[3];
-		var part = {css: css, media: media, sourceMap: sourceMap};
-		if(!newStyles[id])
-			styles.push(newStyles[id] = {id: id, parts: [part]});
-		else
-			newStyles[id].parts.push(part);
-	}
-	return styles;
-}
-
-function insertStyleElement(options, styleElement) {
-	var head = getHeadElement();
-	var lastStyleElementInsertedAtTop = styleElementsInsertedAtTop[styleElementsInsertedAtTop.length - 1];
-	if (options.insertAt === "top") {
-		if(!lastStyleElementInsertedAtTop) {
-			head.insertBefore(styleElement, head.firstChild);
-		} else if(lastStyleElementInsertedAtTop.nextSibling) {
-			head.insertBefore(styleElement, lastStyleElementInsertedAtTop.nextSibling);
-		} else {
-			head.appendChild(styleElement);
-		}
-		styleElementsInsertedAtTop.push(styleElement);
-	} else if (options.insertAt === "bottom") {
-		head.appendChild(styleElement);
-	} else {
-		throw new Error("Invalid value for parameter 'insertAt'. Must be 'top' or 'bottom'.");
-	}
-}
-
-function removeStyleElement(styleElement) {
-	styleElement.parentNode.removeChild(styleElement);
-	var idx = styleElementsInsertedAtTop.indexOf(styleElement);
-	if(idx >= 0) {
-		styleElementsInsertedAtTop.splice(idx, 1);
-	}
-}
-
-function createStyleElement(options) {
-	var styleElement = document.createElement("style");
-	styleElement.type = "text/css";
-	insertStyleElement(options, styleElement);
-	return styleElement;
-}
-
-function createLinkElement(options) {
-	var linkElement = document.createElement("link");
-	linkElement.rel = "stylesheet";
-	insertStyleElement(options, linkElement);
-	return linkElement;
-}
-
-function addStyle(obj, options) {
-	var styleElement, update, remove;
-
-	if (options.singleton) {
-		var styleIndex = singletonCounter++;
-		styleElement = singletonElement || (singletonElement = createStyleElement(options));
-		update = applyToSingletonTag.bind(null, styleElement, styleIndex, false);
-		remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true);
-	} else if(obj.sourceMap &&
-		typeof URL === "function" &&
-		typeof URL.createObjectURL === "function" &&
-		typeof URL.revokeObjectURL === "function" &&
-		typeof Blob === "function" &&
-		typeof btoa === "function") {
-		styleElement = createLinkElement(options);
-		update = updateLink.bind(null, styleElement);
-		remove = function() {
-			removeStyleElement(styleElement);
-			if(styleElement.href)
-				URL.revokeObjectURL(styleElement.href);
-		};
-	} else {
-		styleElement = createStyleElement(options);
-		update = applyToTag.bind(null, styleElement);
-		remove = function() {
-			removeStyleElement(styleElement);
-		};
-	}
-
-	update(obj);
-
-	return function updateStyle(newObj) {
-		if(newObj) {
-			if(newObj.css === obj.css && newObj.media === obj.media && newObj.sourceMap === obj.sourceMap)
-				return;
-			update(obj = newObj);
-		} else {
-			remove();
-		}
-	};
-}
-
-var replaceText = (function () {
-	var textStore = [];
-
-	return function (index, replacement) {
-		textStore[index] = replacement;
-		return textStore.filter(Boolean).join('\n');
-	};
-})();
-
-function applyToSingletonTag(styleElement, index, remove, obj) {
-	var css = remove ? "" : obj.css;
-
-	if (styleElement.styleSheet) {
-		styleElement.styleSheet.cssText = replaceText(index, css);
-	} else {
-		var cssNode = document.createTextNode(css);
-		var childNodes = styleElement.childNodes;
-		if (childNodes[index]) styleElement.removeChild(childNodes[index]);
-		if (childNodes.length) {
-			styleElement.insertBefore(cssNode, childNodes[index]);
-		} else {
-			styleElement.appendChild(cssNode);
-		}
-	}
-}
-
-function applyToTag(styleElement, obj) {
-	var css = obj.css;
-	var media = obj.media;
-
-	if(media) {
-		styleElement.setAttribute("media", media)
-	}
-
-	if(styleElement.styleSheet) {
-		styleElement.styleSheet.cssText = css;
-	} else {
-		while(styleElement.firstChild) {
-			styleElement.removeChild(styleElement.firstChild);
-		}
-		styleElement.appendChild(document.createTextNode(css));
-	}
-}
-
-function updateLink(linkElement, obj) {
-	var css = obj.css;
-	var sourceMap = obj.sourceMap;
-
-	if(sourceMap) {
-		// http://stackoverflow.com/a/26603875
-		css += "\n/*# sourceMappingURL=data:application/json;base64," + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + " */";
-	}
-
-	var blob = new Blob([css], { type: "text/css" });
-
-	var oldSrc = linkElement.href;
-
-	linkElement.href = URL.createObjectURL(blob);
-
-	if(oldSrc)
-		URL.revokeObjectURL(oldSrc);
-}
-
-
-/***/ }),
-/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(setImmediate) {/**
@@ -1987,6 +1679,7 @@ function readMultiplicativeExpr(walker) {
 
     var code = walker.currentCode();
     switch (code) {
+        case 37: // %
         case 42: // *
         case 47: // /
             walker.go(1);
@@ -2463,7 +2156,13 @@ var directiveParsers = {
         };
     },
 
-    'else': function () {
+    'elif': function (value) {
+        return {
+            value: parseExpr(value.replace(/(^\{\{|\}\}$)/g, ''))
+        };
+    },
+
+    'else': function (value) {
         return {
             value: 1
         };
@@ -2479,17 +2178,19 @@ var directiveParsers = {
 /**
  * 解析指令
  *
+ * @param {ANode} aNode 抽象节点
  * @param {string} name 指令名称
  * @param {string} value 指令值
- * @return {Object?}
  */
-function parseDirective(name, value) {
+function parseDirective(aNode, name, value) {
     var parser = directiveParsers[name];
+    
     if (parser) {
         var result = parser(value);
         result.name = name;
         result.raw = value;
-        return result;
+
+        aNode.directives.push(result);
     }
 }
 
@@ -2541,8 +2242,7 @@ function integrateAttr(aNode, name, value, ignoreNormal) {
 
         case 'san':
         case 's':
-            var directive = parseDirective(realName, value);
-            directive && aNode.directives.push(directive);
+            parseDirective(aNode, realName, value);
             break;
 
         case 'prop':
@@ -2708,36 +2408,34 @@ function parseTemplate(source) {
                 }
             }
 
-            // match if directive for else directive
-            var elseDirective = aElement.directives.get('else');
+            // match if directive for else/elif directive
+            var elseDirective = aElement.directives.get('else') || aElement.directives.get('elif');
             if (elseDirective) {
                 var parentChildsLen = currentNode.childs.length;
 
                 while (parentChildsLen--) {
                     var parentChild = currentNode.childs[parentChildsLen];
                     if (parentChild.isText) {
+                        currentNode.childs.splice(parentChildsLen, 1);
                         continue
                     }
 
-                    var childIfDirective = parentChild.directives.get('if');
-
                     // #[begin] error
-                    if (!childIfDirective) {
+                    if (!parentChild.directives.get('if')) {
                         throw new Error('[SAN FATEL] else not match if.');
                     }
                     // #[end]
 
-                    parentChild['else'] = aElement;
-                    elseDirective.value = {
-                        type: ExprType.UNARY,
-                        expr: childIfDirective.value
-                    };
+                    parentChild.elses = parentChild.elses || [];
+                    parentChild.elses.push(aElement);
 
                     break;
                 }
             }
+            else {
+                currentNode.childs.push(aElement);
+            }
 
-            currentNode.childs.push(aElement);
             if (!tagClose) {
                 currentNode = aElement;
             }
@@ -2782,6 +2480,9 @@ function parseTemplate(source) {
  */
 var BinaryOp = {
     /* eslint-disable */
+    37: function (a, b) {
+        return a % b;
+    },
     43: function (a, b) {
         return a + b;
     },
@@ -3529,6 +3230,7 @@ Data.prototype.remove = function (expr, value, option) {
  * @file 生命周期类
  * @author errorrik(errorrik@gmail.com)
  */
+// var each = require('../util/each');
 
 /* eslint-disable fecs-valid-var-jsdoc */
 /**
@@ -3546,22 +3248,27 @@ var LifeCycles = {
         value: 2
     },
 
-    created: {
+    painting: {
         value: 3
     },
 
-    attached: {
+    created: {
         value: 4,
-        mutex: 'detached'
+        mutex: 'painting'
+    },
+
+    attached: {
+        value: 5,
+        mutex: 'detached,painting'
     },
 
     detached: {
-        value: 5,
+        value: 6,
         mutex: 'attached'
     },
 
     disposed: {
-        value: 6,
+        value: 7,
         mutex: '*'
     }
 };
@@ -3582,19 +3289,22 @@ function LifeCycle() {
  * @param {string} name 生命周期名称
  */
 LifeCycle.prototype.set = function (name) {
+    var me = this;
     var lifeCycle = LifeCycles[name];
     if (!lifeCycle) {
         return;
     }
 
     if (lifeCycle.mutex === '*') {
-        this.raw = {};
+        me.raw = {};
     }
     else if (lifeCycle.mutex) {
-        this.raw[LifeCycles[lifeCycle.mutex].value] = 0;
+        each(lifeCycle.mutex.split(','), function (mutex) {
+            me.raw[LifeCycles[mutex].value] = 0;
+        }); 
     }
 
-    this.raw[lifeCycle.value] = 1;
+    me.raw[lifeCycle.value] = 1;
 };
 
 /**
@@ -3623,7 +3333,7 @@ LifeCycle.prototype.is = function (name) {
  * @return {boolean}
  */
 function isComponent(node) {
-    return node && node._type === 'component';
+    return node && node._type === 'san-cmpt';
 }
 
 // exports = module.exports = isComponent;
@@ -3776,10 +3486,68 @@ Node.prototype.evalExpr = function (expr, escapeInterpHtml) {
  * @param {StringBuffer} buf html串存储对象
  */
 function genStumpHTML(node, buf) {
-    buf.push('<script type="text/san" id="' + node.id + '"></script>');
+    // buf.push('<script type="text/san" id="' + node.id + '"></script>');
+    buf.push('<!--san:' + node.id + '-->');
 }
 
 // exports = module.exports = genStumpHTML;
+
+
+/**
+ * @file 判断是否结束桩
+ * @author errorrik(errorrik@gmail.com)
+ */
+
+// #[begin] reverse
+/**
+ * 判断是否结束桩
+ *
+ * @param {HTMLElement|HTMLComment} target 要判断的元素
+ * @param {string} type 桩类型
+ * @return {boolean}
+ */
+function isEndStump(target, type) {
+    return target.nodeType === 8 && target.data === '/s-' + type;
+}
+// #[end]
+
+// exports = module.exports = isEndStump;
+
+
+/**
+ * @file  获取节点 stump 的 comment
+ * @author errorrik(errorrik@gmail.com)
+ */
+
+// #[begin] error
+/**
+ * 获取节点 stump 的 comment
+ *
+ * @param {HTMLElement} el HTML元素
+ */
+function warnSetHTML(el) {
+    // dont warn if not in browser runtime
+    if (!(typeof window !== 'undefined' && typeof navigator !== 'undefined' && window.document)) {
+        return;
+    }
+
+    // some html elements cannot set innerHTML in old ie
+    // see: https://msdn.microsoft.com/en-us/library/ms533897(VS.85).aspx
+    if (/^(col|colgroup|frameset|style|table|tbody|tfoot|thead|tr|select)$/i.test(el.tagName)) {
+        var message = '[SAN WARNING] set html for element "' + el.tagName 
+            + '" may cause an error in old IE';
+
+        if (typeof console === 'object' && console.warn) {
+            console.warn(message);
+        }
+        else {
+            throw new Error(message);
+        }
+    }
+}
+// #[end]
+
+// exports = module.exports = warnSetHTML;
 
 
 /**
@@ -3791,7 +3559,8 @@ function genStumpHTML(node, buf) {
 // var inherits = require('../util/inherits');
 // var each = require('../util/each');
 // var Node = require('./node');
-// var genStumpHTML = require('./gen-stump-html');
+// var isEndStump = require('./is-end-stump');
+// var warnSetHTML = require('./warn-set-html');
 // var createANode = require('../parser/create-a-node');
 // var changeExprCompare = require('../runtime/change-expr-compare');
 // var removeEl = require('../browser/remove-el');
@@ -3824,7 +3593,7 @@ TextNode.prototype._init = function (options) {
     if (this.el) {
         this.aNode = createANode({
             isText: 1,
-            text: this.el.data.replace('s-ts:', '')
+            text: options.stumpText
         });
 
         this.parent._pushChildANode(this.aNode);
@@ -3833,7 +3602,7 @@ TextNode.prototype._init = function (options) {
         while (1) {
         /* eslint-enable no-constant-condition */
             var next = options.elWalker.next;
-            if (next.nodeType === 8 && next.data === 's-te') {
+            if (isEndStump(next, 'text')) {
                 options.elWalker.goNext();
                 removeEl(next);
                 break;
@@ -3887,6 +3656,10 @@ TextNode.prototype.update = function () {
         startRemoveEl = insertBeforeEl;
     }
 
+    // #[begin] error
+    warnSetHTML(parentEl);
+    // #[end]
+    
     var text = this.evalExpr(this.aNode.textExpr, 1);
     if (insertBeforeEl) {
         insertBeforeEl.insertAdjacentHTML('beforebegin', text);
@@ -3927,6 +3700,9 @@ TextNode.prototype.updateView = function (changes) {
 // var contains = require('../util/contains');
 // var empty = require('../util/empty');
 // var svgTags = require('../browser/svg-tags');
+// var isComponent = require('./is-component');
+
+
 /**
  * HTML 属性和 DOM 操作属性的对照表
  *
@@ -3972,8 +3748,8 @@ var defaultElementPropHandler = {
         }
     },
 
-    output: function (element, bindInfo) {
-        element.scope.set(bindInfo.expr, element.el[bindInfo.name], {
+    output: function (element, bindInfo, data) {
+        data.set(bindInfo.expr, element.el[bindInfo.name], {
             target: {
                 id: element.id,
                 prop: bindInfo.name
@@ -4036,17 +3812,17 @@ var elementPropHandlers = {
                 }
             },
 
-            output: function (element, bindInfo) {
+            output: function (element, bindInfo, data) {
                 var el = element.el;
                 var bindType = element.props.get('type') || {};
 
                 switch (bindType.raw) {
                     case 'checkbox':
-                        element.scope[el.checked ? 'push' : 'remove'](bindInfo.expr, el.value);
+                        data[el.checked ? 'push' : 'remove'](bindInfo.expr, el.value);
                         break;
 
                     case 'radio':
-                        el.checked && element.scope.set(bindInfo.expr, el.value, {
+                        el.checked && data.set(bindInfo.expr, el.value, {
                             target: {
                                 id: element.id,
                                 prop: bindInfo.name
@@ -4083,11 +3859,19 @@ var elementPropHandlers = {
                         parentSelect = parentSelect.parent;
                     }
 
+
                     if (parentSelect) {
                         var selectValue = null;
-                        var selectValueProp = parentSelect.props.get('value');
-                        if (selectValueProp) {
-                            selectValue = parentSelect.evalExpr(selectValueProp.expr) || '';
+                        var prop;
+                        var expr;
+
+                        if ((prop = parentSelect.props.get('value'))
+                            && (expr = prop.expr)
+                        ) {
+                            selectValue = isComponent(parentSelect)
+                                    ? evalExpr(expr, parentSelect.data, parentSelect)
+                                    : parentSelect.evalExpr(expr)
+                                || '';
                         }
 
                         if (selectValue === value) {
@@ -4323,7 +4107,8 @@ function genElementChildsHTML(element, buf) {
         else {
             each(element.aNode.childs, function (aNodeChild) {
                 var child = createNode(aNodeChild, element);
-                if (!this._static) {
+                if (!child._static) {
+                    child.lifeCycle.set('painting');
                     element.childs.push(child);
                 }
                 child.genHTML(buf);
@@ -4353,6 +4138,8 @@ function genElementChildsHTML(element, buf) {
 // var isDataChangeByElement = require('./is-data-change-by-element');
 // var fromElInitChilds = require('./from-el-init-childs');
 // var isComponent = require('./is-component');
+// var warnSetHTML = require('./warn-set-html');
+// var isBrowser = require('../browser/is-browser');
 // var on = require('../browser/on');
 // var un = require('../browser/un');
 // var removeEl = require('../browser/remove-el');
@@ -4442,6 +4229,7 @@ Element.prototype._create = function () {
     var me = this;
 
     if (!this.el) {
+        me.lifeCycle.set('painting');
         me.el = createEl(me.tagName);
         me.el.id = me.id;
 
@@ -4450,7 +4238,7 @@ Element.prototype._create = function () {
                 ? evalExpr(prop.expr, me.data, me)
                 : me.evalExpr(prop.expr, 1);
 
-            var match = /^\s+([a-z0-9_-]+)=(['"])([^\2]*)\2$/.exec(
+            var match = /^\s+([a-z0-9_-]+)=(['"])([^\2]*)\2$/i.exec(
                 getPropHandler(me, prop.name)
                     .input
                     .attr(me, prop.name, value)
@@ -4477,7 +4265,7 @@ Element.prototype.create = function () {
  * 完成创建元素DOM后的行为
  */
 Element.prototype._attached = function () {
-    this._initSelfChanger();
+    this._initRootBindx();
 
     var me = this;
     each(this.aNode.events, function (eventBind) {
@@ -4501,25 +4289,27 @@ Element.prototype._attached = function () {
  *
  * @private
  */
-Element.prototype._initSelfChanger = function () {
+Element.prototype._initRootBindx = function () {
     var me = this;
+    var xBinds = isComponent(me) ? this.props : this.binds;
+    var data = isComponent(me) ? this.data : this.scope;
 
-    this.binds && this.binds.each(function (bindInfo) {
+    xBinds && xBinds.each(function (bindInfo) {
         if (!bindInfo.x) {
             return;
         }
 
         var el = me._getEl();
         function outputer() {
-            getPropHandler(me, bindInfo.name).output(me, bindInfo);
-        };
+            getPropHandler(me, bindInfo.name).output(me, bindInfo, data);
+        }
 
         switch (bindInfo.name) {
             case 'value':
                 switch (me.tagName) {
                     case 'input':
                     case 'textarea':
-                        if (root.CompositionEvent) {
+                        if (isBrowser && window.CompositionEvent) {
                             me._onEl('compositionstart', function () {
                                 this.composing = 1;
                             });
@@ -4597,7 +4387,17 @@ Element.prototype._attach = function (parentEl, beforeEl) {
     if (!this._contentReady) {
         var buf = new StringBuffer();
         genElementChildsHTML(this, buf);
-        this.el.innerHTML = buf.toString();
+
+        // html 没内容就不要设置 innerHTML了
+        // 这里还能避免在 IE 下 component root 为 input 等元素时设置 innerHTML 报错的问题
+        var html = buf.toString();
+        if (html) {
+            // #[begin] error
+            warnSetHTML(this.el);
+            // #[end]
+            this.el.innerHTML = html;
+        }
+
         this._contentReady = 1;
     }
 };
@@ -4667,6 +4467,9 @@ Element.prototype.updateView = function (changes) {
     if (htmlDirective) {
         each(changes, function (change) {
             if (changeExprCompare(change.expr, htmlDirective.value, me.scope)) {
+                // #[begin] error
+                warnSetHTML(me.el);
+                // #[end]
                 me.el.innerHTML = me.evalExpr(htmlDirective.value);
                 return false;
             }
@@ -4797,7 +4600,7 @@ function createNode(aNode, parent, scope) {
         return new TextNode(options);
     }
 
-    if (aNode.directives.get('if') || aNode.directives.get('else')) {
+    if (aNode.directives.get('if')) {
         return new IfDirective(options);
     }
 
@@ -4833,7 +4636,6 @@ function createNode(aNode, parent, scope) {
 // var Element = require('./element');
 // var SlotElement = require('./slot-element');
 // var Component = require('./component');
-// var isStump = require('./is-stump');
 // var parseANodeFromEl = require('../parser/parse-anode-from-el');
 
 // #[begin] reverse
@@ -4858,10 +4660,44 @@ function createNodeByEl(el, parent, elWalker, scope) {
         elWalker: elWalker
     };
 
-    // comment as TextNode
+    // comment as stump
     if (el.nodeType === 8) {
-        if (/^\s*s-ts:/.test(el.data)) {
-            return new TextNode(option);
+        var stumpMatch = el.data.match(/^\s*s-([a-z]+)(:[\s\S]+)?$/);
+
+        if (stumpMatch) {
+            option.stumpText = stumpMatch[2] ? stumpMatch[2].slice(1) : '';
+
+            switch (stumpMatch[1]) {
+                case 'text':
+                    return new TextNode(option);
+
+                case 'for':
+                    return new ForDirective(option);
+
+                case 'slot':
+                    return new SlotElement(option);
+
+                case 'if':
+                    return new IfDirective(option);
+                
+
+                case 'else':
+                case 'elif':
+                    createNodeByElseStump(option, stumpMatch[1]);
+                    return;
+
+                case 'data':
+                    // fill component data
+                    var data = (new Function(
+                        'return ' + option.stumpText.replace(/^[\s\n]*/ ,'')
+                    ))();
+
+                    for (var key in data) {
+                        owner.data.set(key, data[key]);
+                    }
+
+                    return;
+            }
         }
 
         return;
@@ -4870,7 +4706,6 @@ function createNodeByEl(el, parent, elWalker, scope) {
     // element as anything
     var tagName = el.tagName.toLowerCase();
     var childANode = parseANodeFromEl(el);
-    var stumpName = el.getAttribute('s-stump');
     option.aNode = childANode;
 
     // find component class
@@ -4886,34 +4721,18 @@ function createNodeByEl(el, parent, elWalker, scope) {
     }
 
 
-
-    if (childANode.directives.get('if') || childANode.directives.get('else')) {
+    if (childANode.directives.get('if')) {
         return new IfDirective(option);
     }
 
-    switch (stumpName) {
-        case 'if':
-        case 'else':
-            return new IfDirective(option);
-
-        case 'for-start':
-            return new ForDirective(option);
-
-        case 'slot-start':
-            return new SlotElement(option);
-
-        case 'data':
-            // fill component data
-            var data = (new Function(
-                'return ' + el.innerHTML.replace(/^[\s\n]*/ ,'')
-            ))();
-
-            for (var key in data) {
-                owner.data.set(key, data[key]);
-            }
-
-            return;
+    if (childANode.directives.get('else')) {
+        return createNodeByElseEl(option, 'else');
     }
+    
+    if (childANode.directives.get('elif')) {
+        return createNodeByElseEl(option, 'elif');
+    }
+
 
     // as Component
     if (ComponentClass) {
@@ -4923,27 +4742,156 @@ function createNodeByEl(el, parent, elWalker, scope) {
     // as Element
     return new Element(option);
 }
+
+function createNodeByElseEl(option, type) {
+    var parentChilds = option.parent.childs;
+    var len = parentChilds.length;
+
+    while (len--) {
+        var ifNode = parentChilds[len];
+        if (ifNode instanceof TextNode) {
+            continue;
+        }
+
+        if (ifNode instanceof IfDirective) {
+            if (!ifNode.aNode.elses) {
+                ifNode.aNode.elses = [];
+            }
+            ifNode.aNode.elses.push(option.aNode);
+            ifNode.elseIndex = ifNode.aNode.elses.length - 1;
+
+            option.el.removeAttribute('san-' + type);
+            option.el.removeAttribute('s-' + type);
+
+            var elseChild = createNodeByEl(option.el, ifNode, option.elWalker);
+            ifNode.childs[0] = elseChild;
+            option.aNode.childs = option.aNode.childs.slice(0);
+            break;
+        }
+
+        throw new Error('[SAN FATEL] ' + type + ' not match if.');
+    }
+}
+
+function createNodeByElseStump(option, type) {
+    var parentChilds = option.parent.childs;
+    var len = parentChilds.length;
+
+    while (len--) {
+        var ifNode = parentChilds[len];
+        if (ifNode instanceof TextNode) {
+            continue;
+        }
+
+        if (ifNode instanceof IfDirective) {
+            if (!ifNode.aNode.elses) {
+                ifNode.aNode.elses = [];
+            }
+
+            var elseANode;
+            switch (type) {
+                case 'else':
+                    elseANode = parseTemplate(
+                        option.stumpText.replace('san-else', '').replace('s-else', '')
+                    ).childs[0];
+                    elseANode.directives.push({
+                        value: 1,
+                        name: type
+                    });
+
+                    break;
+
+                case 'elif':
+                    elseANode = parseTemplate(
+                        option.stumpText.replace('san-elif', 's-if').replace('s-elif', 's-if')
+                    ).childs[0];
+
+                    var ifDirective = elseANode.directives.get('if');
+                    elseANode.directives.remove('if');
+                    ifDirective.name = 'elif';
+                    elseANode.directives.push(ifDirective);
+
+                    break;
+            }
+
+            ifNode.aNode.elses.push(elseANode);
+            break;
+        }
+
+        throw new Error('[SAN FATEL] ' + type + ' not match if.');
+    }
+}
 // #[end]
 
 // exports = module.exports = createNodeByEl;
 
 
 /**
- * @file 判断一个元素是不是桩
+ * @file  获取节点 stump 的父元素
  * @author errorrik(errorrik@gmail.com)
  */
 
 /**
- * 判断一个元素是不是桩
+ * 获取节点 stump 的父元素
+ * if、for 节点的 el stump 是 comment node，在 IE 下还可能不存在
+ * 获取其父元素通常用于 el 的查找，以及视图变更的插入操作
  *
- * @param {HTMLElement} element 要判断的元素
- * @return {boolean}
+ * @param {Node} node 节点对象
+ * @return {HTMLElement}
  */
-function isStump(element) {
-    return element.tagName === 'SCRIPT' && element.type === 'text/san';
+function getNodeStumpParent(node) {
+    if (node.el) {
+        return node.el.parentNode;
+    }
+
+    var parentNode = node.parent._getEl();
+    while (parentNode && parentNode.nodeType !== 1) {
+        parentNode = parentNode.parentNode;
+    }
+
+    return parentNode;
 }
 
-// exports = module.exports = isStump;
+// exports = module.exports = getNodeStumpParent;
+
+
+/**
+ * @file  获取节点 stump 的 comment
+ * @author errorrik(errorrik@gmail.com)
+ */
+
+
+// var getNodeStumpParent = require('./get-node-stump-parent');
+
+/**
+ * 获取节点 stump 的 comment
+ *
+ * @param {Node} node 节点对象
+ * @return {Comment}
+ */
+function getNodeStump(node) {
+    if (typeof node.el === 'undefined') {
+        var parentNode = getNodeStumpParent(node);
+        var el = parentNode.firstChild;
+
+        while (el) {
+            if (el.nodeType === 8
+                && el.data.indexOf('san:') === 0
+                && el.data.replace('san:', '') === node.id
+            ) {
+                break;
+            }
+
+            el = el.nextSibling;
+        }
+
+        node.el = el;
+    }
+
+    return node.el;
+}
+
+// exports = module.exports = getNodeStump;
 
 
 /**
@@ -4963,9 +4911,10 @@ function isStump(element) {
 // var ieOldThan9 = require('../browser/ie-old-than-9');
 // var removeEl = require('../browser/remove-el');
 // var escapeHTML = require('../runtime/escape-html');
-// var isStump = require('./is-stump');
 // var ExprType = require('../parser/expr-type');
 // var TextNode = require('./text-node');
+// var getNodeStump = require('./get-node-stump');
+// var getNodeStumpParent = require('./get-node-stump-parent');
 
 /**
  * if 指令处理类
@@ -4983,23 +4932,24 @@ inherits(IfDirective, Element);
  * 创建 if 指令对应条件为 true 时对应的元素
  *
  * @inner
- * @param {IfDirective} ifElement if指令元素
+ * @param {ANode} directiveANode 指令ANode
+ * @param {IfDirective} mainIf 主if元素
  * @return {Element}
  */
-function createIfDirectiveChild(ifElement) {
-    var aNode = ifElement.aNode;
+function createIfDirectiveChild(directiveANode, mainIf) {
     var childANode = createANode({
-        childs: aNode.childs,
-        props: aNode.props,
-        events: aNode.events,
-        tagName: aNode.tagName,
-        directives: (new IndexedList()).concat(aNode.directives)
+        childs: directiveANode.childs,
+        props: directiveANode.props,
+        events: directiveANode.events,
+        tagName: directiveANode.tagName,
+        directives: (new IndexedList()).concat(directiveANode.directives)
     });
 
     childANode.directives.remove('if');
     childANode.directives.remove('else');
+    childANode.directives.remove('elif');
 
-    return createNode(childANode, ifElement);
+    return createNode(childANode, mainIf);
 }
 
 /**
@@ -5007,9 +4957,7 @@ function createIfDirectiveChild(ifElement) {
  */
 IfDirective.prototype._create = function () {
     if (!this.el) {
-        this.el = document.createElement('script');
-        this.el.type = 'text/san';
-        this.el.id = this.id;
+        this.el = document.createComment('san:' + this.id);
     }
 };
 
@@ -5023,56 +4971,29 @@ IfDirective.prototype._init = function (options) {
 
     // #[begin] reverse
     if (options.el) {
-        if (isStump(options.el)) {
-            var aNode = parseTemplate(options.el.innerHTML).childs[0];
+        if (options.el.nodeType === 8) {
+            var aNode = parseTemplate(options.stumpText).childs[0];
             this.aNode = aNode;
         }
         else {
+            this.elseIndex = -1;
             this.el = null;
             this._create();
             options.el.parentNode.insertBefore(this.el, options.el.nextSibling);
 
             options.el.removeAttribute('san-if');
-            options.el.removeAttribute('san-else');
             options.el.removeAttribute('s-if');
-            options.el.removeAttribute('s-else');
 
             var child = createNodeByEl(options.el, this, options.elWalker);
             this.childs[0] = child;
             this.aNode.childs = child.aNode.childs.slice(0);
         }
 
-        // match if directive for else directive
-        var elseDirective = this.aNode.directives.get('else');
-        if (elseDirective) {
-            var parentChilds = this.parent.childs;
-            var len = parentChilds.length;
-
-            while (len--) {
-                var child = parentChilds[len];
-
-                if (child instanceof TextNode) {
-                    continue;
-                }
-
-                if (child instanceof IfDirective) {
-                    elseDirective.value = {
-                        type: ExprType.UNARY,
-                        expr: child.aNode.directives.get('if').value
-                    };
-
-                    break;
-                }
-
-                throw new Error('[SAN FATEL] else not match if.');
-            }
-        }
-
         this.parent._pushChildANode(this.aNode);
     }
     // #[end]
 
-    this.cond = (this.aNode.directives.get('else') || this.aNode.directives.get('if')).value;
+    this.cond = this.aNode.directives.get('if').value;
 };
 
 /**
@@ -5082,13 +5003,30 @@ IfDirective.prototype._init = function (options) {
  * @param {StringBuffer} buf html串存储对象
  */
 IfDirective.prototype.genHTML = function (buf) {
-    if (this.evalExpr(this.cond)) {
-        var child = createIfDirectiveChild(this);
-        this.childs[0] = child;
-        child.genHTML(buf);
+    var me = this;
+    var elseIndex;
+    var child;
+
+    if (me.evalExpr(me.cond)) {
+        child = createIfDirectiveChild(me.aNode, me);
+        elseIndex = -1;
     }
-    else if (ieOldThan9) {
-        buf.push('\uFEFF');
+    else {
+        each(me.aNode.elses, function (elseANode, index) {
+            var elif = elseANode.directives.get('elif');
+
+            if (!elif || elif && me.evalExpr(elif.value)) {
+                child = createIfDirectiveChild(elseANode, me);
+                elseIndex = index;
+                return false;
+            }
+        });
+    }
+
+    if (child) {
+        me.childs[0] = child;
+        child.genHTML(buf);
+        me.elseIndex = elseIndex;
     }
 
     genStumpHTML(this, buf);
@@ -5100,22 +5038,52 @@ IfDirective.prototype.genHTML = function (buf) {
  * @param {Array} changes 数据变化信息
  */
 IfDirective.prototype.updateView = function (changes) {
-    var child = this.childs[0];
-    var el = this._getEl();
+    var me = this;
+    var childANode = me.aNode;
+    var elseIndex;
 
     if (this.evalExpr(this.cond)) {
-        if (child) {
-            this.updateChilds(changes);
-        }
-        else {
-            child = createIfDirectiveChild(this);
-            child.attach(el.parentNode, el);
-            this.childs[0] = child;
-        }
+        elseIndex = -1;
     }
     else {
-        this._disposeChilds();
+        each(me.aNode.elses, function (elseANode, index) {
+            var elif = elseANode.directives.get('elif');
+
+            if (elif && me.evalExpr(elif.value) || !elif) {
+                elseIndex = index;
+                childANode = elseANode;
+                return false;
+            }
+        });
     }
+
+    if (elseIndex === me.elseIndex) {
+        me.updateChilds(changes);
+    }
+    else {
+        me._disposeChilds();
+
+        if (typeof elseIndex !== 'undefined') {
+            var child = createIfDirectiveChild(childANode, me);
+            var parentEl = getNodeStumpParent(me);
+            child.attach(parentEl, me._getEl() || parentEl.firstChild);
+
+            me.childs[0] = child;
+        }
+
+        me.elseIndex = elseIndex;
+    }
+};
+
+
+/**
+ * 获取节点对应的主元素
+ *
+ * @protected
+ * @return {HTMLElement}
+ */
+IfDirective.prototype._getEl = function () {
+    return getNodeStump(this);
 };
 
 // #[begin] reverse
@@ -5126,23 +5094,6 @@ IfDirective.prototype.updateView = function (changes) {
 IfDirective.prototype._pushChildANode = empty;
 // #[end]
 
-IfDirective.prototype._attached = function () {
-    // 移除节点桩元素前面的空白 FEFF 字符
-    if (ieOldThan9 && this._getEl()) {
-        var headingBlank = this._getEl().previousSibling;
-
-        if (headingBlank && headingBlank.nodeType === 3) {
-            var textProp = typeof headingBlank.textContent === 'string'
-                ? 'textContent'
-                : 'data';
-            var text = headingBlank[textProp];
-
-            if (!text || text === '\uFEFF') {
-                removeEl(headingBlank);
-            }
-        }
-    }
-};
 
 
 // exports = module.exports = IfDirective;
@@ -5163,6 +5114,10 @@ IfDirective.prototype._attached = function () {
 // var genStumpHTML = require('./gen-stump-html');
 // var createNode = require('./create-node');
 // var createNodeByEl = require('./create-node-by-el');
+// var getNodeStump = require('./get-node-stump');
+// var isEndStump = require('./is-end-stump');
+// var getNodeStumpParent = require('./get-node-stump-parent');
+// var warnSetHTML = require('./warn-set-html');
 // var parseTemplate = require('../parser/parse-template');
 // var createANode = require('../parser/create-a-node');
 // var ExprType = require('../parser/expr-type');
@@ -5316,9 +5271,6 @@ ForDirective.prototype.genHTML = function (buf, onlyChilds) {
     );
 
     if (!onlyChilds) {
-        if (ieOldThan9 && !this.childs.length) {
-            buf.push('\uFEFF');
-        }
         genStumpHTML(this, buf);
     }
 };
@@ -5335,7 +5287,7 @@ ForDirective.prototype._init = function (options) {
 
     // #[begin] reverse
     if (options.el) {
-        aNode = parseTemplate(options.el.innerHTML).childs[0];
+        aNode = parseTemplate(options.stumpText).childs[0];
         this.aNode = aNode;
 
         var index = 0;
@@ -5346,7 +5298,7 @@ ForDirective.prototype._init = function (options) {
         while (1) {
         /* eslint-enable no-constant-condition */
             var next = options.elWalker.next;
-            if (next.getAttribute('s-stump') === 'for-end') {
+            if (isEndStump(next, 'for')) {
                 removeEl(options.el);
                 this.el = next;
                 options.elWalker.goNext();
@@ -5393,10 +5345,46 @@ ForDirective.prototype._attach = function (parentEl, beforeEl) {
         }
     }
 
-    var buf = new StringBuffer();
-    this.genHTML(buf, 1);
-    this._getEl().insertAdjacentHTML('beforebegin', buf.toString());
+    this._paintList();
 };
+
+/**
+ * 绘制整个列表。用于被 attach，或整个列表数据被重置时的刷新
+ *
+ * @private
+ */
+ForDirective.prototype._paintList = function () {
+    var parentEl = getNodeStumpParent(this);
+    var el = this._getEl() || parentEl.firstChild;
+    var prevEl = el && el.previousSibling;
+    var buf = new StringBuffer();
+
+    if (!prevEl) {
+        this.genHTML(buf, 1);
+        // #[begin] error
+        warnSetHTML(parentEl);
+        // #[end]
+        parentEl.insertAdjacentHTML('afterbegin', buf.toString());
+    }
+    else if (prevEl.nodeType === 1) {
+        this.genHTML(buf, 1);
+        // #[begin] error
+        warnSetHTML(parentEl);
+        // #[end]
+        prevEl.insertAdjacentHTML('afterend', buf.toString());
+    }
+    else {
+        each(
+            this.evalExpr(this.aNode.directives.get('for').list),
+            function (item, i) {
+                var child = createForDirectiveChild(this, item, i);
+                this.childs.push(child);
+                child.attach(parentEl, el);
+            },
+            this
+        );
+    }
+}
 
 /**
  * 将元素从页面上移除的行为
@@ -5411,9 +5399,7 @@ ForDirective.prototype._detach = function () {
  */
 ForDirective.prototype._create = function () {
     if (!this.el) {
-        this.el = document.createElement('script');
-        this.el.type = 'text/san';
-        this.el.id = this.id;
+        this.el = document.createComment('san:' + this.id);
     }
 };
 
@@ -5540,9 +5526,7 @@ ForDirective.prototype.updateView = function (changes) {
 
     if (repaintAll) {
         // 整个列表都需要重新刷新
-        var buf = new StringBuffer();
-        this.genHTML(buf, 1);
-        this._getEl().insertAdjacentHTML('beforebegin', buf.toString());
+        this._paintList();
         this._toAttached();
     }
     else {
@@ -5557,8 +5541,7 @@ ForDirective.prototype.updateView = function (changes) {
                 childsChanges[len].length && child.updateView(childsChanges[len]);
             }
             else {
-                var el = attachStump._getEl();
-                child.attach(el.parentNode, el);
+                child.attach(getNodeStumpParent(attachStump), attachStump._getEl());
             }
 
             attachStump = child;
@@ -5566,22 +5549,14 @@ ForDirective.prototype.updateView = function (changes) {
     }
 };
 
-ForDirective.prototype._attached = function () {
-    // 移除节点桩元素前面的空白 FEFF 字符
-    if (ieOldThan9 && this._getEl()) {
-        var headingBlank = this._getEl().previousSibling;
-
-        if (headingBlank && headingBlank.nodeType === 3) {
-            var textProp = typeof headingBlank.textContent === 'string'
-                ? 'textContent'
-                : 'data';
-            var text = headingBlank[textProp];
-
-            if (!text || text === '\uFEFF') {
-                removeEl(headingBlank);
-            }
-        }
-    }
+/**
+ * 获取节点对应的主元素
+ *
+ * @protected
+ * @return {HTMLElement}
+ */
+ForDirective.prototype._getEl = function () {
+    return getNodeStump(this);
 };
 
 
@@ -5589,9 +5564,21 @@ ForDirective.prototype._attached = function () {
 
 
 /**
+ * @file 是否浏览器环境
+ * @author errorrik(errorrik@gmail.com)
+ */
+
+var isBrowser = typeof window !== 'undefined';
+
+// exports = module.exports = isBrowser;
+
+
+/**
  * @file 给 devtool 发通知消息
  * @author errorrik(errorrik@gmail.com)
  */
+
+// var isBrowser = require('../browser/is-browser');
 
 // #[begin] devtool
 var san4devtool;
@@ -5603,8 +5590,8 @@ var san4devtool;
  * @param {*} arg 消息参数
  */
 function emitDevtool(name, arg) {
-    if (san4devtool && san4devtool.debug && root.__san_devtool__) {
-        root.__san_devtool__.emit(name, arg);
+    if (isBrowser && san4devtool && san4devtool.debug && window.__san_devtool__) {
+        window.__san_devtool__.emit(name, arg);
     }
 }
 
@@ -5628,6 +5615,7 @@ emitDevtool.start = function (main) {
 // var extend = require('../util/extend');
 // var nextTick = require('../util/next-tick');
 // var emitDevtool = require('../util/emit-devtool');
+// var empty = require('../util/empty');
 // var Element = require('./element');
 // var IndexedList = require('../util/indexed-list');
 // var ExprType = require('../parser/expr-type');
@@ -5643,7 +5631,6 @@ emitDevtool.start = function (main) {
 // var isComponent = require('./is-component');
 // var isDataChangeByElement = require('./is-data-change-by-element');
 // var eventDeclarationListener = require('./event-declaration-listener');
-// var serializeStump = require('./serialize-stump');
 // var fromElInitChilds = require('./from-el-init-childs');
 // var postComponentBinds = require('./post-component-binds');
 // var camelComponentBinds = require('./camel-component-binds');
@@ -5673,7 +5660,7 @@ inherits(Component, Element);
  * @protected
  * @type {string}
  */
-Component.prototype._type = 'component';
+Component.prototype._type = 'san-cmpt';
 
 /* eslint-disable operator-linebreak */
 /**
@@ -5850,6 +5837,11 @@ Component.prototype.init = function (options) {
         }
     }
 
+
+    if (!this.dataChanger) {
+        this.dataChanger = bind(this._dataChanger, this);
+        this.data.listen(this.dataChanger);
+    }
     this._toPhase('inited');
 
     // #[begin] reverse
@@ -6064,17 +6056,6 @@ Component.prototype._compile = function () {
     }
 };
 
-/**
- * 初始化自身变化时，监听数据变化的行为
- *
- * @private
- */
-Component.prototype._initSelfChanger = function () {
-    if (!this.dataChanger) {
-        this.dataChanger = bind(this._dataChanger, this);
-        this.data.listen(this.dataChanger);
-    }
-};
 
 /**
  * 视图更新函数
@@ -6188,23 +6169,25 @@ Component.prototype.updateView = function (changes) {
  * @param {Object} change 数据变化信息
  */
 Component.prototype._dataChanger = function (change) {
-    var len = this.dataChanges.length;
+    if (this.lifeCycle.is('painting') || this.lifeCycle.is('created')) {
+        var len = this.dataChanges.length;
 
-    if (!len) {
-        nextTick(this.updateView, this);
-    }
-
-    while (len--) {
-        switch (changeExprCompare(change.expr, this.dataChanges[len].expr)) {
-            case 1:
-            case 2:
-                if (change.type === DataChangeType.SET) {
-                    this.dataChanges.splice(len, 1);
-                }
+        if (!len) {
+            nextTick(this.updateView, this);
         }
-    }
 
-    this.dataChanges.push(change);
+        while (len--) {
+            switch (changeExprCompare(change.expr, this.dataChanges[len].expr)) {
+                case 1:
+                case 2:
+                    if (change.type === DataChangeType.SET) {
+                        this.dataChanges.splice(len, 1);
+                    }
+            }
+        }
+
+        this.dataChanges.push(change);
+    }
 };
 
 
@@ -6236,7 +6219,6 @@ Component.prototype._dispose = function () {
     this.dataChanger = null;
     this.dataChanges = null;
 
-    this.data = null;
     this.listeners = null;
 };
 
@@ -6259,6 +6241,18 @@ Component.prototype._dispose = function () {
  * @return {Function}
  */
 function defineComponent(proto) {
+    // 如果传入一个不是 san component 的 constructor，直接返回不是组件构造函数
+    // 这种场景导致的错误 san 不予考虑
+    if (typeof proto === 'function') {
+        return proto;
+    }
+
+    // #[begin] error
+    if (typeof proto !== 'object') {
+        throw new Error('[SAN FATAL] param must be a plain object.');
+    }
+    // #[end]
+
     function ComponentClass(option) {
         Component.call(this, option);
     }
@@ -6270,30 +6264,6 @@ function defineComponent(proto) {
 }
 
 // exports = module.exports = defineComponent;
-
-
-/**
- * @file 生成序列化时桩的html
- * @author errorrik(errorrik@gmail.com)
- */
-
-// #[begin] ssr
-// /**
-//  * 生成序列化时桩的html
-//  *
-//  * @param {string} type 桩类型标识
-//  * @param {string?} content 桩内的内容
-//  * @param {string?} extraPropSource 额外的桩元素属性
-//  * @return {string}
-//  */
-// function serializeStump(type, content, extraPropSource) {
-//     return '<script type="text/san" s-stump="' + type + '"'
-//         + (extraPropSource || '') + '>'
-//         + (content || '') + '</script>';
-// }
-// #[end]
-
-// exports = module.exports = serializeStump;
 
 
 /**
@@ -6468,7 +6438,7 @@ function camelComponentBinds(binds) {
 // var isComponent = require('./is-component');
 // var Component = require('./component');
 // var createANode = require('../parser/create-a-node');
-// var serializeStump = require('./serialize-stump');
+// var isEndStump = require('./is-end-stump');
 // var genElementChildsHTML = require('./gen-element-childs-html');
 
 
@@ -6492,20 +6462,23 @@ inherits(SlotElement, Node);
  */
 SlotElement.prototype._init = function (options) {
     var literalOwner = options.owner;
-    var nameBind = options.aNode.props.get('name');
-    this.name = nameBind ? nameBind.raw : '____';
     var aNode = createANode();
 
     // #[begin] reverse
     if (options.el) {
-        this.name = options.el.getAttribute('name') || '____';
-        if (!options.el.getAttribute('by-default')) {
+        if (options.stumpText.indexOf('!') !== 0) {
             options.owner = literalOwner.owner;
             options.scope = literalOwner.scope;
+            options.stumpText = options.stumpText.slice(1);
         }
+        this.name = options.stumpText || '____';
     }
     else {
     // #[end]
+
+        var nameBind = options.aNode.props.get('name');
+        this.name = nameBind ? nameBind.raw : '____';
+
         var givenSlots = literalOwner.aNode.givenSlots;
         var givenChilds = givenSlots && givenSlots[this.name];
         aNode.childs = givenChilds || options.aNode.childs.slice(0);
@@ -6514,6 +6487,7 @@ SlotElement.prototype._init = function (options) {
             options.owner = literalOwner.owner;
             options.scope = literalOwner.scope;
         }
+
     // #[begin] reverse
     }
     // #[end]
@@ -6543,7 +6517,7 @@ SlotElement.prototype._init = function (options) {
         while (1) {
         /* eslint-enable no-constant-condition */
             var next = options.elWalker.next;
-            if (!next || next.getAttribute('s-stump') === 'slot-end') {
+            if (!next || isEndStump(next, 'slot')) {
                 next && options.elWalker.goNext();
                 break;
             }
@@ -7039,17 +7013,17 @@ function parseANodeFromEl(el) {
 //             return;
 //         }
 // 
-//         str += ' s-' + directive.name + '="' + escapeHTML(directive.raw) + '"';
+//         str += ' s-' + directive.name + '="' + directive.raw + '"';
 //     });
 // 
 //     // for events
 //     each(aNode.events, function (event) {
-//         str += ' on-' + event.name + '="' + escapeHTML(event.expr.raw) + '"';
+//         str += ' on-' + event.name + '="' + event.expr.raw + '"';
 //     });
 // 
 //     // for props
 //     aNode.props.each(function (prop) {
-//         str += ' ' + prop.name + '="' + escapeHTML(prop.raw) + '"';
+//         str += ' ' + prop.name + '="' + prop.raw + '"';
 //     });
 // 
 //     if (autoCloseTags[tagName]) {
@@ -7079,7 +7053,6 @@ function parseANodeFromEl(el) {
  * @author errorrik(errorrik@gmail.com)
  */
 
-// var serializeStump = require('./serialize-stump');
 // var ExprType = require('../parser/expr-type');
 // var parseExpr = require('../parser/parse-expr');
 // var createANode = require('../parser/create-a-node');
@@ -7091,6 +7064,27 @@ function parseANodeFromEl(el) {
 // var serializeANode = require('./serialize-a-node');
 
 // #[begin] ssr
+// 
+// /**
+//  * 生成序列化时起始桩的html
+//  *
+//  * @param {string} type 桩类型标识
+//  * @param {string?} content 桩内的内容
+//  * @return {string}
+//  */
+// function serializeStump(type, content) {
+//     return '<!--s-' + type + (content ? ':' + content : '') + '-->';
+// }
+// 
+// /**
+//  * 生成序列化时结束桩的html
+//  *
+//  * @param {string} type 桩类型标识
+//  * @return {string}
+//  */
+// function serializeStumpEnd(type) {
+//     return '<!--/s-' + type + '-->';
+// }
 // 
 // /**
 //  * ANode 的编译方法集合对象
@@ -7114,9 +7108,6 @@ function parseANodeFromEl(el) {
 //         }
 //         else if (aNode.directives.get('if')) {
 //             compileMethod = 'compileIf';
-//         }
-//         else if (aNode.directives.get('else')) {
-//             compileMethod = 'compileElse';
 //         }
 //         else if (aNode.directives.get('for')) {
 //             compileMethod = 'compileFor';
@@ -7145,9 +7136,9 @@ function parseANodeFromEl(el) {
 //         var value = aNode.textExpr.value;
 // 
 //         if (value == null) {
-//             sourceBuffer.joinString('<!--s-ts:' + aNode.text + '-->');
+//             sourceBuffer.joinString('<!--s-text:' + aNode.text + '-->');
 //             sourceBuffer.joinExpr(aNode.textExpr);
-//             sourceBuffer.joinString('<!--s-te-->');
+//             sourceBuffer.joinString('<!--/s-text-->');
 //         }
 //         else {
 //             sourceBuffer.joinString(value);
@@ -7162,65 +7153,82 @@ function parseANodeFromEl(el) {
 //      * @param {Component} owner 所属组件实例环境
 //      */
 //     compileIf: function (aNode, sourceBuffer, owner) {
-//         var ifElementANode = createANode({
-//             childs: aNode.childs,
-//             props: aNode.props,
-//             events: aNode.events,
-//             tagName: aNode.tagName,
-//             directives: (new IndexedList()).concat(aNode.directives)
-//         });
-//         ifElementANode.directives.remove('if');
+//         sourceBuffer.addRaw('(function () {');
+//         sourceBuffer.addRaw('var ifIndex = null;');
 // 
+//         // for ifIndex
 //         var ifDirective = aNode.directives.get('if');
-//         var elseANode = aNode['else'];
-// 
-//         // for condition true content
 //         sourceBuffer.addRaw('if (' + compileExprSource.expr(ifDirective.value) + ') {');
+//         sourceBuffer.addRaw('    ifIndex = -1;');
+//         sourceBuffer.addRaw('}');
+//         each(aNode.elses, function (elseANode, index) {
+//             var elifDirective = elseANode.directives.get('elif');
+//             if (elifDirective) {
+//                 sourceBuffer.addRaw('else if (' + compileExprSource.expr(elifDirective.value) + ') {');
+//             }
+//             else {
+//                 sourceBuffer.addRaw('else {');
+//             }
+// 
+//             sourceBuffer.addRaw('    ifIndex = ' + index + ';');
+//             sourceBuffer.addRaw('}');
+//         });
+// 
+//         // for output main if html
+//         sourceBuffer.addRaw('if (ifIndex === -1) {');
 //         sourceBuffer.addRaw(
 //             aNodeCompiler.compile(
-//                 ifElementANode,
+//                 rinseANode(aNode),
 //                 sourceBuffer,
 //                 owner,
 //                 {prop: ' s-if="' + escapeHTML(ifDirective.raw) + '"'}
 //             )
 //         );
-//         if (elseANode) {
-//             sourceBuffer.joinString(serializeStump('else', serializeANode(elseANode)));
-//         }
-// 
-//         // for condition false content
 //         sourceBuffer.addRaw('} else {');
 //         sourceBuffer.joinString(serializeStump('if', serializeANode(aNode)));
+//         sourceBuffer.addRaw('}');
 // 
-//         if (elseANode) {
-//             var elseElementANode = createANode({
-//                 childs: elseANode.childs,
-//                 props: elseANode.props,
-//                 events: elseANode.events,
-//                 tagName: elseANode.tagName,
-//                 directives: (new IndexedList()).concat(elseANode.directives)
-//             });
-//             elseElementANode.directives.remove('else');
+//         // for output else html
+//         each(aNode.elses, function (elseANode, index) {
+//             var elifDirective = elseANode.directives.get('elif');
+//             sourceBuffer.addRaw('if (ifIndex === ' + index + ') {');
 //             sourceBuffer.addRaw(
 //                 aNodeCompiler.compile(
-//                     elseElementANode,
+//                     rinseANode(elseANode),
 //                     sourceBuffer,
 //                     owner,
-//                     {prop: ' s-else'}
+//                     {
+//                         prop: elifDirective ? ' s-elif="' + escapeHTML(elifDirective.raw) + '"' : ' s-else'
+//                     }
 //                 )
 //             );
+//             sourceBuffer.addRaw('} else {');
+//             sourceBuffer.joinString(serializeStump(elifDirective ? 'elif' : 'else', serializeANode(elseANode)));
+//             sourceBuffer.addRaw('}');
+//         });
+// 
+//         sourceBuffer.addRaw('})();');
+// 
+//         /**
+//          * 清洗 if aNode，返回纯净无 if 指令的 aNode
+//          *
+//          * @param {ANode} ifANode 节点对象
+//          * @return {ANode} 
+//          */
+//         function rinseANode(ifANode) {
+//             var result = createANode({
+//                 childs: ifANode.childs,
+//                 props: ifANode.props,
+//                 events: ifANode.events,
+//                 tagName: ifANode.tagName,
+//                 directives: (new IndexedList()).concat(ifANode.directives)
+//             });
+//             result.directives.remove('if');
+//             result.directives.remove('elif');
+//             result.directives.remove('else');
+// 
+//             return result;
 //         }
-// 
-//         sourceBuffer.addRaw('}');
-//     },
-// 
-//     /**
-//      * 编译 else 节点
-//      *
-//      * @param {ANode} aNode 节点对象
-//      */
-//     compileElse: function (aNode) {
-//         // 啥都不干，交给 compileIf 了
 //     },
 // 
 //     /**
@@ -7246,7 +7254,7 @@ function parseANodeFromEl(el) {
 //         var listName = compileExprSource.dataAccess(forDirective.list);
 // 
 //         // start stump
-//         sourceBuffer.joinString(serializeStump('for-start', serializeANode(aNode)));
+//         sourceBuffer.joinString(serializeStump('for', serializeANode(aNode)));
 // 
 //         sourceBuffer.addRaw('for ('
 //             + 'var ' + indexName + ' = 0; '
@@ -7265,7 +7273,7 @@ function parseANodeFromEl(el) {
 //         sourceBuffer.addRaw('}');
 // 
 //         // stop stump
-//         sourceBuffer.joinString(serializeStump('for-end'));
+//         sourceBuffer.joinString(serializeStumpEnd('for'));
 //     },
 // 
 //     /**
@@ -7278,7 +7286,6 @@ function parseANodeFromEl(el) {
 //     compileSlot: function (aNode, sourceBuffer, owner) {
 //         var nameProp = aNode.props.get('name');
 //         var name = nameProp ? nameProp.raw : '____';
-//         var extraProp = nameProp ? ' name="' + name + '"' : '';
 //         var isGivenContent = 0;
 //         var childs = aNode.childs;
 // 
@@ -7287,11 +7294,9 @@ function parseANodeFromEl(el) {
 //             childs = owner.aNode.givenSlots[name];
 //         }
 // 
-// 
-//         if (!isGivenContent) {
-//             extraProp += ' by-default="1"';
-//         }
-//         sourceBuffer.joinString(serializeStump('slot-start', '', extraProp));
+//         var stumpText = (!isGivenContent ? '!' : '')
+//             + (nameProp ? nameProp.raw : '');
+//         sourceBuffer.joinString(serializeStump('slot', stumpText));
 // 
 //         if (isGivenContent) {
 //             sourceBuffer.addRaw('(function (componentCtx) {');
@@ -7305,7 +7310,7 @@ function parseANodeFromEl(el) {
 //             sourceBuffer.addRaw('})(componentCtx.owner);');
 //         }
 // 
-//         sourceBuffer.joinString(serializeStump('slot-end'));
+//         sourceBuffer.joinString(serializeStumpEnd('slot'));
 //     },
 // 
 //     /**
@@ -7619,9 +7624,9 @@ function parseANodeFromEl(el) {
 //     );
 // 
 //     if (!component.owner) {
-//         sourceBuffer.joinString('<script type="text/san" s-stump="data">');
+//         sourceBuffer.joinString('<!--s-data:');
 //         sourceBuffer.joinDataStringify();
-//         sourceBuffer.joinString('</script>');
+//         sourceBuffer.joinString('-->');
 //     }
 // 
 //     elementSourceCompiler.inner(sourceBuffer, component.aNode, component);
@@ -7783,7 +7788,7 @@ function parseANodeFromEl(el) {
 //  * @inner
 //  */
 // function componentCompilePreCode() {
-//     var $version = '3.1.3';
+//     var $version = '3.2.3';
 // 
 //     function extend(target, source) {
 //         if (source) {
@@ -8024,7 +8029,7 @@ function parseANodeFromEl(el) {
          *
          * @type {string}
          */
-        version: '3.1.3',
+        version: '3.2.3',
 
         // #[begin] devtool
         /**
@@ -8152,70 +8157,343 @@ function parseANodeFromEl(el) {
     // #[end]
 })(this);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(32).setImmediate))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(51).setImmediate))
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+module.exports = function() {
+	var list = [];
+
+	// return the list of modules as css string
+	list.toString = function toString() {
+		var result = [];
+		for(var i = 0; i < this.length; i++) {
+			var item = this[i];
+			if(item[2]) {
+				result.push("@media " + item[2] + "{" + item[1] + "}");
+			} else {
+				result.push(item[1]);
+			}
+		}
+		return result.join("");
+	};
+
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+var stylesInDom = {},
+	memoize = function(fn) {
+		var memo;
+		return function () {
+			if (typeof memo === "undefined") memo = fn.apply(this, arguments);
+			return memo;
+		};
+	},
+	isOldIE = memoize(function() {
+		return /msie [6-9]\b/.test(self.navigator.userAgent.toLowerCase());
+	}),
+	getHeadElement = memoize(function () {
+		return document.head || document.getElementsByTagName("head")[0];
+	}),
+	singletonElement = null,
+	singletonCounter = 0,
+	styleElementsInsertedAtTop = [];
+
+module.exports = function(list, options) {
+	if(typeof DEBUG !== "undefined" && DEBUG) {
+		if(typeof document !== "object") throw new Error("The style-loader cannot be used in a non-browser environment");
+	}
+
+	options = options || {};
+	// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
+	// tags it will allow on a page
+	if (typeof options.singleton === "undefined") options.singleton = isOldIE();
+
+	// By default, add <style> tags to the bottom of <head>.
+	if (typeof options.insertAt === "undefined") options.insertAt = "bottom";
+
+	var styles = listToStyles(list);
+	addStylesToDom(styles, options);
+
+	return function update(newList) {
+		var mayRemove = [];
+		for(var i = 0; i < styles.length; i++) {
+			var item = styles[i];
+			var domStyle = stylesInDom[item.id];
+			domStyle.refs--;
+			mayRemove.push(domStyle);
+		}
+		if(newList) {
+			var newStyles = listToStyles(newList);
+			addStylesToDom(newStyles, options);
+		}
+		for(var i = 0; i < mayRemove.length; i++) {
+			var domStyle = mayRemove[i];
+			if(domStyle.refs === 0) {
+				for(var j = 0; j < domStyle.parts.length; j++)
+					domStyle.parts[j]();
+				delete stylesInDom[domStyle.id];
+			}
+		}
+	};
+}
+
+function addStylesToDom(styles, options) {
+	for(var i = 0; i < styles.length; i++) {
+		var item = styles[i];
+		var domStyle = stylesInDom[item.id];
+		if(domStyle) {
+			domStyle.refs++;
+			for(var j = 0; j < domStyle.parts.length; j++) {
+				domStyle.parts[j](item.parts[j]);
+			}
+			for(; j < item.parts.length; j++) {
+				domStyle.parts.push(addStyle(item.parts[j], options));
+			}
+		} else {
+			var parts = [];
+			for(var j = 0; j < item.parts.length; j++) {
+				parts.push(addStyle(item.parts[j], options));
+			}
+			stylesInDom[item.id] = {id: item.id, refs: 1, parts: parts};
+		}
+	}
+}
+
+function listToStyles(list) {
+	var styles = [];
+	var newStyles = {};
+	for(var i = 0; i < list.length; i++) {
+		var item = list[i];
+		var id = item[0];
+		var css = item[1];
+		var media = item[2];
+		var sourceMap = item[3];
+		var part = {css: css, media: media, sourceMap: sourceMap};
+		if(!newStyles[id])
+			styles.push(newStyles[id] = {id: id, parts: [part]});
+		else
+			newStyles[id].parts.push(part);
+	}
+	return styles;
+}
+
+function insertStyleElement(options, styleElement) {
+	var head = getHeadElement();
+	var lastStyleElementInsertedAtTop = styleElementsInsertedAtTop[styleElementsInsertedAtTop.length - 1];
+	if (options.insertAt === "top") {
+		if(!lastStyleElementInsertedAtTop) {
+			head.insertBefore(styleElement, head.firstChild);
+		} else if(lastStyleElementInsertedAtTop.nextSibling) {
+			head.insertBefore(styleElement, lastStyleElementInsertedAtTop.nextSibling);
+		} else {
+			head.appendChild(styleElement);
+		}
+		styleElementsInsertedAtTop.push(styleElement);
+	} else if (options.insertAt === "bottom") {
+		head.appendChild(styleElement);
+	} else {
+		throw new Error("Invalid value for parameter 'insertAt'. Must be 'top' or 'bottom'.");
+	}
+}
+
+function removeStyleElement(styleElement) {
+	styleElement.parentNode.removeChild(styleElement);
+	var idx = styleElementsInsertedAtTop.indexOf(styleElement);
+	if(idx >= 0) {
+		styleElementsInsertedAtTop.splice(idx, 1);
+	}
+}
+
+function createStyleElement(options) {
+	var styleElement = document.createElement("style");
+	styleElement.type = "text/css";
+	insertStyleElement(options, styleElement);
+	return styleElement;
+}
+
+function createLinkElement(options) {
+	var linkElement = document.createElement("link");
+	linkElement.rel = "stylesheet";
+	insertStyleElement(options, linkElement);
+	return linkElement;
+}
+
+function addStyle(obj, options) {
+	var styleElement, update, remove;
+
+	if (options.singleton) {
+		var styleIndex = singletonCounter++;
+		styleElement = singletonElement || (singletonElement = createStyleElement(options));
+		update = applyToSingletonTag.bind(null, styleElement, styleIndex, false);
+		remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true);
+	} else if(obj.sourceMap &&
+		typeof URL === "function" &&
+		typeof URL.createObjectURL === "function" &&
+		typeof URL.revokeObjectURL === "function" &&
+		typeof Blob === "function" &&
+		typeof btoa === "function") {
+		styleElement = createLinkElement(options);
+		update = updateLink.bind(null, styleElement);
+		remove = function() {
+			removeStyleElement(styleElement);
+			if(styleElement.href)
+				URL.revokeObjectURL(styleElement.href);
+		};
+	} else {
+		styleElement = createStyleElement(options);
+		update = applyToTag.bind(null, styleElement);
+		remove = function() {
+			removeStyleElement(styleElement);
+		};
+	}
+
+	update(obj);
+
+	return function updateStyle(newObj) {
+		if(newObj) {
+			if(newObj.css === obj.css && newObj.media === obj.media && newObj.sourceMap === obj.sourceMap)
+				return;
+			update(obj = newObj);
+		} else {
+			remove();
+		}
+	};
+}
+
+var replaceText = (function () {
+	var textStore = [];
+
+	return function (index, replacement) {
+		textStore[index] = replacement;
+		return textStore.filter(Boolean).join('\n');
+	};
+})();
+
+function applyToSingletonTag(styleElement, index, remove, obj) {
+	var css = remove ? "" : obj.css;
+
+	if (styleElement.styleSheet) {
+		styleElement.styleSheet.cssText = replaceText(index, css);
+	} else {
+		var cssNode = document.createTextNode(css);
+		var childNodes = styleElement.childNodes;
+		if (childNodes[index]) styleElement.removeChild(childNodes[index]);
+		if (childNodes.length) {
+			styleElement.insertBefore(cssNode, childNodes[index]);
+		} else {
+			styleElement.appendChild(cssNode);
+		}
+	}
+}
+
+function applyToTag(styleElement, obj) {
+	var css = obj.css;
+	var media = obj.media;
+
+	if(media) {
+		styleElement.setAttribute("media", media)
+	}
+
+	if(styleElement.styleSheet) {
+		styleElement.styleSheet.cssText = css;
+	} else {
+		while(styleElement.firstChild) {
+			styleElement.removeChild(styleElement.firstChild);
+		}
+		styleElement.appendChild(document.createTextNode(css));
+	}
+}
+
+function updateLink(linkElement, obj) {
+	var css = obj.css;
+	var sourceMap = obj.sourceMap;
+
+	if(sourceMap) {
+		// http://stackoverflow.com/a/26603875
+		css += "\n/*# sourceMappingURL=data:application/json;base64," + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + " */";
+	}
+
+	var blob = new Blob([css], { type: "text/css" });
+
+	var oldSrc = linkElement.href;
+
+	linkElement.href = URL.createObjectURL(blob);
+
+	if(oldSrc)
+		URL.revokeObjectURL(oldSrc);
+}
+
 
 /***/ }),
 /* 3 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-var g;
+"use strict";
 
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
 
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.transitionGroup = exports.transition = undefined;
 
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
+var _transition = __webpack_require__(18);
 
-module.exports = g;
+var _transition2 = _interopRequireDefault(_transition);
 
+var _transitionGroup = __webpack_require__(17);
+
+var _transitionGroup2 = _interopRequireDefault(_transitionGroup);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.transition = _transition2.default;
+exports.transitionGroup = _transitionGroup2.default;
 
 /***/ }),
 /* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __san_script__, __san_template__
-var __san_styles__ = {}
-__webpack_require__(30)
-__san_script__ = __webpack_require__(14)
-if (__san_script__ &&
-    __san_script__.__esModule &&
-    Object.keys(__san_script__).length > 1) {
-  console.warn("[san-loader] docs/components/App.san: named exports in *.san files are ignored.")}
-__san_template__ = __webpack_require__(22)
-var __san_proto__ = {}
-if (__san_script__) {
-  __san_proto__ = __san_script__.__esModule
-    ? __san_script__['default']
-    : __san_script__
-}
-if (__san_template__) {
-  __san_proto__.template = __san_template__
-}
-var san = __webpack_require__(2)
-var __san_exports__ = san.defineComponent(__san_proto__)
-module.exports = __san_exports__
-if (module.exports.__esModule) module.exports = module.exports['default']
-if (!__san_exports__.computed) __san_exports__.computed = {}
-Object.keys(__san_styles__).forEach(function (key) {
-var module = __san_styles__[key]
-__san_exports__.computed[key] = function () { return module }
-})
-
-
-/***/ }),
-/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -8750,8 +9028,6 @@ function getLocation() {
     return url;
 }
 
-var HASHCHANGE_HANDLER_KEY = Symbol('hashchange_handler_key');
-
 /**
  * hash 模式地址监听器
  *
@@ -8772,7 +9048,7 @@ var Locator = function (_EventTarget) {
         _this.current = getLocation();
         _this.referrer = '';
 
-        _this[HASHCHANGE_HANDLER_KEY] = function () {
+        _this.hashChangeHandler = function () {
             _this.redirect(getLocation());
         };
         return _this;
@@ -8785,11 +9061,11 @@ var Locator = function (_EventTarget) {
 
     Locator.prototype.start = function start() {
         if (window.addEventListener) {
-            window.addEventListener('hashchange', this[HASHCHANGE_HANDLER_KEY], false);
+            window.addEventListener('hashchange', this.hashChangeHandler, false);
         }
 
         if (window.attachEvent) {
-            window.attachEvent('onhashchange', this[HASHCHANGE_HANDLER_KEY]);
+            window.attachEvent('onhashchange', this.hashChangeHandler);
         }
     };
 
@@ -8800,11 +9076,11 @@ var Locator = function (_EventTarget) {
 
     Locator.prototype.stop = function stop() {
         if (window.removeEventListener) {
-            window.removeEventListener('hashchange', this[HASHCHANGE_HANDLER_KEY], false);
+            window.removeEventListener('hashchange', this.hashChangeHandler, false);
         }
 
         if (window.detachEvent) {
-            window.detachEvent('onhashchange', this[HASHCHANGE_HANDLER_KEY]);
+            window.detachEvent('onhashchange', this.hashChangeHandler);
         }
     };
 
@@ -8891,8 +9167,6 @@ function getLocation() {
     return location.pathname + location.search;
 }
 
-var POPSTATE_HANDLER_KEY = Symbol('popstate_handler_key');
-
 /**
  * html5 模式地址监听器
  *
@@ -8913,7 +9187,7 @@ var Locator = function (_EventTarget) {
         _this.current = getLocation();
         _this.referrer = '';
 
-        _this[POPSTATE_HANDLER_KEY] = function () {
+        _this.popstateHandler = function () {
             _this.referrer = _this.current;
             _this.current = getLocation();
 
@@ -8931,7 +9205,7 @@ var Locator = function (_EventTarget) {
 
 
     Locator.prototype.start = function start() {
-        window.addEventListener('popstate', this[POPSTATE_HANDLER_KEY]);
+        window.addEventListener('popstate', this.popstateHandler);
     };
 
     /**
@@ -8940,7 +9214,7 @@ var Locator = function (_EventTarget) {
 
 
     Locator.prototype.stop = function stop() {
-        window.removeEventListener('popstate', this[POPSTATE_HANDLER_KEY]);
+        window.removeEventListener('popstate', this.popstateHandler);
     };
 
     /**
@@ -9038,7 +9312,7 @@ var guid = function guid() {
  *
  * @type {string}
  */
-var version = exports.version = '1.0.3';
+var version = exports.version = '1.1.1';
 
 /**
  * 路由器类
@@ -9066,33 +9340,107 @@ var Router = exports.Router = function () {
         this.routeAlives = [];
         this.listeners = [];
 
+        /**
+         * locator redirect 事件监听函数
+         *
+         * @param {Object} e locator事件对象
+         */
         this.locatorRedirectHandler = function (e) {
             var url = (0, _parseUrl2['default'])(e.url);
+            var routeItem = void 0;
 
-            for (var i = 0; i < _this.routes.length; i++) {
-                var routeItem = _this.routes[i];
-                var match = routeItem.rule.exec(url.path);
+            for (var _i = 0; _i < _this.routes.length; _i++) {
+                var item = _this.routes[_i];
+                var match = item.rule.exec(url.path);
 
                 if (match) {
+                    routeItem = item;
+
                     // fill query
-                    var keys = routeItem.keys || [];
+                    var keys = item.keys || [];
                     for (var j = 1; j < match.length; j++) {
                         url.query[keys[j] || j] = match[j];
                     }
 
                     // fill referrer
                     url.referrer = e.referrer;
+                    url.config = item.config;
 
-                    _this.doRoute(routeItem, url);
-                    return;
+                    break;
                 }
             }
 
-            var len = _this.routeAlives.length;
-            while (len--) {
-                _this.routeAlives[len].component.dispose();
-                _this.routeAlives.splice(len, 1);
-            }
+            var i = 0;
+            var state = 1;
+
+            /**
+             * listener 事件对象
+             *
+             * @type {Object}
+             */
+            var listenerEvent = {
+                hash: url.hash,
+                queryString: url.queryString,
+                query: url.query,
+                path: url.path,
+                referrer: url.referrer,
+                config: url.config,
+                resume: next,
+                suspend: function suspend() {
+                    state = 0;
+                },
+                stop: function stop() {
+                    state = -1;
+                }
+            };
+
+            /**
+             * 尝试运行下一个listener
+             *
+             * @inner
+             */
+            var doNext = function doNext() {
+                if (state > 0) {
+                    if (i < _this.listeners.length) {
+                        _this.listeners[i].call(_this, listenerEvent, url.config);
+                        if (state > 0) {
+                            next();
+                        }
+                    } else {
+                        routeAction();
+                    }
+                }
+            };
+
+            /**
+             * 运行下一个listener
+             *
+             * @inner
+             */
+            function next() {
+                state = 1;
+                i++;
+                doNext();
+            };
+
+            /**
+             * 运行路由行为
+             *
+             * @inner
+             */
+            var routeAction = function routeAction() {
+                if (routeItem) {
+                    _this.doRoute(routeItem, url);
+                } else {
+                    var len = _this.routeAlives.length;
+                    while (len--) {
+                        _this.routeAlives[len].component.dispose();
+                        _this.routeAlives.splice(len, 1);
+                    }
+                }
+            };
+
+            doNext();
         };
 
         this.setMode(mode);
@@ -9135,10 +9483,6 @@ var Router = exports.Router = function () {
 
 
     Router.prototype.doRoute = function doRoute(routeItem, e) {
-        for (var i = 0; i < this.listeners.length; i++) {
-            this.listeners[i].call(this, e, routeItem.config);
-        }
-
         var isUpdateAlive = false;
         var len = this.routeAlives.length;
 
@@ -9198,7 +9542,7 @@ var Router = exports.Router = function () {
 
         if (typeof rule === 'string') {
             // 没用path-to-regexp，暂时不提供这么多功能支持
-            var regText = rule.replace(/\/:([a-z0-9_-]+)(?=\/|$)/g, function (match, key) {
+            var regText = rule.replace(/\/:([a-z0-9_-]+)(?=\/|$)/ig, function (match, key) {
                 keys.push(key);
                 return '/([^/\\s]+)';
             });
@@ -9774,713 +10118,100 @@ exports['default'] = EventQueue;
 });
 
 /***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __san_script__, __san_template__
+var __san_styles__ = {}
+__webpack_require__(46)
+__san_script__ = __webpack_require__(20)
+if (__san_script__ &&
+    __san_script__.__esModule &&
+    Object.keys(__san_script__).length > 1) {
+  console.warn("[san-loader] docs/components/AppHeader.san: named exports in *.san files are ignored.")}
+__san_template__ = __webpack_require__(36)
+var __san_proto__ = {}
+if (__san_script__) {
+  __san_proto__ = __san_script__.__esModule
+    ? __san_script__['default']
+    : __san_script__
+}
+if (__san_template__) {
+  __san_proto__.template = __san_template__
+}
+var san = __webpack_require__(0)
+var __san_exports__ = san.defineComponent(__san_proto__)
+module.exports = __san_exports__
+if (module.exports.__esModule) module.exports = module.exports['default']
+if (!__san_exports__.computed) __san_exports__.computed = {}
+Object.keys(__san_styles__).forEach(function (key) {
+var module = __san_styles__[key]
+__san_exports__.computed[key] = function () { return module }
+})
+
+
+/***/ }),
 /* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(17);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// add the styles to the DOM
-var update = __webpack_require__(1)(content, {});
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../css-loader/index.js!./normalize.css", function() {
-			var newContent = require("!!../css-loader/index.js!./normalize.css");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
+var __san_script__, __san_template__
+var __san_styles__ = {}
+__webpack_require__(48)
+__san_script__ = __webpack_require__(21)
+if (__san_script__ &&
+    __san_script__.__esModule &&
+    Object.keys(__san_script__).length > 1) {
+  console.warn("[san-loader] docs/components/Nav.san: named exports in *.san files are ignored.")}
+__san_template__ = __webpack_require__(35)
+var __san_proto__ = {}
+if (__san_script__) {
+  __san_proto__ = __san_script__.__esModule
+    ? __san_script__['default']
+    : __san_script__
 }
+if (__san_template__) {
+  __san_proto__.template = __san_template__
+}
+var san = __webpack_require__(0)
+var __san_exports__ = san.defineComponent(__san_proto__)
+module.exports = __san_exports__
+if (module.exports.__esModule) module.exports = module.exports['default']
+if (!__san_exports__.computed) __san_exports__.computed = {}
+Object.keys(__san_styles__).forEach(function (key) {
+var module = __san_styles__[key]
+__san_exports__.computed[key] = function () { return module }
+})
+
 
 /***/ }),
 /* 7 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-// style-loader: Adds some css to the DOM by adding a <style> tag
+var g;
 
-// load the styles
-var content = __webpack_require__(18);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// add the styles to the DOM
-var update = __webpack_require__(1)(content, {});
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../css-loader/index.js!./prism-tomorrow.css", function() {
-			var newContent = require("!!../../css-loader/index.js!./prism-tomorrow.css");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
 }
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
 
 /***/ }),
 /* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(21);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// add the styles to the DOM
-var update = __webpack_require__(1)(content, {});
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../node_modules/css-loader/index.js!../node_modules/stylus-loader/index.js!./markdown.styl", function() {
-			var newContent = require("!!../node_modules/css-loader/index.js!../node_modules/stylus-loader/index.js!./markdown.styl");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _App = __webpack_require__(4);
-
-var _App2 = _interopRequireDefault(_App);
-
-var _sanRouter = __webpack_require__(5);
-
-__webpack_require__(7);
-
-__webpack_require__(6);
-
-__webpack_require__(8);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-_sanRouter.router.setMode('hash');
-
-_sanRouter.router.add({
-  rule: '/',
-  Component: _App2.default,
-  target: 'body'
-});
-
-_sanRouter.router.start();
-
-/***/ }),
-/* 10 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.transitionGroup = exports.transition = undefined;
-
-var _transition = __webpack_require__(12);
-
-var _transition2 = _interopRequireDefault(_transition);
-
-var _transitionGroup = __webpack_require__(11);
-
-var _transitionGroup2 = _interopRequireDefault(_transitionGroup);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-exports.transition = _transition2.default;
-exports.transitionGroup = _transitionGroup2.default;
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-// todos: transition group
-
-exports.default = function () {
-  var prop = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'san';
-  return function (Component) {
-    var Target = function (_Component) {
-      _inherits(Target, _Component);
-
-      function Target() {
-        _classCallCheck(this, Target);
-
-        return _possibleConstructorReturn(this, (Target.__proto__ || Object.getPrototypeOf(Target)).apply(this, arguments));
-      }
-
-      return Target;
-    }(Component);
-
-    return Target;
-  };
-};
-
-/***/ }),
-/* 12 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _util = __webpack_require__(13);
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-exports.default = function () {
-  var prop = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'san';
-  return function (Component) {
-    var Target = function (_Component) {
-      _inherits(Target, _Component);
-
-      function Target() {
-        _classCallCheck(this, Target);
-
-        return _possibleConstructorReturn(this, (Target.__proto__ || Object.getPrototypeOf(Target)).apply(this, arguments));
-      }
-
-      return Target;
-    }(Component);
-
-    var _Target$prototype = Target.prototype,
-        attached = _Target$prototype.attached,
-        attach = _Target$prototype.attach,
-        inited = _Target$prototype.inited;
-
-    // define css hooks name
-
-    var hooks = (0, _util.getHooks)(prop
-
-    // define transition flags
-    );Target.prototype.isEntering = false;
-    Target.prototype.isLeaving = false;
-
-    // override attached lifecycle
-    Target.prototype.attached = function () {
-      // entering
-      var el = this.el,
-          parent = this.parent;
-
-      (0, _util.clearParentTimeout)(parent);
-      el.classList.add(hooks.in);
-      parent.isEntering = true;
-      parent.transitionEl = el;
-      var transitionHandler = function transitionHandler() {
-        el.classList.remove(hooks.in);
-        parent.enteringTimeout = setTimeout(function () {
-          parent.isEntering = false;
-        }, (0, _util.getTimeout)(el));
-      };
-      el.classList.add(hooks.live);
-      (0, _util.afterNextFrame)(transitionHandler);
-
-      attached && attached.call(this);
-    };
-
-    // override attach function
-    Target.prototype.attach = function () {
-      // entering
-      var parent = this.parent;
-
-      if (parent.isLeaving) {
-        (0, _util.prepareEnter)(parent, hooks);
-      } else {
-        attach.apply(this, arguments);
-      }
-    };
-
-    // override inited lifecycle
-    Target.prototype.inited = function () {
-      var parent = this.parent;
-      var updateView = parent.updateView,
-          _disposeChilds = parent._disposeChilds;
-
-      // override updateView function
-
-      parent.updateView = function (changes) {
-        var _this2 = this;
-
-        var child = this.childs[0];
-        var el = this.transitionEl;
-        if (this.evalExpr(this.cond)) {
-          if (child && parent.isLeaving) {
-            // entering
-            (0, _util.prepareEnter)(parent, hooks);
-            parent.enteringTimeout = setTimeout(function () {
-              parent.isEntering = false;
-              updateView.call(_this2, changes);
-            }, (0, _util.getTimeout)(el));
-          } else {
-            updateView.call(this, changes);
-          }
-        } else {
-          // leaving
-          (0, _util.clearParentTimeout)(parent);
-          if (!parent.isLeaving) {
-            (0, _util.prepareLeave)(parent, hooks);
-            var leaveHandler = function leaveHandler(e) {
-              if (parent.isLeaving) {
-                _disposeChilds.call(_this2);
-                parent.isLeaving = false;
-              }
-            };
-            var transitionHandler = function transitionHandler() {
-              el.classList.remove(hooks.live);
-              parent.leavingTimeout = setTimeout(leaveHandler, (0, _util.getTimeout)(el));
-            };
-            el.classList.add(hooks.out);
-            (0, _util.afterNextFrame)(transitionHandler);
-          }
-        }
-      };
-      inited && inited.call(this);
-    };
-
-    return Target;
-  };
-};
-
-/***/ }),
-/* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-var getTime = function getTime(duration, delay) {
-  return Math.max.apply(undefined, duration.map(function (str, i) {
-    return getFloat(str) + parseFloat(delay[i]);
-  }));
-};
-
-var getFloat = function getFloat(str) {
-  return (parseFloat(str) || 0) * 1000;
-};
-
-var getTimeout = exports.getTimeout = function getTimeout(el) {
-  var style = getComputedStyle(el);
-  var transDuration = style.transitionDuration.split(',');
-  var transDelay = style.transitionDelay.split(',');
-  var aniDuration = style.animationDuration.split(',');
-  var aniDelay = style.animationDelay.split(',');
-  return Math.max(getTime(transDuration, transDelay), getTime(aniDuration, aniDelay));
-};
-
-var afterNextFrame = exports.afterNextFrame = function afterNextFrame(fn) {
-  return requestAnimationFrame(function () {
-    return requestAnimationFrame(fn);
-  });
-};
-
-var clearParentTimeout = exports.clearParentTimeout = function clearParentTimeout(parent) {
-  clearTimeout(parent.leavingTimeout);
-  clearTimeout(parent.enteringTimeout);
-};
-
-var prepareEnter = exports.prepareEnter = function prepareEnter(parent, hooks) {
-  var transitionEl = parent.transitionEl;
-
-  parent.isEntering = true;
-  parent.isLeaving = false;
-  transitionEl.classList.add(hooks.live);
-  transitionEl.classList.remove(hooks.out);
-};
-
-var prepareLeave = exports.prepareLeave = function prepareLeave(parent, hooks) {
-  var transitionEl = parent.transitionEl;
-
-  parent.isEntering = false;
-  parent.isLeaving = true;
-  transitionEl.classList.remove(hooks.in);
-  transitionEl.classList.remove(hooks.live);
-  transitionEl.classList.add(hooks.out);
-};
-
-var getHooks = exports.getHooks = function getHooks(prop) {
-  return (typeof prop === 'undefined' ? 'undefined' : _typeof(prop)) === 'object' ? {
-    in: prop.in || 'san-in',
-    out: prop.out || 'san-out',
-    live: prop.leave || 'san-live'
-  } : {
-    in: prop + '-in',
-    out: prop + '-out',
-    live: prop + '-live'
-  };
-};
-
-/***/ }),
-/* 14 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _Doc = __webpack_require__(27);
-
-var _Doc2 = _interopRequireDefault(_Doc);
-
-var _index = __webpack_require__(10);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// <template>
-// <section>
-//   <a href="https://github.com/dafrok/san-transition"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"></a>
-//   <div class="markdown-body">
-//     <doc></doc>
-//   </div>
-// </section>
-// </template>
-//
-// <script>
-exports.default = {
-  components: {
-    doc: (0, _index.transition)()(_Doc2.default)
-  }
-  // </script>
-  //
-  // <style>
-  // body {
-  //   padding: 20px;
-  //   color: #999;
-  //   background-color: #19232e;
-  // }
-  // .san-live {
-  //   opacity: 1;
-  //   transition: all 1s ease-out;
-  //   transform: translate(0, 0);
-  // }
-  // .san-in, .san-out {
-  //   opacity: 0;
-  //   transform: translate(0, 100px);
-  // }
-  // </style>
-
-};
-
-/***/ }),
-/* 15 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _prismjs = __webpack_require__(25);
-
-var _prismjs2 = _interopRequireDefault(_prismjs);
-
-var _try = __webpack_require__(28);
-
-var _try2 = _interopRequireDefault(_try);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// <template lang="md">
-// # <img src="https://ecomfe.github.io/san/img/logo-colorful.svg" height="28px"><span>San Transition</span>
-//
-// High order component factory for generating [san](//github.com/ecomfe/san) components with transition effects.
-//
-// ## Get Start
-//
-// ### Installation
-//
-// #### NPM
-//
-// ```bash
-// $ npm install --save san-transition
-// ```
-//
-// #### CDN
-//
-// ```html
-// <script src="//unpkg.com/san-transition"></script>
-// ```
-//
-// ### Usage
-//
-// ```html
-// <template>
-//   <div>
-//     <transition-layer>A component with transition effects.</transition-layer>
-//   <div>
-// </template>
-//
-// <script>
-// import {transition} from 'san-transition'
-// import {YourComponent} from 'YOUR_SAN_COMPONENT'
-//
-// export default {
-//   components: {
-//     'transition-layer': transition('fade')(YourComponent)
-//   }
-// }
-// </script>
-//
-// <style>
-// .fade-live {
-//   opacity: 1;
-//   transform: translate(0, 0);
-//   transition: all .5s;
-// }
-// .fade-in, .fade-out {
-//   opacity: 0;
-//   transform: translate(100px, 0);
-// }
-// </style>
-//
-// ```
-//
-// ## API
-//
-// ### transition
-//
-// - Arguments
-//   - **{None, String, Object}** hook id
-// - Usage
-//   ```javascript
-//   // register default hooks
-//   // the same as `transition('san')(YourComponent)`
-//   transition()(YourComponent)
-//
-//   // register named hooks
-//   transition('foo')(YourComponent)
-//
-//   // register custom hooks
-//   transition({
-//     in: 'custom-transition-in-hook'
-//     out: 'custom-transition-out-hook',
-//     live: 'custom-live-hook',
-//   })(YourComponent)
-//   ```
-//
-// ### transitionGroup (uncompleted)
-//
-// Coming soon...
-//
-// ## CSS Hooks
-//
-// - **in** - Applies when the component attaches DOM tree and removes in the next frame immediately.
-// - **out** - Applies when the component will dispose.
-// - **live** - Applies between the next frame of ***in*** hook deactives and ***out*** hook actives.
-//
-// ## Try It Out
-//
-// ### Default Hooks
-//
-// <try penId="pwravg" title="Default Hooks"></try>
-//
-// ### Named Hooks
-//
-// <try penId="VWzQWV" title="Named Hooks"></try>
-//
-// ### Custom Hooks
-//
-// <try penId="xrLYYz" title="Custom Hooks"></try>
-//
-// ### Keyframe Animation Transition
-//
-// <try penId="rwzJqJ" title="Keyframe Animation Transition"></try>
-//
-// ### Working with s-if & s-else expression
-//
-// <try penId="dRzmbB" title="Working with s-if & s-else expression"></try>
-// </template>
-//
-//
-// <script>
-exports.default = {
-  components: {
-    try: _try2.default
-  },
-  attach: function attach() {
-    _prismjs2.default.highlightAll();
-  }
-};
-// </script>
-//
-// <style>
-// h1 * {
-//   margin-right: 10px;
-//   vertical-align: middle;
-// }
-// </style>
-
-/***/ }),
-/* 16 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(global) {
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-// <template>
-// <iframe
-//   height="{{height || '300'}}"
-//   width="100%"
-//   scrolling="no"
-//   title="{{title}}"
-//   src="//codepen.io/Dafrok/embed/{{penId}}/?height=300&theme-id=dark&default-tab={{tab}}&embed-version=2"
-//   frameborder="no"
-//   allowtransparency="true"
-//   allowfullscreen="true">
-//   See the Pen <a href="https://codepen.io/Dafrok/pen/{{penId}}/">{{penId}}</a> by Dafrok (<a href="https://codepen.io/Dafrok">@Dafrok</a>) on <a href="https://codepen.io">CodePen</a>.
-// </iframe>
-// </template>
-//
-// <script>
-exports.default = {
-  initData: function initData() {
-    return {
-      tab: global.screen.width >= 800 ? 'js,result' : 'result'
-    };
-  }
-};
-// </script>
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
-
-/***/ }),
-/* 17 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(0)();
-// imports
-
-
-// module
-exports.push([module.i, "/*! normalize.css v6.0.0 | MIT License | github.com/necolas/normalize.css */\n\n/* Document\n   ========================================================================== */\n\n/**\n * 1. Correct the line height in all browsers.\n * 2. Prevent adjustments of font size after orientation changes in\n *    IE on Windows Phone and in iOS.\n */\n\nhtml {\n  line-height: 1.15; /* 1 */\n  -ms-text-size-adjust: 100%; /* 2 */\n  -webkit-text-size-adjust: 100%; /* 2 */\n}\n\n/* Sections\n   ========================================================================== */\n\n/**\n * Add the correct display in IE 9-.\n */\n\narticle,\naside,\nfooter,\nheader,\nnav,\nsection {\n  display: block;\n}\n\n/**\n * Correct the font size and margin on `h1` elements within `section` and\n * `article` contexts in Chrome, Firefox, and Safari.\n */\n\nh1 {\n  font-size: 2em;\n  margin: 0.67em 0;\n}\n\n/* Grouping content\n   ========================================================================== */\n\n/**\n * Add the correct display in IE 9-.\n * 1. Add the correct display in IE.\n */\n\nfigcaption,\nfigure,\nmain { /* 1 */\n  display: block;\n}\n\n/**\n * Add the correct margin in IE 8.\n */\n\nfigure {\n  margin: 1em 40px;\n}\n\n/**\n * 1. Add the correct box sizing in Firefox.\n * 2. Show the overflow in Edge and IE.\n */\n\nhr {\n  box-sizing: content-box; /* 1 */\n  height: 0; /* 1 */\n  overflow: visible; /* 2 */\n}\n\n/**\n * 1. Correct the inheritance and scaling of font size in all browsers.\n * 2. Correct the odd `em` font sizing in all browsers.\n */\n\npre {\n  font-family: monospace, monospace; /* 1 */\n  font-size: 1em; /* 2 */\n}\n\n/* Text-level semantics\n   ========================================================================== */\n\n/**\n * 1. Remove the gray background on active links in IE 10.\n * 2. Remove gaps in links underline in iOS 8+ and Safari 8+.\n */\n\na {\n  background-color: transparent; /* 1 */\n  -webkit-text-decoration-skip: objects; /* 2 */\n}\n\n/**\n * 1. Remove the bottom border in Chrome 57- and Firefox 39-.\n * 2. Add the correct text decoration in Chrome, Edge, IE, Opera, and Safari.\n */\n\nabbr[title] {\n  border-bottom: none; /* 1 */\n  text-decoration: underline; /* 2 */\n  text-decoration: underline dotted; /* 2 */\n}\n\n/**\n * Prevent the duplicate application of `bolder` by the next rule in Safari 6.\n */\n\nb,\nstrong {\n  font-weight: inherit;\n}\n\n/**\n * Add the correct font weight in Chrome, Edge, and Safari.\n */\n\nb,\nstrong {\n  font-weight: bolder;\n}\n\n/**\n * 1. Correct the inheritance and scaling of font size in all browsers.\n * 2. Correct the odd `em` font sizing in all browsers.\n */\n\ncode,\nkbd,\nsamp {\n  font-family: monospace, monospace; /* 1 */\n  font-size: 1em; /* 2 */\n}\n\n/**\n * Add the correct font style in Android 4.3-.\n */\n\ndfn {\n  font-style: italic;\n}\n\n/**\n * Add the correct background and color in IE 9-.\n */\n\nmark {\n  background-color: #ff0;\n  color: #000;\n}\n\n/**\n * Add the correct font size in all browsers.\n */\n\nsmall {\n  font-size: 80%;\n}\n\n/**\n * Prevent `sub` and `sup` elements from affecting the line height in\n * all browsers.\n */\n\nsub,\nsup {\n  font-size: 75%;\n  line-height: 0;\n  position: relative;\n  vertical-align: baseline;\n}\n\nsub {\n  bottom: -0.25em;\n}\n\nsup {\n  top: -0.5em;\n}\n\n/* Embedded content\n   ========================================================================== */\n\n/**\n * Add the correct display in IE 9-.\n */\n\naudio,\nvideo {\n  display: inline-block;\n}\n\n/**\n * Add the correct display in iOS 4-7.\n */\n\naudio:not([controls]) {\n  display: none;\n  height: 0;\n}\n\n/**\n * Remove the border on images inside links in IE 10-.\n */\n\nimg {\n  border-style: none;\n}\n\n/**\n * Hide the overflow in IE.\n */\n\nsvg:not(:root) {\n  overflow: hidden;\n}\n\n/* Forms\n   ========================================================================== */\n\n/**\n * Remove the margin in Firefox and Safari.\n */\n\nbutton,\ninput,\noptgroup,\nselect,\ntextarea {\n  margin: 0;\n}\n\n/**\n * Show the overflow in IE.\n * 1. Show the overflow in Edge.\n */\n\nbutton,\ninput { /* 1 */\n  overflow: visible;\n}\n\n/**\n * Remove the inheritance of text transform in Edge, Firefox, and IE.\n * 1. Remove the inheritance of text transform in Firefox.\n */\n\nbutton,\nselect { /* 1 */\n  text-transform: none;\n}\n\n/**\n * 1. Prevent a WebKit bug where (2) destroys native `audio` and `video`\n *    controls in Android 4.\n * 2. Correct the inability to style clickable types in iOS and Safari.\n */\n\nbutton,\nhtml [type=\"button\"], /* 1 */\n[type=\"reset\"],\n[type=\"submit\"] {\n  -webkit-appearance: button; /* 2 */\n}\n\n/**\n * Remove the inner border and padding in Firefox.\n */\n\nbutton::-moz-focus-inner,\n[type=\"button\"]::-moz-focus-inner,\n[type=\"reset\"]::-moz-focus-inner,\n[type=\"submit\"]::-moz-focus-inner {\n  border-style: none;\n  padding: 0;\n}\n\n/**\n * Restore the focus styles unset by the previous rule.\n */\n\nbutton:-moz-focusring,\n[type=\"button\"]:-moz-focusring,\n[type=\"reset\"]:-moz-focusring,\n[type=\"submit\"]:-moz-focusring {\n  outline: 1px dotted ButtonText;\n}\n\n/**\n * 1. Correct the text wrapping in Edge and IE.\n * 2. Correct the color inheritance from `fieldset` elements in IE.\n * 3. Remove the padding so developers are not caught out when they zero out\n *    `fieldset` elements in all browsers.\n */\n\nlegend {\n  box-sizing: border-box; /* 1 */\n  color: inherit; /* 2 */\n  display: table; /* 1 */\n  max-width: 100%; /* 1 */\n  padding: 0; /* 3 */\n  white-space: normal; /* 1 */\n}\n\n/**\n * 1. Add the correct display in IE 9-.\n * 2. Add the correct vertical alignment in Chrome, Firefox, and Opera.\n */\n\nprogress {\n  display: inline-block; /* 1 */\n  vertical-align: baseline; /* 2 */\n}\n\n/**\n * Remove the default vertical scrollbar in IE.\n */\n\ntextarea {\n  overflow: auto;\n}\n\n/**\n * 1. Add the correct box sizing in IE 10-.\n * 2. Remove the padding in IE 10-.\n */\n\n[type=\"checkbox\"],\n[type=\"radio\"] {\n  box-sizing: border-box; /* 1 */\n  padding: 0; /* 2 */\n}\n\n/**\n * Correct the cursor style of increment and decrement buttons in Chrome.\n */\n\n[type=\"number\"]::-webkit-inner-spin-button,\n[type=\"number\"]::-webkit-outer-spin-button {\n  height: auto;\n}\n\n/**\n * 1. Correct the odd appearance in Chrome and Safari.\n * 2. Correct the outline style in Safari.\n */\n\n[type=\"search\"] {\n  -webkit-appearance: textfield; /* 1 */\n  outline-offset: -2px; /* 2 */\n}\n\n/**\n * Remove the inner padding and cancel buttons in Chrome and Safari on macOS.\n */\n\n[type=\"search\"]::-webkit-search-cancel-button,\n[type=\"search\"]::-webkit-search-decoration {\n  -webkit-appearance: none;\n}\n\n/**\n * 1. Correct the inability to style clickable types in iOS and Safari.\n * 2. Change font properties to `inherit` in Safari.\n */\n\n::-webkit-file-upload-button {\n  -webkit-appearance: button; /* 1 */\n  font: inherit; /* 2 */\n}\n\n/* Interactive\n   ========================================================================== */\n\n/*\n * Add the correct display in IE 9-.\n * 1. Add the correct display in Edge, IE, and Firefox.\n */\n\ndetails, /* 1 */\nmenu {\n  display: block;\n}\n\n/*\n * Add the correct display in all browsers.\n */\n\nsummary {\n  display: list-item;\n}\n\n/* Scripting\n   ========================================================================== */\n\n/**\n * Add the correct display in IE 9-.\n */\n\ncanvas {\n  display: inline-block;\n}\n\n/**\n * Add the correct display in IE.\n */\n\ntemplate {\n  display: none;\n}\n\n/* Hidden\n   ========================================================================== */\n\n/**\n * Add the correct display in IE 10-.\n */\n\n[hidden] {\n  display: none;\n}\n", ""]);
-
-// exports
-
-
-/***/ }),
-/* 18 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(0)();
-// imports
-
-
-// module
-exports.push([module.i, "/**\n * prism.js tomorrow night eighties for JavaScript, CoffeeScript, CSS and HTML\n * Based on https://github.com/chriskempson/tomorrow-theme\n * @author Rose Pritchard\n */\n\ncode[class*=\"language-\"],\npre[class*=\"language-\"] {\n\tcolor: #ccc;\n\tbackground: none;\n\tfont-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;\n\ttext-align: left;\n\twhite-space: pre;\n\tword-spacing: normal;\n\tword-break: normal;\n\tword-wrap: normal;\n\tline-height: 1.5;\n\n\t-moz-tab-size: 4;\n\t-o-tab-size: 4;\n\ttab-size: 4;\n\n\t-webkit-hyphens: none;\n\t-moz-hyphens: none;\n\t-ms-hyphens: none;\n\thyphens: none;\n\n}\n\n/* Code blocks */\npre[class*=\"language-\"] {\n\tpadding: 1em;\n\tmargin: .5em 0;\n\toverflow: auto;\n}\n\n:not(pre) > code[class*=\"language-\"],\npre[class*=\"language-\"] {\n\tbackground: #2d2d2d;\n}\n\n/* Inline code */\n:not(pre) > code[class*=\"language-\"] {\n\tpadding: .1em;\n\tborder-radius: .3em;\n\twhite-space: normal;\n}\n\n.token.comment,\n.token.block-comment,\n.token.prolog,\n.token.doctype,\n.token.cdata {\n\tcolor: #999;\n}\n\n.token.punctuation {\n\tcolor: #ccc;\n}\n\n.token.tag,\n.token.attr-name,\n.token.namespace,\n.token.deleted {\n\tcolor: #e2777a;\n}\n\n.token.function-name {\n\tcolor: #6196cc;\n}\n\n.token.boolean,\n.token.number,\n.token.function {\n\tcolor: #f08d49;\n}\n\n.token.property,\n.token.class-name,\n.token.constant,\n.token.symbol {\n\tcolor: #f8c555;\n}\n\n.token.selector,\n.token.important,\n.token.atrule,\n.token.keyword,\n.token.builtin {\n\tcolor: #cc99cd;\n}\n\n.token.string,\n.token.char,\n.token.attr-value,\n.token.regex,\n.token.variable {\n\tcolor: #7ec699;\n}\n\n.token.operator,\n.token.entity,\n.token.url {\n\tcolor: #67cdcc;\n}\n\n.token.important,\n.token.bold {\n\tfont-weight: bold;\n}\n.token.italic {\n\tfont-style: italic;\n}\n\n.token.entity {\n\tcursor: help;\n}\n\n.token.inserted {\n\tcolor: green;\n}\n", ""]);
-
-// exports
-
-
-/***/ }),
-/* 19 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(0)();
-// imports
-
-
-// module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nbody {\n  padding: 20px;\n  color: #999;\n  background-color: #19232e;\n}\n.san-live {\n  opacity: 1;\n  transition: all 1s ease-out;\n  transform: translate(0, 0);\n}\n.san-in, .san-out {\n  opacity: 0;\n  transform: translate(0, 100px);\n}\n", ""]);
-
-// exports
-
-
-/***/ }),
-/* 20 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(0)();
-// imports
-
-
-// module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nh1 * {\n  margin-right: 10px;\n  vertical-align: middle;\n}\n", ""]);
-
-// exports
-
-
-/***/ }),
-/* 21 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(0)();
-// imports
-
-
-// module
-exports.push([module.i, ".markdown-body {\n  color: #999;\n}\n.markdown-body table {\n  width: 100%;\n}\n.markdown-body a {\n  color: #4183c4;\n}\n.markdown-body a.absent {\n  color: #c00;\n}\n.markdown-body a.anchor {\n  display: block;\n  padding-left: 30px;\n  margin-left: -30px;\n  cursor: pointer;\n  position: absolute;\n  top: 0;\n  left: 0;\n  bottom: 0;\n}\n.markdown-body a:first-child h1,\n.markdown-body a:first-child h2,\n.markdown-body a:first-child h3,\n.markdown-body a:first-child h4,\n.markdown-body a:first-child h5,\n.markdown-body a:first-child h6 {\n  margin-top: 0;\n  padding-top: 0;\n}\n.markdown-body h1,\n.markdown-body h2,\n.markdown-body h3,\n.markdown-body h4,\n.markdown-body h5,\n.markdown-body h6 {\n  color: #fff;\n  margin: 20px 0 10px;\n  padding: 0;\n  font-weight: bold;\n  -webkit-font-smoothing: antialiased;\n  cursor: text;\n  position: relative;\n}\n.markdown-body h1:hover a.anchor,\n.markdown-body h2:hover a.anchor,\n.markdown-body h3:hover a.anchor,\n.markdown-body h4:hover a.anchor,\n.markdown-body h5:hover a.anchor,\n.markdown-body h6:hover a.anchor {\n  text-decoration: none;\n}\n.markdown-body h1 tt,\n.markdown-body h2 tt,\n.markdown-body h3 tt,\n.markdown-body h4 tt,\n.markdown-body h5 tt,\n.markdown-body h6 tt,\n.markdown-body h1 code,\n.markdown-body h2 code,\n.markdown-body h3 code,\n.markdown-body h4 code,\n.markdown-body h5 code,\n.markdown-body h6 code {\n  font-size: inherit;\n}\n.markdown-body h1 p,\n.markdown-body h2 p,\n.markdown-body h3 p,\n.markdown-body h4 p,\n.markdown-body h5 p,\n.markdown-body h6 p {\n  margin-top: 0;\n}\n.markdown-body h4,\n.markdown-body h5,\n.markdown-body h6 {\n  font-weight: 400;\n}\n.markdown-body h1 {\n  font-size: 28px;\n}\n.markdown-body h2 {\n  font-size: 24px;\n  border-bottom: 1px solid #ccc;\n}\n.markdown-body h3 {\n  font-size: 18px;\n}\n.markdown-body h4 {\n  font-size: 16px;\n}\n.markdown-body h5 {\n  font-size: 14px;\n}\n.markdown-body h6 {\n  color: #777;\n  font-size: 14px;\n}\n.markdown-body p,\n.markdown-body blockquote,\n.markdown-body ul,\n.markdown-body ol,\n.markdown-body dl,\n.markdown-body li,\n.markdown-body table,\n.markdown-body pre {\n  margin: 15px 0;\n}\n.markdown-body hr {\n  border: 0 none;\n  color: #ccc;\n  height: 4px;\n  padding: 0;\n}\n.markdown-body li {\n  margin: 0;\n}\n.markdown-body li p.first {\n  display: inline-block;\n}\n.markdown-body ul,\n.markdown-body ol {\n  padding-left: 30px;\n}\n.markdown-body ul:first-child,\n.markdown-body ol:first-child {\n  margin-top: 0;\n}\n.markdown-body dl {\n  padding: 0;\n}\n.markdown-body dl dt {\n  font-size: 14px;\n  font-weight: bold;\n  font-style: italic;\n  padding: 0;\n  margin: 15px 0 5px;\n}\n.markdown-body dl dt:first-child {\n  padding: 0;\n}\n.markdown-body dl dt > :first-child {\n  margin-top: 0;\n}\n.markdown-body dl dt > :last-child {\n  margin-bottom: 0;\n}\n.markdown-body dl dd {\n  margin: 0 0 15px;\n  padding: 0 15px;\n}\n.markdown-body dl dd > :first-child {\n  margin-top: 0;\n}\n.markdown-body dl dd > :last-child {\n  margin-bottom: 0;\n}\n.markdown-body blockquote {\n  border-left: 4px solid #ddd;\n  padding: 0 15px;\n  color: #777;\n}\n.markdown-body blockquote > :first-child {\n  margin-top: 0;\n}\n.markdown-body blockquote > :last-child {\n  margin-bottom: 0;\n}\n.markdown-body table {\n  padding: 0;\n  border-collapse: collapse;\n}\n.markdown-body table tr {\n  border-top: 1px solid #ccc;\n  background-color: #fff;\n  margin: 0;\n  padding: 0;\n}\n.markdown-body table tr:nth-child(2n) {\n  background-color: #f8f8f8;\n}\n.markdown-body table tr th {\n  font-weight: bold;\n  border: 1px solid #ccc;\n  margin: 0;\n  padding: 6px 13px;\n  background: #ccc;\n}\n.markdown-body table tr td {\n  border: 1px solid #ccc;\n  margin: 0;\n  padding: 6px 13px;\n}\n.markdown-body table tr th:first-child,\n.markdown-body table tr td:first-child {\n  margin-top: 0;\n}\n.markdown-body table tr th:last-child,\n.markdown-body table tr td:last-child {\n  margin-bottom: 0;\n}\n.markdown-body img {\n  max-width: 100%;\n}\n.markdown-body span.frame {\n  display: block;\n  overflow: hidden;\n}\n.markdown-body span.frame > span {\n  border: 1px solid #ddd;\n  display: block;\n  float: left;\n  overflow: hidden;\n  margin: 13px 0 0;\n  padding: 7px;\n  width: auto;\n}\n.markdown-body span.frame span span {\n  clear: both;\n  color: #333;\n  display: block;\n  padding: 5px 0 0;\n}\n.markdown-body span.frame span img {\n  display: block;\n  float: left;\n}\n.markdown-body span .align-center {\n  display: block;\n  overflow: hidden;\n  clear: both;\n}\n.markdown-body span .align-center > span {\n  display: block;\n  overflow: hidden;\n  margin: 13px auto 0;\n  text-align: center;\n}\n.markdown-body span .align-center span img {\n  margin: 0 auto;\n  text-align: center;\n}\n.markdown-body span .align-right {\n  display: block;\n  overflow: hidden;\n  clear: both;\n}\n.markdown-body span .align-right > span {\n  display: block;\n  overflow: hidden;\n  margin: 13px 0 0;\n  text-align: right;\n}\n.markdown-body span .align-right span img {\n  margin: 0;\n  text-align: right;\n}\n.markdown-body span .float-left {\n  display: block;\n  margin-right: 13px;\n  overflow: hidden;\n  float: left;\n}\n.markdown-body span .float-left span {\n  margin: 13px 0 0;\n}\n.markdown-body span .float-right {\n  display: block;\n  margin-left: 13px;\n  overflow: hidden;\n  float: right;\n}\n.markdown-body span .float-right > span {\n  display: block;\n  overflow: hidden;\n  margin: 13px auto 0;\n  text-align: right;\n}\n.markdown-body code,\n.markdown-body tt {\n  margin: 0 2px;\n  padding: 0 5px;\n  white-space: nowrap;\n  border: 1px solid #eaeaea;\n  background-color: #f8f8f8;\n  border-radius: 3px;\n}\n.markdown-body pre code {\n  margin: 0;\n  padding: 0;\n  white-space: pre;\n  border: none;\n  background: transparent;\n}\n.markdown-body .highlight pre {\n  background-color: #f8f8f8;\n  border: 1px solid #ccc;\n  font-size: 13px;\n  line-height: 19px;\n  overflow: auto;\n  padding: 6px 10px;\n  border-radius: 3px;\n}\n.markdown-body pre {\n  border: 1px solid #ccc;\n  font-size: 13px;\n  line-height: 19px;\n  overflow: auto;\n  padding: 6px 10px;\n  border-radius: 3px;\n}\n.markdown-body pre code,\n.markdown-body pre tt {\n  background-color: transparent;\n  border: none;\n}\n.markdown-body sup {\n  font-size: 0.83em;\n  vertical-align: super;\n  line-height: 0;\n}\n.markdown-body * {\n  -webkit-print-color-adjust: exact;\n}\n@media screen and (min-width: 914px) {\n  .markdown-body body {\n    width: 854px;\n    margin0: auto;\n  }\n}\n@media print {\n  .markdown-body table,\n  .markdown-body pre {\n    page-break-inside: avoid;\n  }\n  .markdown-body pre {\n    word-wrap: break-word;\n  }\n}\n", ""]);
-
-// exports
-
-
-/***/ }),
-/* 22 */
-/***/ (function(module, exports) {
-
-module.exports = "\n<section>\n  <a href=\"https://github.com/dafrok/san-transition\"><img style=\"position: absolute; top: 0; right: 0; border: 0;\" src=\"https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67\" alt=\"Fork me on GitHub\" data-canonical-src=\"https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png\"></a>\n  <div class=\"markdown-body\">\n    <doc></doc>\n  </div>\n</section>\n";
-
-/***/ }),
-/* 23 */
-/***/ (function(module, exports) {
-
-module.exports = "\n<iframe\n  height=\"{{height || '300'}}\"\n  width=\"100%\"\n  scrolling=\"no\"\n  title=\"{{title}}\"\n  src=\"//codepen.io/Dafrok/embed/{{penId}}/?height=300&theme-id=dark&default-tab={{tab}}&embed-version=2\"\n  frameborder=\"no\"\n  allowtransparency=\"true\"\n  allowfullscreen=\"true\">\n  See the Pen <a href=\"https://codepen.io/Dafrok/pen/{{penId}}/\">{{penId}}</a> by Dafrok (<a href=\"https://codepen.io/Dafrok\">@Dafrok</a>) on <a href=\"https://codepen.io\">CodePen</a>.\n</iframe>\n";
-
-/***/ }),
-/* 24 */
-/***/ (function(module, exports) {
-
-module.exports = "<div><h1 id=\"-img-src-https-ecomfe-github-io-san-img-logo-colorful-svg-height-28px-span-san-transition-span-\"><img src=\"https://ecomfe.github.io/san/img/logo-colorful.svg\" height=\"28px\"><span>San Transition</span></h1>\n<p>High order component factory for generating <a href=\"//github.com/ecomfe/san\">san</a> components with transition effects.</p>\n<h2 id=\"get-start\">Get Start</h2>\n<h3 id=\"installation\">Installation</h3>\n<h4 id=\"npm\">NPM</h4>\n<pre><code class=\"lang-bash\">$ npm install --save san-transition\n</code></pre>\n<h4 id=\"cdn\">CDN</h4>\n<pre><code class=\"lang-html\">&lt;script src=&quot;//unpkg.com/san-transition&quot;&gt;&lt;/script&gt;\n</code></pre>\n<h3 id=\"usage\">Usage</h3>\n<pre><code class=\"lang-html\">&lt;template&gt;\n  &lt;div&gt;\n    &lt;transition-layer&gt;A component with transition effects.&lt;/transition-layer&gt;\n  &lt;div&gt;\n&lt;/template&gt;\n\n&lt;script&gt;\nimport {transition} from &#39;san-transition&#39;\nimport {YourComponent} from &#39;YOUR_SAN_COMPONENT&#39;\n\nexport default {\n  components: {\n    &#39;transition-layer&#39;: transition(&#39;fade&#39;)(YourComponent)\n  }\n}\n&lt;/script&gt;\n\n&lt;style&gt;\n.fade-live {\n  opacity: 1;\n  transform: translate(0, 0);\n  transition: all .5s;\n}\n.fade-in, .fade-out {\n  opacity: 0;\n  transform: translate(100px, 0);\n}\n&lt;/style&gt;\n</code></pre>\n<h2 id=\"api\">API</h2>\n<h3 id=\"transition\">transition</h3>\n<ul>\n<li>Arguments<ul>\n<li><strong>{None, String, Object}</strong> hook id</li>\n</ul>\n</li>\n<li><p>Usage</p>\n<pre><code class=\"lang-javascript\">// register default hooks\n// the same as `transition(&#39;san&#39;)(YourComponent)`\ntransition()(YourComponent)\n\n// register named hooks\ntransition(&#39;foo&#39;)(YourComponent)\n\n// register custom hooks\ntransition({\n  in: &#39;custom-transition-in-hook&#39;\n  out: &#39;custom-transition-out-hook&#39;,\n  live: &#39;custom-live-hook&#39;,\n})(YourComponent)\n</code></pre>\n</li>\n</ul>\n<h3 id=\"transitiongroup-uncompleted-\">transitionGroup (uncompleted)</h3>\n<p>Coming soon...</p>\n<h2 id=\"css-hooks\">CSS Hooks</h2>\n<ul>\n<li><strong>in</strong> - Applies when the component attaches DOM tree and removes in the next frame immediately.</li>\n<li><strong>out</strong> - Applies when the component will dispose.</li>\n<li><strong>live</strong> - Applies between the next frame of <strong><em>in</em></strong> hook deactives and <strong><em>out</em></strong> hook actives.</li>\n</ul>\n<h2 id=\"try-it-out\">Try It Out</h2>\n<h3 id=\"default-hooks\">Default Hooks</h3>\n<try penId=\"pwravg\" title=\"Default Hooks\"></try>\n\n<h3 id=\"named-hooks\">Named Hooks</h3>\n<try penId=\"VWzQWV\" title=\"Named Hooks\"></try>\n\n<h3 id=\"custom-hooks\">Custom Hooks</h3>\n<try penId=\"xrLYYz\" title=\"Custom Hooks\"></try>\n\n<h3 id=\"keyframe-animation-transition\">Keyframe Animation Transition</h3>\n<try penId=\"rwzJqJ\" title=\"Keyframe Animation Transition\"></try>\n\n<h3 id=\"working-with-s-if-s-else-expression\">Working with s-if &amp; s-else expression</h3>\n<try penId=\"dRzmbB\" title=\"Working with s-if & s-else expression\"></try>\n</div>";
-
-/***/ }),
-/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {
@@ -10509,6 +10240,7 @@ var lang = /\blang(?:uage)?-(\w+)\b/i;
 var uniqueId = 0;
 
 var _ = _self.Prism = {
+	manual: _self.Prism && _self.Prism.manual,
 	util: {
 		encode: function (tokens) {
 			if (tokens instanceof Token) {
@@ -10548,8 +10280,7 @@ var _ = _self.Prism = {
 					return clone;
 
 				case 'Array':
-					// Check for existence for IE8
-					return o.map && o.map(function(v) { return _.util.clone(v); });
+					return o.map(function(v) { return _.util.clone(v); });
 			}
 
 			return o;
@@ -10694,7 +10425,9 @@ var _ = _self.Prism = {
 
 		if (!env.code || !env.grammar) {
 			if (env.code) {
+				_.hooks.run('before-highlight', env);
 				env.element.textContent = env.code;
+				_.hooks.run('after-highlight', env);
 			}
 			_.hooks.run('complete', env);
 			return;
@@ -10742,24 +10475,16 @@ var _ = _self.Prism = {
 		return Token.stringify(_.util.encode(tokens), language);
 	},
 
-	tokenize: function(text, grammar, language) {
+	matchGrammar: function (text, strarr, grammar, index, startPos, oneshot, target) {
 		var Token = _.Token;
 
-		var strarr = [text];
-
-		var rest = grammar.rest;
-
-		if (rest) {
-			for (var token in rest) {
-				grammar[token] = rest[token];
-			}
-
-			delete grammar.rest;
-		}
-
-		tokenloop: for (var token in grammar) {
+		for (var token in grammar) {
 			if(!grammar.hasOwnProperty(token) || !grammar[token]) {
 				continue;
+			}
+
+			if (token == target) {
+				return;
 			}
 
 			var patterns = grammar[token];
@@ -10782,13 +10507,13 @@ var _ = _self.Prism = {
 				pattern = pattern.pattern || pattern;
 
 				// Don’t cache length as it changes during the loop
-				for (var i=0, pos = 0; i<strarr.length; pos += strarr[i].length, ++i) {
+				for (var i = index, pos = startPos; i < strarr.length; pos += strarr[i].length, ++i) {
 
 					var str = strarr[i];
 
 					if (strarr.length > text.length) {
 						// Something went terribly wrong, ABORT, ABORT!
-						break tokenloop;
+						return;
 					}
 
 					if (str instanceof Token) {
@@ -10813,7 +10538,7 @@ var _ = _self.Prism = {
 						    k = i,
 						    p = pos;
 
-						for (var len = strarr.length; k < len && p < to; ++k) {
+						for (var len = strarr.length; k < len && (p < to || (!strarr[k].type && !strarr[k - 1].greedy)); ++k) {
 							p += strarr[k].length;
 							// Move the index i to the element in strarr that is closest to from
 							if (from >= p) {
@@ -10837,6 +10562,10 @@ var _ = _self.Prism = {
 					}
 
 					if (!match) {
+						if (oneshot) {
+							break;
+						}
+
 						continue;
 					}
 
@@ -10853,6 +10582,8 @@ var _ = _self.Prism = {
 					var args = [i, delNum];
 
 					if (before) {
+						++i;
+						pos += before.length;
 						args.push(before);
 					}
 
@@ -10865,9 +10596,31 @@ var _ = _self.Prism = {
 					}
 
 					Array.prototype.splice.apply(strarr, args);
+
+					if (delNum != 1)
+						_.matchGrammar(text, strarr, grammar, i, pos, true, token);
+
+					if (oneshot)
+						break;
 				}
 			}
 		}
+	},
+
+	tokenize: function(text, grammar, language) {
+		var strarr = [text];
+
+		var rest = grammar.rest;
+
+		if (rest) {
+			for (var token in rest) {
+				grammar[token] = rest[token];
+			}
+
+			delete grammar.rest;
+		}
+
+		_.matchGrammar(text, strarr, grammar, 0, 0, false);
 
 		return strarr;
 	},
@@ -10973,7 +10726,7 @@ var script = document.currentScript || [].slice.call(document.getElementsByTagNa
 if (script) {
 	_.filename = script.src;
 
-	if (document.addEventListener && !script.hasAttribute('data-manual')) {
+	if (!_.manual && !script.hasAttribute('data-manual')) {
 		if(document.readyState !== "loading") {
 			if (window.requestAnimationFrame) {
 				window.requestAnimationFrame(_.highlightAll);
@@ -11006,12 +10759,12 @@ if (typeof global !== 'undefined') {
 ********************************************** */
 
 Prism.languages.markup = {
-	'comment': /<!--[\w\W]*?-->/,
-	'prolog': /<\?[\w\W]+?\?>/,
-	'doctype': /<!DOCTYPE[\w\W]+?>/i,
-	'cdata': /<!\[CDATA\[[\w\W]*?]]>/i,
+	'comment': /<!--[\s\S]*?-->/,
+	'prolog': /<\?[\s\S]+?\?>/,
+	'doctype': /<!DOCTYPE[\s\S]+?>/i,
+	'cdata': /<!\[CDATA\[[\s\S]*?]]>/i,
 	'tag': {
-		pattern: /<\/?(?!\d)[^\s>\/=$<]+(?:\s+[^\s>\/=]+(?:=(?:("|')(?:\\\1|\\?(?!\1)[\w\W])*\1|[^\s'">=]+))?)*\s*\/?>/i,
+		pattern: /<\/?(?!\d)[^\s>\/=$<]+(?:\s+[^\s>\/=]+(?:=(?:("|')(?:\\\1|\\?(?!\1)[\s\S])*\1|[^\s'">=]+))?)*\s*\/?>/i,
 		inside: {
 			'tag': {
 				pattern: /^<\/?[^\s>\/]+/i,
@@ -11021,7 +10774,7 @@ Prism.languages.markup = {
 				}
 			},
 			'attr-value': {
-				pattern: /=(?:('|")[\w\W]*?(\1)|[^\s>]+)/i,
+				pattern: /=(?:('|")[\s\S]*?(\1)|[^\s>]+)/i,
 				inside: {
 					'punctuation': /[=>"']/
 				}
@@ -11038,6 +10791,9 @@ Prism.languages.markup = {
 	},
 	'entity': /&#?[\da-z]{1,8};/i
 };
+
+Prism.languages.markup['tag'].inside['attr-value'].inside['entity'] =
+	Prism.languages.markup['entity'];
 
 // Plugin to make entity title show the real entity, idea by Roman Komarov
 Prism.hooks.add('wrap', function(env) {
@@ -11058,7 +10814,7 @@ Prism.languages.svg = Prism.languages.markup;
 ********************************************** */
 
 Prism.languages.css = {
-	'comment': /\/\*[\w\W]*?\*\//,
+	'comment': /\/\*[\s\S]*?\*\//,
 	'atrule': {
 		pattern: /@[\w-]+?.*?(;|(?=\s*\{))/i,
 		inside: {
@@ -11066,10 +10822,10 @@ Prism.languages.css = {
 			// See rest below
 		}
 	},
-	'url': /url\((?:(["'])(\\(?:\r\n|[\w\W])|(?!\1)[^\\\r\n])*\1|.*?)\)/i,
+	'url': /url\((?:(["'])(\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*\1|.*?)\)/i,
 	'selector': /[^\{\}\s][^\{\};]*?(?=\s*\{)/,
 	'string': {
-		pattern: /("|')(\\(?:\r\n|[\w\W])|(?!\1)[^\\\r\n])*\1/,
+		pattern: /("|')(\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*\1/,
 		greedy: true
 	},
 	'property': /(\b|\B)[\w-]+(?=\s*:)/i,
@@ -11083,7 +10839,7 @@ Prism.languages.css['atrule'].inside.rest = Prism.util.clone(Prism.languages.css
 if (Prism.languages.markup) {
 	Prism.languages.insertBefore('markup', 'tag', {
 		'style': {
-			pattern: /(<style[\w\W]*?>)[\w\W]*?(?=<\/style>)/i,
+			pattern: /(<style[\s\S]*?>)[\s\S]*?(?=<\/style>)/i,
 			lookbehind: true,
 			inside: Prism.languages.css,
 			alias: 'language-css'
@@ -11116,7 +10872,7 @@ if (Prism.languages.markup) {
 Prism.languages.clike = {
 	'comment': [
 		{
-			pattern: /(^|[^\\])\/\*[\w\W]*?\*\//,
+			pattern: /(^|[^\\])\/\*[\s\S]*?(?:\*\/|$)/,
 			lookbehind: true
 		},
 		{
@@ -11150,15 +10906,15 @@ Prism.languages.clike = {
 
 Prism.languages.javascript = Prism.languages.extend('clike', {
 	'keyword': /\b(as|async|await|break|case|catch|class|const|continue|debugger|default|delete|do|else|enum|export|extends|finally|for|from|function|get|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|set|static|super|switch|this|throw|try|typeof|var|void|while|with|yield)\b/,
-	'number': /\b-?(0x[\dA-Fa-f]+|0b[01]+|0o[0-7]+|\d*\.?\d+([Ee][+-]?\d+)?|NaN|Infinity)\b/,
+	'number': /\b-?(0[xX][\dA-Fa-f]+|0[bB][01]+|0[oO][0-7]+|\d*\.?\d+([Ee][+-]?\d+)?|NaN|Infinity)\b/,
 	// Allow for all non-ASCII characters (See http://stackoverflow.com/a/2008444)
 	'function': /[_$a-zA-Z\xA0-\uFFFF][_$a-zA-Z0-9\xA0-\uFFFF]*(?=\()/i,
-	'operator': /--?|\+\+?|!=?=?|<=?|>=?|==?=?|&&?|\|\|?|\?|\*\*?|\/|~|\^|%|\.{3}/
+	'operator': /-[-=]?|\+[+=]?|!=?=?|<<?=?|>>?>?=?|=(?:==?|>)?|&[&=]?|\|[|=]?|\*\*?=?|\/=?|~|\^=?|%=?|\?|\.{3}/
 });
 
 Prism.languages.insertBefore('javascript', 'keyword', {
 	'regex': {
-		pattern: /(^|[^/])\/(?!\/)(\[.+?]|\\.|[^/\\\r\n])+\/[gimyu]{0,5}(?=\s*($|[\r\n,.;})]))/,
+		pattern: /(^|[^/])\/(?!\/)(\[[^\]\r\n]+]|\\.|[^/\\\[\r\n])+\/[gimyu]{0,5}(?=\s*($|[\r\n,.;})]))/,
 		lookbehind: true,
 		greedy: true
 	}
@@ -11187,7 +10943,7 @@ Prism.languages.insertBefore('javascript', 'string', {
 if (Prism.languages.markup) {
 	Prism.languages.insertBefore('markup', 'tag', {
 		'script': {
-			pattern: /(<script[\w\W]*?>)[\w\W]*?(?=<\/script>)/i,
+			pattern: /(<script[\s\S]*?>)[\s\S]*?(?=<\/script>)/i,
 			lookbehind: true,
 			inside: Prism.languages.javascript,
 			alias: 'language-javascript'
@@ -11196,6 +10952,7 @@ if (Prism.languages.markup) {
 }
 
 Prism.languages.js = Prism.languages.javascript;
+
 
 /* **********************************************
      Begin prism-file-highlight.js
@@ -11220,58 +10977,56 @@ Prism.languages.js = Prism.languages.javascript;
 			'tex': 'latex'
 		};
 
-		if(Array.prototype.forEach) { // Check to prevent error in IE8
-			Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach(function (pre) {
-				var src = pre.getAttribute('data-src');
+		Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach(function (pre) {
+			var src = pre.getAttribute('data-src');
 
-				var language, parent = pre;
-				var lang = /\blang(?:uage)?-(?!\*)(\w+)\b/i;
-				while (parent && !lang.test(parent.className)) {
-					parent = parent.parentNode;
-				}
+			var language, parent = pre;
+			var lang = /\blang(?:uage)?-(?!\*)(\w+)\b/i;
+			while (parent && !lang.test(parent.className)) {
+				parent = parent.parentNode;
+			}
 
-				if (parent) {
-					language = (pre.className.match(lang) || [, ''])[1];
-				}
+			if (parent) {
+				language = (pre.className.match(lang) || [, ''])[1];
+			}
 
-				if (!language) {
-					var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
-					language = Extensions[extension] || extension;
-				}
+			if (!language) {
+				var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
+				language = Extensions[extension] || extension;
+			}
 
-				var code = document.createElement('code');
-				code.className = 'language-' + language;
+			var code = document.createElement('code');
+			code.className = 'language-' + language;
 
-				pre.textContent = '';
+			pre.textContent = '';
 
-				code.textContent = 'Loading…';
+			code.textContent = 'Loading…';
 
-				pre.appendChild(code);
+			pre.appendChild(code);
 
-				var xhr = new XMLHttpRequest();
+			var xhr = new XMLHttpRequest();
 
-				xhr.open('GET', src, true);
+			xhr.open('GET', src, true);
 
-				xhr.onreadystatechange = function () {
-					if (xhr.readyState == 4) {
+			xhr.onreadystatechange = function () {
+				if (xhr.readyState == 4) {
 
-						if (xhr.status < 400 && xhr.responseText) {
-							code.textContent = xhr.responseText;
+					if (xhr.status < 400 && xhr.responseText) {
+						code.textContent = xhr.responseText;
 
-							Prism.highlightElement(code);
-						}
-						else if (xhr.status >= 400) {
-							code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
-						}
-						else {
-							code.textContent = '✖ Error: File does not exist or is empty';
-						}
+						Prism.highlightElement(code);
 					}
-				};
+					else if (xhr.status >= 400) {
+						code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
+					}
+					else {
+						code.textContent = '✖ Error: File does not exist or is empty';
+					}
+				}
+			};
 
-				xhr.send(null);
-			});
-		}
+			xhr.send(null);
+		});
 
 	};
 
@@ -11279,10 +11034,1110 @@ Prism.languages.js = Prism.languages.javascript;
 
 })();
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __san_script__, __san_template__
+var __san_styles__ = {}
+__san_script__ = __webpack_require__(22)
+if (__san_script__ &&
+    __san_script__.__esModule &&
+    Object.keys(__san_script__).length > 1) {
+  console.warn("[san-loader] docs/pages/API.san: named exports in *.san files are ignored.")}
+__san_template__ = __webpack_require__(38)
+var __san_proto__ = {}
+if (__san_script__) {
+  __san_proto__ = __san_script__.__esModule
+    ? __san_script__['default']
+    : __san_script__
+}
+if (__san_template__) {
+  __san_proto__.template = __san_template__
+}
+var san = __webpack_require__(0)
+var __san_exports__ = san.defineComponent(__san_proto__)
+module.exports = __san_exports__
+if (module.exports.__esModule) module.exports = module.exports['default']
+if (!__san_exports__.computed) __san_exports__.computed = {}
+Object.keys(__san_styles__).forEach(function (key) {
+var module = __san_styles__[key]
+__san_exports__.computed[key] = function () { return module }
+})
+
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __san_script__, __san_template__
+var __san_styles__ = {}
+__webpack_require__(49)
+__san_script__ = __webpack_require__(23)
+if (__san_script__ &&
+    __san_script__.__esModule &&
+    Object.keys(__san_script__).length > 1) {
+  console.warn("[san-loader] docs/pages/App.san: named exports in *.san files are ignored.")}
+__san_template__ = __webpack_require__(39)
+var __san_proto__ = {}
+if (__san_script__) {
+  __san_proto__ = __san_script__.__esModule
+    ? __san_script__['default']
+    : __san_script__
+}
+if (__san_template__) {
+  __san_proto__.template = __san_template__
+}
+var san = __webpack_require__(0)
+var __san_exports__ = san.defineComponent(__san_proto__)
+module.exports = __san_exports__
+if (module.exports.__esModule) module.exports = module.exports['default']
+if (!__san_exports__.computed) __san_exports__.computed = {}
+Object.keys(__san_styles__).forEach(function (key) {
+var module = __san_styles__[key]
+__san_exports__.computed[key] = function () { return module }
+})
+
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __san_script__, __san_template__
+var __san_styles__ = {}
+__webpack_require__(50)
+__san_script__ = __webpack_require__(24)
+if (__san_script__ &&
+    __san_script__.__esModule &&
+    Object.keys(__san_script__).length > 1) {
+  console.warn("[san-loader] docs/pages/Examples.san: named exports in *.san files are ignored.")}
+__san_template__ = __webpack_require__(40)
+var __san_proto__ = {}
+if (__san_script__) {
+  __san_proto__ = __san_script__.__esModule
+    ? __san_script__['default']
+    : __san_script__
+}
+if (__san_template__) {
+  __san_proto__.template = __san_template__
+}
+var san = __webpack_require__(0)
+var __san_exports__ = san.defineComponent(__san_proto__)
+module.exports = __san_exports__
+if (module.exports.__esModule) module.exports = module.exports['default']
+if (!__san_exports__.computed) __san_exports__.computed = {}
+Object.keys(__san_styles__).forEach(function (key) {
+var module = __san_styles__[key]
+__san_exports__.computed[key] = function () { return module }
+})
+
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __san_script__, __san_template__
+var __san_styles__ = {}
+__san_script__ = __webpack_require__(25)
+if (__san_script__ &&
+    __san_script__.__esModule &&
+    Object.keys(__san_script__).length > 1) {
+  console.warn("[san-loader] docs/pages/GetStart.san: named exports in *.san files are ignored.")}
+__san_template__ = __webpack_require__(41)
+var __san_proto__ = {}
+if (__san_script__) {
+  __san_proto__ = __san_script__.__esModule
+    ? __san_script__['default']
+    : __san_script__
+}
+if (__san_template__) {
+  __san_proto__.template = __san_template__
+}
+var san = __webpack_require__(0)
+var __san_exports__ = san.defineComponent(__san_proto__)
+module.exports = __san_exports__
+if (module.exports.__esModule) module.exports = module.exports['default']
+if (!__san_exports__.computed) __san_exports__.computed = {}
+Object.keys(__san_styles__).forEach(function (key) {
+var module = __san_styles__[key]
+__san_exports__.computed[key] = function () { return module }
+})
+
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(26);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(2)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../css-loader/index.js!./normalize.css", function() {
+			var newContent = require("!!../css-loader/index.js!./normalize.css");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(27);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(2)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../css-loader/index.js!./prism-tomorrow.css", function() {
+			var newContent = require("!!../../css-loader/index.js!./prism-tomorrow.css");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(33);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(2)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../node_modules/css-loader/index.js!../node_modules/stylus-loader/index.js!./markdown.styl", function() {
+			var newContent = require("!!../node_modules/css-loader/index.js!../node_modules/stylus-loader/index.js!./markdown.styl");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _san = __webpack_require__(0);
+
+var _san2 = _interopRequireDefault(_san);
+
+var _App = __webpack_require__(10);
+
+var _App2 = _interopRequireDefault(_App);
+
+var _sanRouter = __webpack_require__(4);
+
+var _prismjs = __webpack_require__(8);
+
+var _prismjs2 = _interopRequireDefault(_prismjs);
+
+var _API = __webpack_require__(9);
+
+var _API2 = _interopRequireDefault(_API);
+
+var _Examples = __webpack_require__(11);
+
+var _Examples2 = _interopRequireDefault(_Examples);
+
+var _GetStart = __webpack_require__(12);
+
+var _GetStart2 = _interopRequireDefault(_GetStart);
+
+var _index = __webpack_require__(3);
+
+__webpack_require__(14);
+
+__webpack_require__(13);
+
+__webpack_require__(15);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var genPage = (0, _index.transition)('page');
+
+_sanRouter.router.setMode('hash');
+
+_sanRouter.router.add({
+  rule: '/',
+  Component: genPage(_App2.default),
+  target: 'body'
+}).add({
+  rule: '/start',
+  Component: genPage(_GetStart2.default),
+  target: 'body'
+}).add({
+  rule: '/api',
+  Component: genPage(_API2.default),
+  target: 'body'
+}).add({
+  rule: '/examples',
+  Component: genPage(_Examples2.default),
+  target: 'body'
+});
+
+_sanRouter.router.start();
+
+_sanRouter.router.listen(function (e) {
+  _san2.default.nextTick(function () {
+    _prismjs2.default.highlightAll();
+  });
+});
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+// todos: transition group
+
+exports.default = function () {
+  var prop = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'san';
+  return function (Component) {
+    var Target = function (_Component) {
+      _inherits(Target, _Component);
+
+      function Target() {
+        _classCallCheck(this, Target);
+
+        return _possibleConstructorReturn(this, (Target.__proto__ || Object.getPrototypeOf(Target)).apply(this, arguments));
+      }
+
+      return Target;
+    }(Component);
+
+    return Target;
+  };
+};
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _util = __webpack_require__(19);
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+exports.default = function () {
+  var prop = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'san';
+  return function (Component) {
+    var Target = function (_Component) {
+      _inherits(Target, _Component);
+
+      function Target() {
+        _classCallCheck(this, Target);
+
+        return _possibleConstructorReturn(this, (Target.__proto__ || Object.getPrototypeOf(Target)).apply(this, arguments));
+      }
+
+      return Target;
+    }(Component);
+
+    var _Target$prototype = Target.prototype,
+        attached = _Target$prototype.attached,
+        dispose = _Target$prototype.dispose;
+
+    // define css hooks name
+
+    var hooks = (0, _util.getHooks)(prop);
+
+    // override attached lifecycle
+    Target.prototype.attached = function () {
+      // entering
+      var el = this.el;
+
+      (0, _util.addHook)(el, hooks.beforeEnter);
+      var transitionHandler = function transitionHandler() {
+        (0, _util.removeHook)(el, hooks.beforeEnter);
+        (0, _util.addHook)(el, hooks.enter);
+        setTimeout(function () {
+          return (0, _util.removeHook)(el, hooks.enter);
+        }, (0, _util.getTimeout)(el));
+      };
+      (0, _util.afterNextFrame)(transitionHandler);
+      attached && attached.call(this);
+    };
+
+    // override dispose lifecycle
+    Target.prototype.dispose = function () {
+      var _this2 = this,
+          _arguments = arguments;
+
+      var el = this.el;
+
+      (0, _util.addHook)(el, hooks.beforeLeave);
+      el.transitionEl = el;
+      var transitionHandler = function transitionHandler() {
+        (0, _util.addHook)(el, hooks.leave);
+        setTimeout(function () {
+          return dispose.apply(_this2, _arguments);
+        }, (0, _util.getTimeout)(el));
+      };
+      (0, _util.afterNextFrame)(transitionHandler);
+    };
+    return Target;
+  };
+};
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var getTime = function getTime(duration, delay) {
+  return Math.max.apply(undefined, duration.map(function (str, i) {
+    return getFloat(str) + parseFloat(delay[i]);
+  }));
+};
+
+var getFloat = function getFloat(str) {
+  return (parseFloat(str) || 0) * 1000;
+};
+
+var getTimeout = exports.getTimeout = function getTimeout(el) {
+  var style = getComputedStyle(el);
+  var transDuration = style.transitionDuration.split(',');
+  var transDelay = style.transitionDelay.split(',');
+  var aniDuration = style.animationDuration.split(',');
+  var aniDelay = style.animationDelay.split(',');
+  return Math.max(getTime(transDuration, transDelay), getTime(aniDuration, aniDelay));
+};
+
+var afterNextFrame = exports.afterNextFrame = function afterNextFrame(fn) {
+  return requestAnimationFrame(function () {
+    return requestAnimationFrame(fn);
+  });
+};
+
+var prepareEnter = exports.prepareEnter = function prepareEnter(parent, hooks) {
+  var transitionEl = parent.transitionEl;
+
+  parent.isEntering = true;
+  parent.isLeaving = false;
+  transitionEl.classList.add(hooks.live);
+  transitionEl.classList.remove(hooks.out);
+};
+
+var prepareLeave = exports.prepareLeave = function prepareLeave(parent, hooks) {
+  var transitionEl = parent.transitionEl;
+
+  parent.isEntering = false;
+  parent.isLeaving = true;
+  transitionEl.classList.remove(hooks.in);
+  transitionEl.classList.remove(hooks.live);
+  transitionEl.classList.add(hooks.out);
+};
+
+var getHooks = exports.getHooks = function getHooks(prop) {
+  return (typeof prop === 'undefined' ? 'undefined' : _typeof(prop)) === 'object' ? {
+    beforeEnter: prop.beforeEnter || 'san-before-enter',
+    enter: prop.enter || 'san-enter',
+    beforeLeave: prop.beforeLeave || 'san-before-leave',
+    leave: prop.leave || 'san-leave'
+  } : {
+    beforeEnter: prop + '-before-enter',
+    enter: prop + '-enter',
+    beforeLeave: prop + '-before-leave',
+    leave: prop + '-leave'
+  };
+};
+
+var addHook = exports.addHook = function addHook(el, hook) {
+  return el.classList.add(hook);
+};
+var removeHook = exports.removeHook = function removeHook(el, hook) {
+  return el.classList.remove(hook);
+};
+
+var disableEl = exports.disableEl = function disableEl(el) {
+  el.style.pointerEvents = 'none';
+};
+var enableEl = exports.enableEl = function enableEl(el) {
+  el.style.pointerEvents = '';
+};
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _Nav = __webpack_require__(6);
+
+var _Nav2 = _interopRequireDefault(_Nav);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = {
+  components: {
+    'navigator': _Nav2.default
+  }
+  // </script>
+  //
+  // <style lang="stylus">
+  // .app-header
+  //   background-color #001a23
+  //   overflow hidden
+  //   h1
+  //     padding 0 20px
+  //     img, span
+  //       vertical-align middle
+  //     .logo
+  //       height 36px
+  //       margin-right 10px
+  // </style>
+
+}; // <template lang="pug">
+// header.app-header
+//   a(href="https://github.com/dafrok/san-transition")
+//   h1
+//     img(src="https://ecomfe.github.io/san/img/logo-colorful.svg" class="logo")
+//     span San Transition
+//   navigator
+// </template>
+//
+// <script>
+
+/***/ }),
+/* 21 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _sanRouter = __webpack_require__(4);
+
+exports.default = {
+  initData: function initData() {
+    return {
+      routes: [{ name: 'Home', path: '/' }, { name: 'Get Start', path: '/start' }, { name: 'API', path: '/api' }, { name: 'Examples', path: '/examples' }],
+      activeRoute: _sanRouter.router.locator.current
+    };
+  },
+
+  components: {
+    'router-link': _sanRouter.Link
+  }
+  // </script>
+  //
+  // <style lang="stylus">
+  // nav
+  //   background-color #334959
+  //   a 
+  //     display inline-block
+  //     padding 8px 30px
+  //     &.active
+  //       color #001a23
+  //       background-color #9ee0fe
+  //       &:hover
+  //         color white
+  //     &:hover
+  //       text-decoration none
+  //       color #9ee0fe
+  // .index
+  //   nav
+  //     text-align center
+  // </style>
+
+}; // <template>
+//   <nav>
+//     <router-link s-for="route in routes" class="{{activeRoute === route.path ? 'active' : ''}}" to="{{route.path}}">{{route.name}}</router-link>
+//   </nav>  
+// </template>
+//
+// <script>
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _AppHeader = __webpack_require__(5);
+
+var _AppHeader2 = _interopRequireDefault(_AppHeader);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = {
+  components: {
+    'app-header': _AppHeader2.default
+  }
+  // </script>
+
+}; // <template lang="pug">
+// section.page
+//   app-header
+//   article.markdown-body
+//     include:markdown-it(html) ../components/API.md
+// </template>
+//
+// <script>
+
+/***/ }),
+/* 23 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _sanRouter = __webpack_require__(4);
+
+var _Jumbotron = __webpack_require__(43);
+
+var _Jumbotron2 = _interopRequireDefault(_Jumbotron);
+
+var _Nav = __webpack_require__(6);
+
+var _Nav2 = _interopRequireDefault(_Nav);
+
+var _index = __webpack_require__(3);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// <template lang="pug">
+// section.index.page
+//   jumbotron
+//   navigator
+// </template>
+//
+// <script>
+exports.default = {
+  components: {
+    'jumbotron': _Jumbotron2.default,
+    'router-link': _sanRouter.Link,
+    'navigator': _Nav2.default
+  }
+  // </script>
+  //
+  // <style lang="stylus">
+  // body
+  //   color: #999
+  //   background-color #19232e
+  //   margin 0
+  //   padding 0
+  // h1, a
+  //   color white
+  // a
+  //   text-decoration none
+  //   &:hover
+  //     text-decoration underline
+  //
+  // .logo
+  //   animation logo 2s infinite
+  //
+  // .page
+  //   transition all .3s ease-out
+  //   opacity 1
+  //   transform: translate(0, 0)
+  // .page-enter, .page-leave, .page-before-enter, .page-before-leave
+  //   width 100%
+  //   top 0
+  //   position: absolute
+  // .page-before-enter, .page-leave
+  //   opacity 0
+  //   transform translate(-100%, 0)
+  //
+  // @keyframes logo
+  //   0%
+  //     transform rotate3d(0, 1, 0, 0deg)
+  //   100%
+  //     transform rotate3d(0, 1, 0, 360deg)
+  // </style>
+
+};
+
+/***/ }),
+/* 24 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _index = __webpack_require__(3);
+
+var _TransitionLayer = __webpack_require__(44);
+
+var _TransitionLayer2 = _interopRequireDefault(_TransitionLayer);
+
+var _AppHeader = __webpack_require__(5);
+
+var _AppHeader2 = _interopRequireDefault(_AppHeader);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// import Debug from '../components/Debug.san'
+
+exports.default = {
+  initData: function initData() {
+    return {
+      alpha: true,
+      beta: true,
+      gamma: true,
+      delta: true,
+      epsilon: true
+    };
+  },
+  toggle: function toggle(name) {
+    this.data.set(name, !this.data.get(name));
+  },
+
+  components: {
+    'app-header': _AppHeader2.default,
+    'alpha': (0, _index.transition)('alpha')(_TransitionLayer2.default),
+    'beta': (0, _index.transition)('beta')(_TransitionLayer2.default),
+    'gamma': (0, _index.transition)({
+      beforeEnter: 'gamma-off',
+      enter: 'gamma-on',
+      beforeLeave: 'gamma-on',
+      leave: 'gamma-off'
+    })(_TransitionLayer2.default),
+    'delta': (0, _index.transition)('delta')(_TransitionLayer2.default),
+    'epsilon': (0, _index.transition)('epsilon')(_TransitionLayer2.default)
+    // 'debug': Debug
+  }
+  // </script>
+  //
+  // <style lang="stylus">
+  // .content
+  //   padding 20px
+  // .example
+  //   height 300px
+  //   overflow hidden
+  //   display flex
+  //   font-size 0
+  //   border 1px solid
+  //   .preview
+  //     background #333
+  //     position relative
+  //   .preview, .code
+  //     font-size 14px
+  //     flex 1
+  //     width 50%
+  //     overflow auto
+  //     pre
+  //       margin 0
+  //   .trans-layer
+  //     position absolute
+  //     width 124px
+  //     height 200px
+  //     top 20px
+  //     left 0
+  //     right 0
+  //     margin auto
+  //   button
+  //     background-color #2EA2F8
+  //     color #fff
+  //     border-radius 3px
+  //     width 180px
+  //     line-height 38px
+  //     font-size 18px
+  //     border 0
+  //     padding 0
+  //     margin 0
+  //     outline 0
+  //     position absolute
+  //     bottom 40px
+  //     left 0
+  //     right 0
+  //     margin auto
+  //     cursor pointer
+  //     &:hover
+  //       background-color lighten(#2EA2F8, 10)
+  // .alpha
+  //   transition all .3s ease-out
+  //   opacity 1
+  // .alpha-enter, .alpha-before-leave
+  //   transform translate(0, 0)
+  // .alpha-before-enter
+  //   opacity 0
+  //   transform translate(-50px, 0)
+  // .alpha-leave
+  //   opacity 0
+  //   transform translate(50px, 0)
+  //
+  // .beta
+  //   transition all .3s ease-out
+  //   opacity 1
+  // .beta-enter, .beta-before-leave
+  //   transform translate(0, 0)
+  // .beta-before-enter, .beta-leave
+  //   opacity 0
+  //   transform translate(0, -50px)
+  //
+  // .gamma
+  //   transition all .3s ease-out
+  //   opacity 1
+  // .gamma-on
+  //   transform scale(1)
+  // .gamma-off
+  //   opacity 0
+  //   transform scale(0)
+  //
+  // .delta
+  //   transition all .3s ease-out
+  //   opacity 1
+  //   &.reverse
+  //     img
+  //       transform rotate(180deg)
+  // .delta-enter, .delta-before-leave
+  //   transform rotate(0deg) translate(0, 0)
+  // .delta-before-enter
+  //   opacity 0
+  //   transform rotate(-180deg) translate(-200px, 0)
+  // .delta-leave
+  //   opacity 0
+  //   transform rotate(180deg) translate(200px, 0)
+  //
+  // .epsilon-before-enter
+  //   transform scale(0) translate(-100px, 0) rotate(360deg)
+  // .epsilon-enter
+  //   animation come-in .5s
+  // .epsilon-leave
+  //   animation go-out .5s
+  //   animation-fill-mode forwards
+  //
+  // @keyframes come-in
+  //   0%
+  //     transform scale(0) translate(-100px, 0) rotate(360deg)
+  //   50%
+  //     transform scale(1.2) translate(-50px, 0) rotate(-90deg)
+  //   100%
+  //     transform scale(1) translate(0, 0) rotate(0deg)
+  //
+  // @keyframes go-out
+  //   0%
+  //     transform scale(1) translate(0, 0) rotate(0deg)
+  //   50%
+  //     transform scale(1.2) translate(50px, 0) rotate(90deg)
+  //   100%
+  //     transform scale(0) translate(100px, 0) rotate(-360deg)
+  // </style>
+
+}; // <template lang="pug">
+// section.page
+//   app-header
+//   .markdown-body
+//     h3 Default Transition
+//     .example
+//       .preview
+//         alpha.alpha(s-if="alpha")
+//         button(on-click="toggle('alpha')") Toggle
+//       .code
+//         include:markdown-it(html) ../components/CaseAlpha.md
+//     h3 Named Transition
+//     .example
+//       .preview
+//         beta.beta(s-if="beta")
+//         button(on-click="toggle('beta')") Toggle
+//       .code
+//         include:markdown-it(html) ../components/CaseBeta.md
+//     h3 Custom Transition Hook
+//     .example
+//       .preview
+//         gamma.gamma(s-if="gamma")
+//         button(on-click="toggle('gamma')") Toggle
+//       .code
+//         include:markdown-it(html) ../components/CaseGamma.md
+//     h3 Transition with s-if / s-else Directive
+//     .example
+//       .preview
+//         delta.delta(s-if="delta")
+//         delta.delta.reverse(s-else)
+//         button(on-click="toggle('delta')") Toggle
+//       .code
+//         include:markdown-it(html) ../components/CaseDelta.md
+//     h3 Transition with animation
+//     .example
+//       .preview
+//         epsilon.epsilon(s-if="epsilon")
+//         button(on-click="toggle('epsilon')") Toggle
+//       .code
+//         include:markdown-it(html) ../components/CaseEpsilon.md
+// </template>
+//
+// <script>
+
+/***/ }),
+/* 25 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _AppHeader = __webpack_require__(5);
+
+var _AppHeader2 = _interopRequireDefault(_AppHeader);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = {
+  components: {
+    'app-header': _AppHeader2.default
+  }
+  // </script>
+
+}; // <template lang="pug">
+// section.page
+//   app-header
+//   article.markdown-body
+//     include:markdown-it(html) ../components/GetStart.md
+// </template>
+//
+// <script>
 
 /***/ }),
 /* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1)();
+// imports
+
+
+// module
+exports.push([module.i, "/*! normalize.css v6.0.0 | MIT License | github.com/necolas/normalize.css */\n\n/* Document\n   ========================================================================== */\n\n/**\n * 1. Correct the line height in all browsers.\n * 2. Prevent adjustments of font size after orientation changes in\n *    IE on Windows Phone and in iOS.\n */\n\nhtml {\n  line-height: 1.15; /* 1 */\n  -ms-text-size-adjust: 100%; /* 2 */\n  -webkit-text-size-adjust: 100%; /* 2 */\n}\n\n/* Sections\n   ========================================================================== */\n\n/**\n * Add the correct display in IE 9-.\n */\n\narticle,\naside,\nfooter,\nheader,\nnav,\nsection {\n  display: block;\n}\n\n/**\n * Correct the font size and margin on `h1` elements within `section` and\n * `article` contexts in Chrome, Firefox, and Safari.\n */\n\nh1 {\n  font-size: 2em;\n  margin: 0.67em 0;\n}\n\n/* Grouping content\n   ========================================================================== */\n\n/**\n * Add the correct display in IE 9-.\n * 1. Add the correct display in IE.\n */\n\nfigcaption,\nfigure,\nmain { /* 1 */\n  display: block;\n}\n\n/**\n * Add the correct margin in IE 8.\n */\n\nfigure {\n  margin: 1em 40px;\n}\n\n/**\n * 1. Add the correct box sizing in Firefox.\n * 2. Show the overflow in Edge and IE.\n */\n\nhr {\n  box-sizing: content-box; /* 1 */\n  height: 0; /* 1 */\n  overflow: visible; /* 2 */\n}\n\n/**\n * 1. Correct the inheritance and scaling of font size in all browsers.\n * 2. Correct the odd `em` font sizing in all browsers.\n */\n\npre {\n  font-family: monospace, monospace; /* 1 */\n  font-size: 1em; /* 2 */\n}\n\n/* Text-level semantics\n   ========================================================================== */\n\n/**\n * 1. Remove the gray background on active links in IE 10.\n * 2. Remove gaps in links underline in iOS 8+ and Safari 8+.\n */\n\na {\n  background-color: transparent; /* 1 */\n  -webkit-text-decoration-skip: objects; /* 2 */\n}\n\n/**\n * 1. Remove the bottom border in Chrome 57- and Firefox 39-.\n * 2. Add the correct text decoration in Chrome, Edge, IE, Opera, and Safari.\n */\n\nabbr[title] {\n  border-bottom: none; /* 1 */\n  text-decoration: underline; /* 2 */\n  text-decoration: underline dotted; /* 2 */\n}\n\n/**\n * Prevent the duplicate application of `bolder` by the next rule in Safari 6.\n */\n\nb,\nstrong {\n  font-weight: inherit;\n}\n\n/**\n * Add the correct font weight in Chrome, Edge, and Safari.\n */\n\nb,\nstrong {\n  font-weight: bolder;\n}\n\n/**\n * 1. Correct the inheritance and scaling of font size in all browsers.\n * 2. Correct the odd `em` font sizing in all browsers.\n */\n\ncode,\nkbd,\nsamp {\n  font-family: monospace, monospace; /* 1 */\n  font-size: 1em; /* 2 */\n}\n\n/**\n * Add the correct font style in Android 4.3-.\n */\n\ndfn {\n  font-style: italic;\n}\n\n/**\n * Add the correct background and color in IE 9-.\n */\n\nmark {\n  background-color: #ff0;\n  color: #000;\n}\n\n/**\n * Add the correct font size in all browsers.\n */\n\nsmall {\n  font-size: 80%;\n}\n\n/**\n * Prevent `sub` and `sup` elements from affecting the line height in\n * all browsers.\n */\n\nsub,\nsup {\n  font-size: 75%;\n  line-height: 0;\n  position: relative;\n  vertical-align: baseline;\n}\n\nsub {\n  bottom: -0.25em;\n}\n\nsup {\n  top: -0.5em;\n}\n\n/* Embedded content\n   ========================================================================== */\n\n/**\n * Add the correct display in IE 9-.\n */\n\naudio,\nvideo {\n  display: inline-block;\n}\n\n/**\n * Add the correct display in iOS 4-7.\n */\n\naudio:not([controls]) {\n  display: none;\n  height: 0;\n}\n\n/**\n * Remove the border on images inside links in IE 10-.\n */\n\nimg {\n  border-style: none;\n}\n\n/**\n * Hide the overflow in IE.\n */\n\nsvg:not(:root) {\n  overflow: hidden;\n}\n\n/* Forms\n   ========================================================================== */\n\n/**\n * Remove the margin in Firefox and Safari.\n */\n\nbutton,\ninput,\noptgroup,\nselect,\ntextarea {\n  margin: 0;\n}\n\n/**\n * Show the overflow in IE.\n * 1. Show the overflow in Edge.\n */\n\nbutton,\ninput { /* 1 */\n  overflow: visible;\n}\n\n/**\n * Remove the inheritance of text transform in Edge, Firefox, and IE.\n * 1. Remove the inheritance of text transform in Firefox.\n */\n\nbutton,\nselect { /* 1 */\n  text-transform: none;\n}\n\n/**\n * 1. Prevent a WebKit bug where (2) destroys native `audio` and `video`\n *    controls in Android 4.\n * 2. Correct the inability to style clickable types in iOS and Safari.\n */\n\nbutton,\nhtml [type=\"button\"], /* 1 */\n[type=\"reset\"],\n[type=\"submit\"] {\n  -webkit-appearance: button; /* 2 */\n}\n\n/**\n * Remove the inner border and padding in Firefox.\n */\n\nbutton::-moz-focus-inner,\n[type=\"button\"]::-moz-focus-inner,\n[type=\"reset\"]::-moz-focus-inner,\n[type=\"submit\"]::-moz-focus-inner {\n  border-style: none;\n  padding: 0;\n}\n\n/**\n * Restore the focus styles unset by the previous rule.\n */\n\nbutton:-moz-focusring,\n[type=\"button\"]:-moz-focusring,\n[type=\"reset\"]:-moz-focusring,\n[type=\"submit\"]:-moz-focusring {\n  outline: 1px dotted ButtonText;\n}\n\n/**\n * 1. Correct the text wrapping in Edge and IE.\n * 2. Correct the color inheritance from `fieldset` elements in IE.\n * 3. Remove the padding so developers are not caught out when they zero out\n *    `fieldset` elements in all browsers.\n */\n\nlegend {\n  box-sizing: border-box; /* 1 */\n  color: inherit; /* 2 */\n  display: table; /* 1 */\n  max-width: 100%; /* 1 */\n  padding: 0; /* 3 */\n  white-space: normal; /* 1 */\n}\n\n/**\n * 1. Add the correct display in IE 9-.\n * 2. Add the correct vertical alignment in Chrome, Firefox, and Opera.\n */\n\nprogress {\n  display: inline-block; /* 1 */\n  vertical-align: baseline; /* 2 */\n}\n\n/**\n * Remove the default vertical scrollbar in IE.\n */\n\ntextarea {\n  overflow: auto;\n}\n\n/**\n * 1. Add the correct box sizing in IE 10-.\n * 2. Remove the padding in IE 10-.\n */\n\n[type=\"checkbox\"],\n[type=\"radio\"] {\n  box-sizing: border-box; /* 1 */\n  padding: 0; /* 2 */\n}\n\n/**\n * Correct the cursor style of increment and decrement buttons in Chrome.\n */\n\n[type=\"number\"]::-webkit-inner-spin-button,\n[type=\"number\"]::-webkit-outer-spin-button {\n  height: auto;\n}\n\n/**\n * 1. Correct the odd appearance in Chrome and Safari.\n * 2. Correct the outline style in Safari.\n */\n\n[type=\"search\"] {\n  -webkit-appearance: textfield; /* 1 */\n  outline-offset: -2px; /* 2 */\n}\n\n/**\n * Remove the inner padding and cancel buttons in Chrome and Safari on macOS.\n */\n\n[type=\"search\"]::-webkit-search-cancel-button,\n[type=\"search\"]::-webkit-search-decoration {\n  -webkit-appearance: none;\n}\n\n/**\n * 1. Correct the inability to style clickable types in iOS and Safari.\n * 2. Change font properties to `inherit` in Safari.\n */\n\n::-webkit-file-upload-button {\n  -webkit-appearance: button; /* 1 */\n  font: inherit; /* 2 */\n}\n\n/* Interactive\n   ========================================================================== */\n\n/*\n * Add the correct display in IE 9-.\n * 1. Add the correct display in Edge, IE, and Firefox.\n */\n\ndetails, /* 1 */\nmenu {\n  display: block;\n}\n\n/*\n * Add the correct display in all browsers.\n */\n\nsummary {\n  display: list-item;\n}\n\n/* Scripting\n   ========================================================================== */\n\n/**\n * Add the correct display in IE 9-.\n */\n\ncanvas {\n  display: inline-block;\n}\n\n/**\n * Add the correct display in IE.\n */\n\ntemplate {\n  display: none;\n}\n\n/* Hidden\n   ========================================================================== */\n\n/**\n * Add the correct display in IE 10-.\n */\n\n[hidden] {\n  display: none;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 27 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1)();
+// imports
+
+
+// module
+exports.push([module.i, "/**\n * prism.js tomorrow night eighties for JavaScript, CoffeeScript, CSS and HTML\n * Based on https://github.com/chriskempson/tomorrow-theme\n * @author Rose Pritchard\n */\n\ncode[class*=\"language-\"],\npre[class*=\"language-\"] {\n\tcolor: #ccc;\n\tbackground: none;\n\tfont-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;\n\ttext-align: left;\n\twhite-space: pre;\n\tword-spacing: normal;\n\tword-break: normal;\n\tword-wrap: normal;\n\tline-height: 1.5;\n\n\t-moz-tab-size: 4;\n\t-o-tab-size: 4;\n\ttab-size: 4;\n\n\t-webkit-hyphens: none;\n\t-moz-hyphens: none;\n\t-ms-hyphens: none;\n\thyphens: none;\n\n}\n\n/* Code blocks */\npre[class*=\"language-\"] {\n\tpadding: 1em;\n\tmargin: .5em 0;\n\toverflow: auto;\n}\n\n:not(pre) > code[class*=\"language-\"],\npre[class*=\"language-\"] {\n\tbackground: #2d2d2d;\n}\n\n/* Inline code */\n:not(pre) > code[class*=\"language-\"] {\n\tpadding: .1em;\n\tborder-radius: .3em;\n\twhite-space: normal;\n}\n\n.token.comment,\n.token.block-comment,\n.token.prolog,\n.token.doctype,\n.token.cdata {\n\tcolor: #999;\n}\n\n.token.punctuation {\n\tcolor: #ccc;\n}\n\n.token.tag,\n.token.attr-name,\n.token.namespace,\n.token.deleted {\n\tcolor: #e2777a;\n}\n\n.token.function-name {\n\tcolor: #6196cc;\n}\n\n.token.boolean,\n.token.number,\n.token.function {\n\tcolor: #f08d49;\n}\n\n.token.property,\n.token.class-name,\n.token.constant,\n.token.symbol {\n\tcolor: #f8c555;\n}\n\n.token.selector,\n.token.important,\n.token.atrule,\n.token.keyword,\n.token.builtin {\n\tcolor: #cc99cd;\n}\n\n.token.string,\n.token.char,\n.token.attr-value,\n.token.regex,\n.token.variable {\n\tcolor: #7ec699;\n}\n\n.token.operator,\n.token.entity,\n.token.url {\n\tcolor: #67cdcc;\n}\n\n.token.important,\n.token.bold {\n\tfont-weight: bold;\n}\n.token.italic {\n\tfont-style: italic;\n}\n\n.token.entity {\n\tcursor: help;\n}\n\n.token.inserted {\n\tcolor: green;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 28 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1)();
+// imports
+
+
+// module
+exports.push([module.i, ".app-header {\n  background-color: #001a23;\n  overflow: hidden;\n}\n.app-header h1 {\n  padding: 0 20px;\n}\n.app-header h1 img,\n.app-header h1 span {\n  vertical-align: middle;\n}\n.app-header h1 .logo {\n  height: 36px;\n  margin-right: 10px;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 29 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1)();
+// imports
+
+
+// module
+exports.push([module.i, ".index header {\n  text-align: center;\n  padding: 50px 0;\n  background-color: #001a23;\n  overflow: hidden;\n  perspective: 800px;\n}\n.index header .logo {\n  height: 220px;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 30 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1)();
+// imports
+
+
+// module
+exports.push([module.i, "nav {\n  background-color: #334959;\n}\nnav a {\n  display: inline-block;\n  padding: 8px 30px;\n}\nnav a.active {\n  color: #001a23;\n  background-color: #9ee0fe;\n}\nnav a.active:hover {\n  color: #fff;\n}\nnav a:hover {\n  text-decoration: none;\n  color: #9ee0fe;\n}\n.index nav {\n  text-align: center;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 31 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1)();
+// imports
+
+
+// module
+exports.push([module.i, "body {\n  color: #999;\n  background-color: #19232e;\n  margin: 0;\n  padding: 0;\n}\nh1,\na {\n  color: #fff;\n}\na {\n  text-decoration: none;\n}\na:hover {\n  text-decoration: underline;\n}\n.logo {\n  animation: logo 2s infinite;\n}\n.page {\n  transition: all 0.3s ease-out;\n  opacity: 1;\n  transform: translate(0, 0);\n}\n.page-enter,\n.page-leave,\n.page-before-enter,\n.page-before-leave {\n  width: 100%;\n  top: 0;\n  position: absolute;\n}\n.page-before-enter,\n.page-leave {\n  opacity: 0;\n  transform: translate(-100%, 0);\n}\n@-moz-keyframes logo {\n  0% {\n    transform: rotate3d(0, 1, 0, 0deg);\n  }\n  100% {\n    transform: rotate3d(0, 1, 0, 360deg);\n  }\n}\n@-webkit-keyframes logo {\n  0% {\n    transform: rotate3d(0, 1, 0, 0deg);\n  }\n  100% {\n    transform: rotate3d(0, 1, 0, 360deg);\n  }\n}\n@-o-keyframes logo {\n  0% {\n    transform: rotate3d(0, 1, 0, 0deg);\n  }\n  100% {\n    transform: rotate3d(0, 1, 0, 360deg);\n  }\n}\n@keyframes logo {\n  0% {\n    transform: rotate3d(0, 1, 0, 0deg);\n  }\n  100% {\n    transform: rotate3d(0, 1, 0, 360deg);\n  }\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 32 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1)();
+// imports
+
+
+// module
+exports.push([module.i, ".content {\n  padding: 20px;\n}\n.example {\n  height: 300px;\n  overflow: hidden;\n  display: flex;\n  font-size: 0;\n  border: 1px solid;\n}\n.example .preview {\n  background: #333;\n  position: relative;\n}\n.example .preview,\n.example .code {\n  font-size: 14px;\n  flex: 1;\n  width: 50%;\n  overflow: auto;\n}\n.example .preview pre,\n.example .code pre {\n  margin: 0;\n}\n.example .trans-layer {\n  position: absolute;\n  width: 124px;\n  height: 200px;\n  top: 20px;\n  left: 0;\n  right: 0;\n  margin: auto;\n}\n.example button {\n  background-color: #2ea2f8;\n  color: #fff;\n  border-radius: 3px;\n  width: 180px;\n  line-height: 38px;\n  font-size: 18px;\n  border: 0;\n  padding: 0;\n  margin: 0;\n  outline: 0;\n  position: absolute;\n  bottom: 40px;\n  left: 0;\n  right: 0;\n  margin: auto;\n  cursor: pointer;\n}\n.example button:hover {\n  background-color: #5fb8fa;\n}\n.alpha {\n  transition: all 0.3s ease-out;\n  opacity: 1;\n}\n.alpha-enter,\n.alpha-before-leave {\n  transform: translate(0, 0);\n}\n.alpha-before-enter {\n  opacity: 0;\n  transform: translate(-50px, 0);\n}\n.alpha-leave {\n  opacity: 0;\n  transform: translate(50px, 0);\n}\n.beta {\n  transition: all 0.3s ease-out;\n  opacity: 1;\n}\n.beta-enter,\n.beta-before-leave {\n  transform: translate(0, 0);\n}\n.beta-before-enter,\n.beta-leave {\n  opacity: 0;\n  transform: translate(0, -50px);\n}\n.gamma {\n  transition: all 0.3s ease-out;\n  opacity: 1;\n}\n.gamma-on {\n  transform: scale(1);\n}\n.gamma-off {\n  opacity: 0;\n  transform: scale(0);\n}\n.delta {\n  transition: all 0.3s ease-out;\n  opacity: 1;\n}\n.delta.reverse img {\n  transform: rotate(180deg);\n}\n.delta-enter,\n.delta-before-leave {\n  transform: rotate(0deg) translate(0, 0);\n}\n.delta-before-enter {\n  opacity: 0;\n  transform: rotate(-180deg) translate(-200px, 0);\n}\n.delta-leave {\n  opacity: 0;\n  transform: rotate(180deg) translate(200px, 0);\n}\n.epsilon-before-enter {\n  transform: scale(0) translate(-100px, 0) rotate(360deg);\n}\n.epsilon-enter {\n  animation: come-in 0.5s;\n}\n.epsilon-leave {\n  animation: go-out 0.5s;\n  animation-fill-mode: forwards;\n}\n@-moz-keyframes come-in {\n  0% {\n    transform: scale(0) translate(-100px, 0) rotate(360deg);\n  }\n  50% {\n    transform: scale(1.2) translate(-50px, 0) rotate(-90deg);\n  }\n  100% {\n    transform: scale(1) translate(0, 0) rotate(0deg);\n  }\n}\n@-webkit-keyframes come-in {\n  0% {\n    transform: scale(0) translate(-100px, 0) rotate(360deg);\n  }\n  50% {\n    transform: scale(1.2) translate(-50px, 0) rotate(-90deg);\n  }\n  100% {\n    transform: scale(1) translate(0, 0) rotate(0deg);\n  }\n}\n@-o-keyframes come-in {\n  0% {\n    transform: scale(0) translate(-100px, 0) rotate(360deg);\n  }\n  50% {\n    transform: scale(1.2) translate(-50px, 0) rotate(-90deg);\n  }\n  100% {\n    transform: scale(1) translate(0, 0) rotate(0deg);\n  }\n}\n@keyframes come-in {\n  0% {\n    transform: scale(0) translate(-100px, 0) rotate(360deg);\n  }\n  50% {\n    transform: scale(1.2) translate(-50px, 0) rotate(-90deg);\n  }\n  100% {\n    transform: scale(1) translate(0, 0) rotate(0deg);\n  }\n}\n@-moz-keyframes go-out {\n  0% {\n    transform: scale(1) translate(0, 0) rotate(0deg);\n  }\n  50% {\n    transform: scale(1.2) translate(50px, 0) rotate(90deg);\n  }\n  100% {\n    transform: scale(0) translate(100px, 0) rotate(-360deg);\n  }\n}\n@-webkit-keyframes go-out {\n  0% {\n    transform: scale(1) translate(0, 0) rotate(0deg);\n  }\n  50% {\n    transform: scale(1.2) translate(50px, 0) rotate(90deg);\n  }\n  100% {\n    transform: scale(0) translate(100px, 0) rotate(-360deg);\n  }\n}\n@-o-keyframes go-out {\n  0% {\n    transform: scale(1) translate(0, 0) rotate(0deg);\n  }\n  50% {\n    transform: scale(1.2) translate(50px, 0) rotate(90deg);\n  }\n  100% {\n    transform: scale(0) translate(100px, 0) rotate(-360deg);\n  }\n}\n@keyframes go-out {\n  0% {\n    transform: scale(1) translate(0, 0) rotate(0deg);\n  }\n  50% {\n    transform: scale(1.2) translate(50px, 0) rotate(90deg);\n  }\n  100% {\n    transform: scale(0) translate(100px, 0) rotate(-360deg);\n  }\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 33 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1)();
+// imports
+
+
+// module
+exports.push([module.i, ".markdown-body {\n  padding: 20px;\n  color: #999;\n}\n.markdown-body table {\n  width: 100%;\n}\n.markdown-body a {\n  color: #4183c4;\n}\n.markdown-body a.absent {\n  color: #c00;\n}\n.markdown-body a.anchor {\n  display: block;\n  padding-left: 30px;\n  margin-left: -30px;\n  cursor: pointer;\n  position: absolute;\n  top: 0;\n  left: 0;\n  bottom: 0;\n}\n.markdown-body a:first-child h1,\n.markdown-body a:first-child h2,\n.markdown-body a:first-child h3,\n.markdown-body a:first-child h4,\n.markdown-body a:first-child h5,\n.markdown-body a:first-child h6 {\n  margin-top: 0;\n  padding-top: 0;\n}\n.markdown-body h1,\n.markdown-body h2,\n.markdown-body h3,\n.markdown-body h4,\n.markdown-body h5,\n.markdown-body h6 {\n  color: #fff;\n  margin: 20px 0 10px;\n  padding: 0;\n  font-weight: bold;\n  -webkit-font-smoothing: antialiased;\n  cursor: text;\n  position: relative;\n}\n.markdown-body h1:hover a.anchor,\n.markdown-body h2:hover a.anchor,\n.markdown-body h3:hover a.anchor,\n.markdown-body h4:hover a.anchor,\n.markdown-body h5:hover a.anchor,\n.markdown-body h6:hover a.anchor {\n  text-decoration: none;\n}\n.markdown-body h1 tt,\n.markdown-body h2 tt,\n.markdown-body h3 tt,\n.markdown-body h4 tt,\n.markdown-body h5 tt,\n.markdown-body h6 tt,\n.markdown-body h1 code,\n.markdown-body h2 code,\n.markdown-body h3 code,\n.markdown-body h4 code,\n.markdown-body h5 code,\n.markdown-body h6 code {\n  font-size: inherit;\n}\n.markdown-body h1 p,\n.markdown-body h2 p,\n.markdown-body h3 p,\n.markdown-body h4 p,\n.markdown-body h5 p,\n.markdown-body h6 p {\n  margin-top: 0;\n}\n.markdown-body h4,\n.markdown-body h5,\n.markdown-body h6 {\n  font-weight: 400;\n}\n.markdown-body h1 {\n  font-size: 28px;\n}\n.markdown-body h2 {\n  font-size: 24px;\n  border-bottom: 1px solid #ccc;\n}\n.markdown-body h3 {\n  font-size: 18px;\n}\n.markdown-body h4 {\n  font-size: 16px;\n}\n.markdown-body h5 {\n  font-size: 14px;\n}\n.markdown-body h6 {\n  color: #777;\n  font-size: 14px;\n}\n.markdown-body p,\n.markdown-body blockquote,\n.markdown-body ul,\n.markdown-body ol,\n.markdown-body dl,\n.markdown-body li,\n.markdown-body table,\n.markdown-body pre {\n  margin: 15px 0;\n}\n.markdown-body hr {\n  border: 0 none;\n  color: #ccc;\n  height: 4px;\n  padding: 0;\n}\n.markdown-body li {\n  margin: 0;\n}\n.markdown-body li p.first {\n  display: inline-block;\n}\n.markdown-body ul,\n.markdown-body ol {\n  padding-left: 30px;\n}\n.markdown-body ul:first-child,\n.markdown-body ol:first-child {\n  margin-top: 0;\n}\n.markdown-body dl {\n  padding: 0;\n}\n.markdown-body dl dt {\n  font-size: 14px;\n  font-weight: bold;\n  font-style: italic;\n  padding: 0;\n  margin: 15px 0 5px;\n}\n.markdown-body dl dt:first-child {\n  padding: 0;\n}\n.markdown-body dl dt > :first-child {\n  margin-top: 0;\n}\n.markdown-body dl dt > :last-child {\n  margin-bottom: 0;\n}\n.markdown-body dl dd {\n  margin: 0 0 15px;\n  padding: 0 15px;\n}\n.markdown-body dl dd > :first-child {\n  margin-top: 0;\n}\n.markdown-body dl dd > :last-child {\n  margin-bottom: 0;\n}\n.markdown-body blockquote {\n  border-left: 4px solid #ddd;\n  padding: 0 15px;\n  color: #777;\n}\n.markdown-body blockquote > :first-child {\n  margin-top: 0;\n}\n.markdown-body blockquote > :last-child {\n  margin-bottom: 0;\n}\n.markdown-body table {\n  padding: 0;\n  border-collapse: collapse;\n}\n.markdown-body table tr {\n  border-top: 1px solid #ccc;\n  background-color: #fff;\n  margin: 0;\n  padding: 0;\n}\n.markdown-body table tr:nth-child(2n) {\n  background-color: #f8f8f8;\n}\n.markdown-body table tr th {\n  font-weight: bold;\n  border: 1px solid #ccc;\n  margin: 0;\n  padding: 6px 13px;\n  background: #ccc;\n}\n.markdown-body table tr td {\n  border: 1px solid #ccc;\n  margin: 0;\n  padding: 6px 13px;\n}\n.markdown-body table tr th:first-child,\n.markdown-body table tr td:first-child {\n  margin-top: 0;\n}\n.markdown-body table tr th:last-child,\n.markdown-body table tr td:last-child {\n  margin-bottom: 0;\n}\n.markdown-body img {\n  max-width: 100%;\n}\n.markdown-body span.frame {\n  display: block;\n  overflow: hidden;\n}\n.markdown-body span.frame > span {\n  border: 1px solid #ddd;\n  display: block;\n  float: left;\n  overflow: hidden;\n  margin: 13px 0 0;\n  padding: 7px;\n  width: auto;\n}\n.markdown-body span.frame span span {\n  clear: both;\n  color: #333;\n  display: block;\n  padding: 5px 0 0;\n}\n.markdown-body span.frame span img {\n  display: block;\n  float: left;\n}\n.markdown-body span .align-center {\n  display: block;\n  overflow: hidden;\n  clear: both;\n}\n.markdown-body span .align-center > span {\n  display: block;\n  overflow: hidden;\n  margin: 13px auto 0;\n  text-align: center;\n}\n.markdown-body span .align-center span img {\n  margin: 0 auto;\n  text-align: center;\n}\n.markdown-body span .align-right {\n  display: block;\n  overflow: hidden;\n  clear: both;\n}\n.markdown-body span .align-right > span {\n  display: block;\n  overflow: hidden;\n  margin: 13px 0 0;\n  text-align: right;\n}\n.markdown-body span .align-right span img {\n  margin: 0;\n  text-align: right;\n}\n.markdown-body span .float-left {\n  display: block;\n  margin-right: 13px;\n  overflow: hidden;\n  float: left;\n}\n.markdown-body span .float-left span {\n  margin: 13px 0 0;\n}\n.markdown-body span .float-right {\n  display: block;\n  margin-left: 13px;\n  overflow: hidden;\n  float: right;\n}\n.markdown-body span .float-right > span {\n  display: block;\n  overflow: hidden;\n  margin: 13px auto 0;\n  text-align: right;\n}\n.markdown-body code,\n.markdown-body tt {\n  margin: 0 2px;\n  padding: 0 5px;\n  white-space: nowrap;\n  border: 1px solid #eaeaea;\n  background-color: #f8f8f8;\n  border-radius: 3px;\n}\n.markdown-body pre code {\n  margin: 0;\n  padding: 0;\n  white-space: pre;\n  border: none;\n  background: transparent;\n}\n.markdown-body .highlight pre {\n  background-color: #f8f8f8;\n  border: 1px solid #ccc;\n  font-size: 13px;\n  line-height: 19px;\n  overflow: auto;\n  padding: 6px 10px;\n  border-radius: 3px;\n}\n.markdown-body pre {\n  border: 1px solid #ccc;\n  font-size: 13px;\n  line-height: 19px;\n  overflow: auto;\n  padding: 6px 10px;\n  border-radius: 3px;\n}\n.markdown-body pre code,\n.markdown-body pre tt {\n  background-color: transparent;\n  border: none;\n}\n.markdown-body sup {\n  font-size: 0.83em;\n  vertical-align: super;\n  line-height: 0;\n}\n.markdown-body * {\n  -webkit-print-color-adjust: exact;\n}\n@media screen and (min-width: 914px) {\n  .markdown-body body {\n    width: 854px;\n    margin0: auto;\n  }\n}\n@media print {\n  .markdown-body table,\n  .markdown-body pre {\n    page-break-inside: avoid;\n  }\n  .markdown-body pre {\n    word-wrap: break-word;\n  }\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 34 */
+/***/ (function(module, exports) {
+
+module.exports = "\n<header>\n  <img src=\"https://ecomfe.github.io/san/img/logo-colorful.svg\" class=\"logo\">\n  <h1>San Transition</h1>\n  <p>High order component factory for generating <a href=\"//github.com/ecomfe/san\">san</a> components with transition effects.</p>\n</header>\n";
+
+/***/ }),
+/* 35 */
+/***/ (function(module, exports) {
+
+module.exports = "\n<nav>\n  <router-link s-for=\"route in routes\" class=\"{{activeRoute === route.path ? 'active' : ''}}\" to=\"{{route.path}}\">{{route.name}}</router-link>\n</nav>  \n";
+
+/***/ }),
+/* 36 */
+/***/ (function(module, exports) {
+
+module.exports = "<header class=\"app-header\"><a href=\"https://github.com/dafrok/san-transition\"></a><h1><img class=\"logo\" src=\"https://ecomfe.github.io/san/img/logo-colorful.svg\"/><span>San Transition</span></h1><navigator></navigator></header>";
+
+/***/ }),
+/* 37 */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"trans-layer\"><slot><img src=\"https://ecomfe.github.io/san/img/logo-colorful.svg\" height=\"200\"/></slot></div>";
+
+/***/ }),
+/* 38 */
+/***/ (function(module, exports) {
+
+module.exports = "<section class=\"page\"><app-header></app-header><article class=\"markdown-body\"><h2>API</h2>\n<h3>transition</h3>\n<ul>\n<li>Arguments\n<ul>\n<li><strong>{None, String, Object}</strong> hook id</li>\n</ul>\n</li>\n<li>Usage<pre><code class=\"language-javascript\">// register default hooks\n// the same as `transition('san')(YourComponent)`\ntransition()(YourComponent)\n\n// register named hooks\ntransition('foo')(YourComponent)\n\n// register custom hooks\ntransition({\n  enter: 'custom-enter-hook'\n  beforeEnter: 'custom-before-enter-hook',\n  leave: 'custom-leave-hook',\n  beforeLeave: 'custom-before-leave-hook'\n})(YourComponent)\n</code></pre>\n</li>\n</ul>\n<h3>transitionGroup (under development)</h3>\n<p>Coming soon...</p>\n<h2>CSS Hooks</h2>\n<ul>\n<li><strong>before-enter</strong>: Applies when the component attaches DOM tree and removes in the next frame immediately.</li>\n<li><strong>before-leave</strong>: Applies when the component will dispose.</li>\n<li><strong>enter</strong>: Applies between the next frame of <em><strong>before-enter</strong></em> hook deactives and its transition ends.</li>\n<li><strong>leave</strong>: Applies between the next frame of <em><strong>before-leave</strong></em> hook deactives and its transition ends.</li>\n</ul>\n</article></section>";
+
+/***/ }),
+/* 39 */
+/***/ (function(module, exports) {
+
+module.exports = "<section class=\"index page\"><jumbotron></jumbotron><navigator></navigator></section>";
+
+/***/ }),
+/* 40 */
+/***/ (function(module, exports) {
+
+module.exports = "<section class=\"page\"><app-header></app-header><div class=\"markdown-body\"><h3>Default Transition</h3><div class=\"example\"><div class=\"preview\"><alpha class=\"alpha\" s-if=\"alpha\"></alpha><button on-click=\"toggle('alpha')\">Toggle</button></div><div class=\"code\"><pre><code class=\"language-html\">&lt;template&gt;\n  &lt;div&gt;\n    &lt;default-transition-layer class=&quot;alpha&quot;&gt;A component with transition effects.&lt;/default-transition-layer&gt;\n  &lt;div&gt;\n&lt;/template&gt;\n\n&lt;script&gt;\nimport {transition} from 'san-transition'\n\nconst YourComponent = san.defineComponent({\n  template: `&lt;div&gt;&lt;slot&gt;&lt;/slot&gt;&lt;/div&gt;`\n})\n\nexport default {\n  components: {\n    'default-transition-layer': transition()(YourComponent)\n  }\n}\n&lt;/script&gt;\n\n&lt;style lang=&quot;stylus&quot;&gt;\n.alpha\n  transition all .3s ease-out\n  opacity 1\n.san-enter, .san-before-leave\n  transform translate(0, 0)\n.san-before-enter\n  opacity 0\n  transform translate(-50px, 0)\n.san-leave\n  opacity 0\n  transform translate(50px, 0)\n&lt;/style&gt;\n</code></pre>\n</div></div><h3>Named Transition</h3><div class=\"example\"><div class=\"preview\"><beta class=\"beta\" s-if=\"beta\"></beta><button on-click=\"toggle('beta')\">Toggle</button></div><div class=\"code\"><pre><code class=\"language-html\">&lt;template&gt;\n  &lt;div&gt;\n    &lt;named-transition-layer class=&quot;beta&quot;&gt;A component with transition effects.&lt;/named-transition-layer&gt;\n  &lt;div&gt;\n&lt;/template&gt;\n\n&lt;script&gt;\nimport {transition} from 'san-transition'\n\nconst YourComponent = san.defineComponent({\n  template: `&lt;div&gt;&lt;slot&gt;&lt;/slot&gt;&lt;/div&gt;`\n})\n\nexport default {\n  components: {\n    'default-transition-layer': transition('toggle')(YourComponent)\n  }\n}\n&lt;/script&gt;\n\n&lt;style lang=&quot;stylus&quot;&gt;\n.beta\n  transition all .3s ease-out\n  opacity 1\n.toggle-enter, .toggle-before-leave\n  transform translate(0, 0)\n.toggle-before-enter, .toggle-leave\n  opacity 0\n  transform translate(0, -50px)\n&lt;/style&gt;\n</code></pre>\n</div></div><h3>Custom Transition Hook</h3><div class=\"example\"><div class=\"preview\"><gamma class=\"gamma\" s-if=\"gamma\"></gamma><button on-click=\"toggle('gamma')\">Toggle</button></div><div class=\"code\"><pre><code class=\"language-html\">&lt;template&gt;\n  &lt;div&gt;\n    &lt;custom-transition-layer class=&quot;gamma&quot;&gt;A component with transition effects.&lt;/custom-transition-layer&gt;\n  &lt;div&gt;\n&lt;/template&gt;\n\n&lt;script&gt;\nimport {transition} from 'san-transition'\n\nconst YourComponent = san.defineComponent({\n  template: `&lt;div&gt;&lt;slot&gt;&lt;/slot&gt;&lt;/div&gt;`\n})\n\nexport default {\n  components: {\n    'custom-transition-layer': transition({\n      beforeEnter: 'off',\n      enter: 'on',\n      beforeLeave: 'on',\n      leave: 'off'\n    })(YourComponent)\n  }\n}\n&lt;/script&gt;\n\n&lt;style lang=&quot;stylus&quot;&gt;\n.gamma\n  transition all .3s ease-out\n  opacity 1\n.on\n  transform scale(1)\n.off\n  opacity 0\n  transform scale(0)\n&lt;/style&gt;\n</code></pre>\n</div></div><h3>Transition with s-if / s-else Directive</h3><div class=\"example\"><div class=\"preview\"><delta class=\"delta\" s-if=\"delta\"></delta><delta class=\"delta reverse\" s-else=\"s-else\"></delta><button on-click=\"toggle('delta')\">Toggle</button></div><div class=\"code\"><pre><code class=\"language-html\">&lt;template&gt;\n  &lt;div&gt;\n    &lt;transition-with-ifel class=&quot;delta&quot;&gt;A component with transition effects.&lt;/transition-layer-with-ifel&gt;\n    &lt;transition-with-ifel class=&quot;delta&quot;&gt;A component with transition effects.&lt;/transition-layer-with-ifel&gt;\n  &lt;div&gt;\n&lt;/template&gt;\n\n&lt;script&gt;\nimport {transition} from 'san-transition'\n\nconst YourComponent = san.defineComponent({\n  template: `&lt;div&gt;&lt;slot&gt;&lt;/slot&gt;&lt;/div&gt;`\n})\n\nexport default {\n  components: {\n    'transition-layer-with-ifel': transition('toggle')(YourComponent)\n  }\n}\n&lt;/script&gt;\n\n&lt;style lang=&quot;stylus&quot;&gt;\n.delta\n  transition all .3s ease-out\n  opacity 1\n.toggle-enter, .toggle-before-leave\n  transform rotate(0deg) translate(0, 0)\n.toggle-before-enter\n  opacity 0\n  transform rotate(-180deg) translate(-200px, 0)\n.toggle-leave\n  opacity 0\n  transform rotate(180deg) translate(200px, 0)\n&lt;/style&gt;\n</code></pre>\n</div></div><h3>Transition with animation</h3><div class=\"example\"><div class=\"preview\"><epsilon class=\"epsilon\" s-if=\"epsilon\"></epsilon><button on-click=\"toggle('epsilon')\">Toggle</button></div><div class=\"code\"><pre><code class=\"language-html\">&lt;template&gt;\n  &lt;div&gt;\n    &lt;transition-layer-with-animation class=&quot;epsilon&quot;&gt;A component with transition effects.&lt;/transition-layer-with-animation&gt;\n  &lt;div&gt;\n&lt;/template&gt;\n\n&lt;script&gt;\nimport {transition} from 'san-transition'\n\nconst YourComponent = san.defineComponent({\n  template: `&lt;div&gt;&lt;slot&gt;&lt;/slot&gt;&lt;/div&gt;`\n})\n\nexport default {\n  components: {\n    'transition-layer-with-animation': transition('toggle')(YourComponent)\n  }\n}\n&lt;/script&gt;\n\n&lt;style lang=&quot;stylus&quot;&gt;\n.toggle-before-enter\n  transform scale(0) translate(-100px, 0) rotate(360deg)\n.toggle-enter\n  animation come-in .5s\n.toggle-leave\n  animation go-out .5s\n  animation-fill-mode forwards\n\n@keyframes come-in\n  0%\n    transform scale(0) translate(-100px, 0) rotate(360deg)\n  50%\n    transform scale(1.2) translate(-50px, 0) rotate(-90deg)\n  100%\n    transform scale(1) translate(0, 0) rotate(0deg)\n\n@keyframes go-out\n  0%\n    transform scale(1) translate(0, 0) rotate(0deg)\n  50%\n    transform scale(1.2) translate(50px, 0) rotate(90deg)\n  100%\n    transform scale(0) translate(100px, 0) rotate(-360deg)\n&lt;/style&gt;\n</code></pre>\n</div></div></div></section>";
+
+/***/ }),
+/* 41 */
+/***/ (function(module, exports) {
+
+module.exports = "<section class=\"page\"><app-header></app-header><article class=\"markdown-body\"><h2>Get Start</h2>\n<h3>Installation</h3>\n<h4>NPM</h4>\n<pre><code class=\"language-bash\">$ npm install --save san-transition\n</code></pre>\n<h4>CDN</h4>\n<pre><code class=\"language-html\">&lt;script src=&quot;//unpkg.com/san-transition&quot;&gt;&lt;/script&gt;\n</code></pre>\n<h3>Usage</h3>\n<pre><code class=\"language-html\">&lt;template&gt;\n  &lt;div&gt;\n    &lt;transition-layer&gt;A component with transition effects.&lt;/transition-layer&gt;\n  &lt;div&gt;\n&lt;/template&gt;\n\n&lt;script&gt;\nimport {transition} from 'san-transition'\nimport {YourComponent} from 'YOUR_SAN_COMPONENT'\n\nexport default {\n  components: {\n    'transition-layer': transition('fade')(YourComponent)\n  }\n}\n&lt;/script&gt;\n\n&lt;style&gt;\n.fade-live {\n  opacity: 1;\n  transform: translate(0, 0);\n  transition: all .5s;\n}\n.fade-in, .fade-out {\n  opacity: 0;\n  transform: translate(100px, 0);\n}\n&lt;/style&gt;\n\n</code></pre>\n</article></section>";
+
+/***/ }),
+/* 42 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -11472,18 +12327,13 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 27 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __san_script__, __san_template__
 var __san_styles__ = {}
-__webpack_require__(31)
-__san_script__ = __webpack_require__(15)
-if (__san_script__ &&
-    __san_script__.__esModule &&
-    Object.keys(__san_script__).length > 1) {
-  console.warn("[san-loader] docs/components/Doc.san: named exports in *.san files are ignored.")}
-__san_template__ = __webpack_require__(24)
+__webpack_require__(47)
+__san_template__ = __webpack_require__(34)
 var __san_proto__ = {}
 if (__san_script__) {
   __san_proto__ = __san_script__.__esModule
@@ -11493,7 +12343,7 @@ if (__san_script__) {
 if (__san_template__) {
   __san_proto__.template = __san_template__
 }
-var san = __webpack_require__(2)
+var san = __webpack_require__(0)
 var __san_exports__ = san.defineComponent(__san_proto__)
 module.exports = __san_exports__
 if (module.exports.__esModule) module.exports = module.exports['default']
@@ -11505,17 +12355,12 @@ __san_exports__.computed[key] = function () { return module }
 
 
 /***/ }),
-/* 28 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __san_script__, __san_template__
 var __san_styles__ = {}
-__san_script__ = __webpack_require__(16)
-if (__san_script__ &&
-    __san_script__.__esModule &&
-    Object.keys(__san_script__).length > 1) {
-  console.warn("[san-loader] docs/components/try.san: named exports in *.san files are ignored.")}
-__san_template__ = __webpack_require__(23)
+__san_template__ = __webpack_require__(37)
 var __san_proto__ = {}
 if (__san_script__) {
   __san_proto__ = __san_script__.__esModule
@@ -11525,7 +12370,7 @@ if (__san_script__) {
 if (__san_template__) {
   __san_proto__.template = __san_template__
 }
-var san = __webpack_require__(2)
+var san = __webpack_require__(0)
 var __san_exports__ = san.defineComponent(__san_proto__)
 module.exports = __san_exports__
 if (module.exports.__esModule) module.exports = module.exports['default']
@@ -11537,7 +12382,7 @@ __san_exports__.computed[key] = function () { return module }
 
 
 /***/ }),
-/* 29 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
@@ -11727,26 +12572,26 @@ __san_exports__.computed[key] = function () { return module }
     attachTo.clearImmediate = clearImmediate;
 }(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), __webpack_require__(26)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7), __webpack_require__(42)))
 
 /***/ }),
-/* 30 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(19);
+var content = __webpack_require__(28);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1)(content, {});
+var update = __webpack_require__(2)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!../../node_modules/css-loader/index.js!../../node_modules/san-loader/lib/style-rewriter.js!../../node_modules/san-loader/lib/selector.js?type=style&index=0!./App.san", function() {
-			var newContent = require("!!../../node_modules/css-loader/index.js!../../node_modules/san-loader/lib/style-rewriter.js!../../node_modules/san-loader/lib/selector.js?type=style&index=0!./App.san");
+		module.hot.accept("!!../../node_modules/css-loader/index.js!../../node_modules/san-loader/lib/style-rewriter.js!../../node_modules/stylus-loader/index.js!../../node_modules/san-loader/lib/selector.js?type=style&index=0!./AppHeader.san", function() {
+			var newContent = require("!!../../node_modules/css-loader/index.js!../../node_modules/san-loader/lib/style-rewriter.js!../../node_modules/stylus-loader/index.js!../../node_modules/san-loader/lib/selector.js?type=style&index=0!./AppHeader.san");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});
@@ -11756,23 +12601,23 @@ if(false) {
 }
 
 /***/ }),
-/* 31 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(20);
+var content = __webpack_require__(29);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1)(content, {});
+var update = __webpack_require__(2)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!../../node_modules/css-loader/index.js!../../node_modules/san-loader/lib/style-rewriter.js!../../node_modules/san-loader/lib/selector.js?type=style&index=0!./Doc.san", function() {
-			var newContent = require("!!../../node_modules/css-loader/index.js!../../node_modules/san-loader/lib/style-rewriter.js!../../node_modules/san-loader/lib/selector.js?type=style&index=0!./Doc.san");
+		module.hot.accept("!!../../node_modules/css-loader/index.js!../../node_modules/san-loader/lib/style-rewriter.js!../../node_modules/stylus-loader/index.js!../../node_modules/san-loader/lib/selector.js?type=style&index=0!./Jumbotron.san", function() {
+			var newContent = require("!!../../node_modules/css-loader/index.js!../../node_modules/san-loader/lib/style-rewriter.js!../../node_modules/stylus-loader/index.js!../../node_modules/san-loader/lib/selector.js?type=style&index=0!./Jumbotron.san");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});
@@ -11782,7 +12627,85 @@ if(false) {
 }
 
 /***/ }),
-/* 32 */
+/* 48 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(30);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(2)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../node_modules/css-loader/index.js!../../node_modules/san-loader/lib/style-rewriter.js!../../node_modules/stylus-loader/index.js!../../node_modules/san-loader/lib/selector.js?type=style&index=0!./Nav.san", function() {
+			var newContent = require("!!../../node_modules/css-loader/index.js!../../node_modules/san-loader/lib/style-rewriter.js!../../node_modules/stylus-loader/index.js!../../node_modules/san-loader/lib/selector.js?type=style&index=0!./Nav.san");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 49 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(31);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(2)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../node_modules/css-loader/index.js!../../node_modules/san-loader/lib/style-rewriter.js!../../node_modules/stylus-loader/index.js!../../node_modules/san-loader/lib/selector.js?type=style&index=0!./App.san", function() {
+			var newContent = require("!!../../node_modules/css-loader/index.js!../../node_modules/san-loader/lib/style-rewriter.js!../../node_modules/stylus-loader/index.js!../../node_modules/san-loader/lib/selector.js?type=style&index=0!./App.san");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 50 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(32);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(2)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../node_modules/css-loader/index.js!../../node_modules/san-loader/lib/style-rewriter.js!../../node_modules/stylus-loader/index.js!../../node_modules/san-loader/lib/selector.js?type=style&index=0!./Examples.san", function() {
+			var newContent = require("!!../../node_modules/css-loader/index.js!../../node_modules/san-loader/lib/style-rewriter.js!../../node_modules/stylus-loader/index.js!../../node_modules/san-loader/lib/selector.js?type=style&index=0!./Examples.san");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var apply = Function.prototype.apply;
@@ -11835,7 +12758,7 @@ exports._unrefActive = exports.active = function(item) {
 };
 
 // setimmediate attaches itself to the global object
-__webpack_require__(29);
+__webpack_require__(45);
 exports.setImmediate = setImmediate;
 exports.clearImmediate = clearImmediate;
 

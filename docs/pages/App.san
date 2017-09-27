@@ -1,8 +1,7 @@
-<template>
-<section class="index">
-  <jumbotron></jumbotron>
-  <navigator></navigator>
-</section>
+<template lang="pug">
+section.index.page
+  jumbotron
+  navigator
 </template>
 
 <script>
@@ -36,20 +35,17 @@ a
 .logo
   animation logo 2s infinite
 
-.san {
-  transition: all .2s ease-out;
-  opacity: 1;
-  transform: translate(0, 0);
-}
-.san-live, .san-in, .san-out {
-  width: 100%;
-  top: 0;
-  position: absolute;
-}
-.san-in, .san-out {
-  opacity: 0;
-  transform: translate(-100%, 0);
-}
+.page
+  transition all .3s ease-out
+  opacity 1
+  transform: translate(0, 0)
+.page-enter, .page-leave, .page-before-enter, .page-before-leave
+  width 100%
+  top 0
+  position: absolute
+.page-before-enter, .page-leave
+  opacity 0
+  transform translate(-100%, 0)
 
 @keyframes logo
   0%

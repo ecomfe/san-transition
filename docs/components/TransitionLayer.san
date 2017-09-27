@@ -1,5 +1,5 @@
-<template>
-<div>
-  <slot></slot>
-</div>
+<template lang="pug">
+div.trans-layer
+  slot
+    img(src="https://ecomfe.github.io/san/img/logo-colorful.svg" height="200")
 </template>

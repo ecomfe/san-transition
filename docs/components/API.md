@@ -16,18 +16,20 @@
 
   // register custom hooks
   transition({
-    in: 'custom-transition-in-hook'
-    out: 'custom-transition-out-hook',
-    live: 'custom-live-hook',
+    enter: 'custom-enter-hook'
+    beforeEnter: 'custom-before-enter-hook',
+    leave: 'custom-leave-hook',
+    beforeLeave: 'custom-before-leave-hook'
   })(YourComponent)
   ```
 
-### transitionGroup (uncompleted)
+### transitionGroup (under development)
 
 Coming soon...
 
 ## CSS Hooks
 
-- **in** - Applies when the component attaches DOM tree and removes in the next frame immediately.
-- **out** - Applies when the component will dispose.
-- **live** - Applies between the next frame of ***in*** hook deactives and ***out*** hook actives.
+- **before-enter**: Applies when the component attaches DOM tree and removes in the next frame immediately.
+- **before-leave**: Applies when the component will dispose.
+- **enter**: Applies between the next frame of ***before-enter*** hook deactives and its transition ends.
+- **leave**: Applies between the next frame of ***before-leave*** hook deactives and its transition ends.

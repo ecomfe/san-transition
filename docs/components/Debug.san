@@ -1,7 +1,9 @@
-<template>
+<template lang="pug">
 <section>
   <button on-click="toggle">Toggle</button>
-  <transition-layer class="transition-layer" s-if="isLive">Transition Layer</transition-layer>
+  <div class="preview">
+    <transition-layer class="case-1" s-if="isLive">Transition Layer</transition-layer>
+  </div>
 </section>
 </template>
 
@@ -15,7 +17,7 @@ const TransitionLayer = san.defineComponent({
 
 export default {
   components: {
-    'transition-layer': transition('animation')(TransitionLayer)
+    'transition-layer': transition('toggle')(TransitionLayer)
   },
   initData () {
     return {
@@ -28,21 +30,13 @@ export default {
 }
 </script>
 
-<style>
-button {
-  background: white;
-  box-shadow: 0 0 1px gray;
-}
-.animation-out {
-  animation: go-out 0.5s;
-}
-.animation-live {
-  transition: all .5s ease-out;
-  border: 1px solid white;
-  width: 100px;
-  height: 100px;
-  animation: come-in 0.5s;
-}
+<style lang="stylus">
+.preview
+  position relative
+button
+  background white
+  box-shadow 0 0 1px gray
+
 @keyframes come-in {
   0% {
     transform: scale(0) translate(-100px, 0) rotate(360deg);
@@ -66,17 +60,18 @@ button {
   }
 }
 
-.toggle-in {
-  opacity: 0;
-  transform: translate(50px, 0);
-}
-.toggle-out {
-  opacity: 0;
-  transform: translate(-50px, 0);
-}
-.toggle-live {
+.case-1 {
+  transition: all .5s ease-out;
   opacity: 1;
   transform: translate(0, 0);
 }
-
+.toggle-enter, .toggle-leave, .toggle-before-enter, .toggle-before-leave {
+  width: 100%;
+  top: 0;
+  position: absolute;
+}
+.toggle-before-enter, .toggle-leave {
+  opacity: 0;
+  transform: translate(0, 100%);
+}
 </style>

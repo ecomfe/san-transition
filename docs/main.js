@@ -12,23 +12,25 @@ import 'prismjs/themes/prism-tomorrow.css'
 import 'normalize.css'
 import './markdown.styl'
 
+const genPage = transition('page')
+
 router.setMode('hash')
 
 router.add({
   rule: '/',
-  Component: transition()(App),
+  Component: genPage(App),
   target: 'body'
 }).add({
   rule: '/start',
-  Component: transition()(GetStart),
+  Component: genPage(GetStart),
   target: 'body'
 }).add({
   rule: '/api',
-  Component: transition()(API),
+  Component: genPage(API),
   target: 'body'
 }).add({
   rule: '/examples',
-  Component: transition()(Examples),
+  Component: genPage(Examples),
   target: 'body'
 })
 
