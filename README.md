@@ -6,8 +6,16 @@ High order component factory for generating [san](//github.com/ecomfe/san) compo
 
 ### Installation
 
+#### NPM
+
 ```bash
 $ npm install --save san-transition
+```
+
+#### CDN
+
+```html
+<script src="//unpkg.com/san-transition"></script>
 ```
 
 ### Usage
@@ -15,13 +23,17 @@ $ npm install --save san-transition
 ```html
 <template>
   <div>
-    <transition-layer>A component with transition effects.</transition-layer>
+    <transition-layer class="layer">A component with transition effects.</transition-layer>
   <div>
 </template>
 
 <script>
+import san from 'san'
 import {transition} from 'san-transition'
-import {YourComponent} from 'YOUR_SAN_COMPONENT'
+
+const YourComponent = san.defineComponent({
+  template: `<div><slot></slot></div>`
+})
 
 export default {
   components: {
@@ -31,25 +43,26 @@ export default {
 </script>
 
 <style>
-.fade-enter-active, .fade-leave {
-  opacity: 1;
-  transform: translate(0, 0);
+.layer {
   transition: all .5s;
 }
-.fade-enter, .fade-leave-active {
+.fade-enter, .fade-before-leave {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+.fade-before-enter, .fade-leave {
   opacity: 0;
   transform: translate(100px, 0);
 }
-
 </style>
 ```
 
-## API
+### API
 
 ### transition
 
 - Arguments
-  - {None, String, Object} hook name
+  - **{None, String, Object}** hook id
 - Usage
   ```javascript
   // register default hooks
@@ -61,18 +74,20 @@ export default {
 
   // register custom hooks
   transition({
-    in: 'custom-transition-in-hook'
-    out: 'custom-transition-out-hook',
-    live: 'custom-live-hook',
+    enter: 'custom-enter-hook'
+    beforeEnter: 'custom-before-enter-hook',
+    leave: 'custom-leave-hook',
+    beforeLeave: 'custom-before-leave-hook'
   })(YourComponent)
   ```
 
-### transitionGroup (uncompleted)
+### transitionGroup (under development)
 
 Coming soon...
 
 ## CSS Hooks
 
-- **in** - Applies when the component attaches DOM tree and removes in the next frame immediately.
-- **out** - Applies when the component will dispose.
-- **live** - Applies between the next frame of `in` hook deactives and `out` hook actives.
+- **before-enter**: Applies when the component attaches DOM tree and removes in the next frame immediately.
+- **before-leave**: Applies when the component will dispose.
+- **enter**: Applies between the next frame of ***before-enter*** hook deactives and its transition ends.
+- **leave**: Applies between the next frame of ***before-leave*** hook deactives and its transition ends.

@@ -24,6 +24,7 @@ $ npm install --save san-transition
 </template>
 
 <script>
+import san from 'san'
 import {transition} from 'san-transition'
 
 const YourComponent = san.defineComponent({
