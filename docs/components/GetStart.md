@@ -19,13 +19,16 @@ $ npm install --save san-transition
 ```html
 <template>
   <div>
-    <transition-layer>A component with transition effects.</transition-layer>
+    <transition-layer class="layer">A component with transition effects.</transition-layer>
   <div>
 </template>
 
 <script>
 import {transition} from 'san-transition'
-import {YourComponent} from 'YOUR_SAN_COMPONENT'
+
+const YourComponent = san.defineComponent({
+  template: `<div><slot></slot></div>`
+})
 
 export default {
   components: {
@@ -35,12 +38,14 @@ export default {
 </script>
 
 <style>
-.fade-live {
-  opacity: 1;
-  transform: translate(0, 0);
+.layer {
   transition: all .5s;
 }
-.fade-in, .fade-out {
+.fade-enter, .fade-before-leave {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+.fade-before-enter, .fade-leave {
   opacity: 0;
   transform: translate(100px, 0);
 }
