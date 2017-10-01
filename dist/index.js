@@ -8471,31 +8471,6 @@ function updateLink(linkElement, obj) {
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.transitionGroup = exports.transition = undefined;
-
-var _transition = __webpack_require__(18);
-
-var _transition2 = _interopRequireDefault(_transition);
-
-var _transitionGroup = __webpack_require__(17);
-
-var _transitionGroup2 = _interopRequireDefault(_transitionGroup);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-exports.transition = _transition2.default;
-exports.transitionGroup = _transitionGroup2.default;
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(true)
 		module.exports = factory();
@@ -10118,6 +10093,31 @@ exports['default'] = EventQueue;
 });
 
 /***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.transitionGroup = exports.transition = undefined;
+
+var _transition = __webpack_require__(18);
+
+var _transition2 = _interopRequireDefault(_transition);
+
+var _transitionGroup = __webpack_require__(17);
+
+var _transitionGroup2 = _interopRequireDefault(_transitionGroup);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.transition = _transition2.default;
+exports.transitionGroup = _transitionGroup2.default;
+
+/***/ }),
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11259,7 +11259,7 @@ var _App = __webpack_require__(10);
 
 var _App2 = _interopRequireDefault(_App);
 
-var _sanRouter = __webpack_require__(4);
+var _sanRouter = __webpack_require__(3);
 
 var _prismjs = __webpack_require__(8);
 
@@ -11277,7 +11277,7 @@ var _GetStart = __webpack_require__(12);
 
 var _GetStart2 = _interopRequireDefault(_GetStart);
 
-var _index = __webpack_require__(3);
+var _index = __webpack_require__(4);
 
 __webpack_require__(14);
 
@@ -11535,10 +11535,24 @@ var _Nav = __webpack_require__(6);
 
 var _Nav2 = _interopRequireDefault(_Nav);
 
+var _sanRouter = __webpack_require__(3);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// <template lang="pug">
+// header.app-header
+//   a(href="https://github.com/dafrok/san-transition")
+//   h1
+//     router-link(to="/")
+//       img(src="https://ecomfe.github.io/san/img/logo-colorful.svg" class="logo")
+//     span San Transition
+//   navigator
+// </template>
+//
+// <script>
 exports.default = {
   components: {
+    'router-link': _sanRouter.Link,
     'navigator': _Nav2.default
   }
   // </script>
@@ -11556,16 +11570,7 @@ exports.default = {
   //       margin-right 10px
   // </style>
 
-}; // <template lang="pug">
-// header.app-header
-//   a(href="https://github.com/dafrok/san-transition")
-//   h1
-//     img(src="https://ecomfe.github.io/san/img/logo-colorful.svg" class="logo")
-//     span San Transition
-//   navigator
-// </template>
-//
-// <script>
+};
 
 /***/ }),
 /* 21 */
@@ -11578,12 +11583,12 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _sanRouter = __webpack_require__(4);
+var _sanRouter = __webpack_require__(3);
 
 exports.default = {
   initData: function initData() {
     return {
-      routes: [{ name: 'Home', path: '/' }, { name: 'Get Start', path: '/start' }, { name: 'API', path: '/api' }, { name: 'Examples', path: '/examples' }],
+      routes: [{ name: 'Get Start', path: '/start' }, { name: 'API', path: '/api' }, { name: 'Examples', path: '/examples' }],
       activeRoute: _sanRouter.router.locator.current
     };
   },
@@ -11600,8 +11605,8 @@ exports.default = {
   //     display inline-block
   //     padding 8px 30px
   //     &.active
-  //       color #001a23
-  //       background-color #9ee0fe
+  //       // background-color #9ee0fe
+  //       background-color lighten(#334959, 10)
   //       &:hover
   //         color white
   //     &:hover
@@ -11663,7 +11668,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _sanRouter = __webpack_require__(4);
+var _sanRouter = __webpack_require__(3);
 
 var _Jumbotron = __webpack_require__(43);
 
@@ -11673,7 +11678,7 @@ var _Nav = __webpack_require__(6);
 
 var _Nav2 = _interopRequireDefault(_Nav);
 
-var _index = __webpack_require__(3);
+var _index = __webpack_require__(4);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -11740,7 +11745,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _index = __webpack_require__(3);
+var _index = __webpack_require__(4);
 
 var _TransitionLayer = __webpack_require__(44);
 
@@ -11802,6 +11807,7 @@ exports.default = {
   //     width 50%
   //     overflow auto
   //     pre
+  //       border 0
   //       margin 0
   //   .trans-layer
   //     position absolute
@@ -12041,7 +12047,7 @@ exports = module.exports = __webpack_require__(1)();
 
 
 // module
-exports.push([module.i, "nav {\n  background-color: #334959;\n}\nnav a {\n  display: inline-block;\n  padding: 8px 30px;\n}\nnav a.active {\n  color: #001a23;\n  background-color: #9ee0fe;\n}\nnav a.active:hover {\n  color: #fff;\n}\nnav a:hover {\n  text-decoration: none;\n  color: #9ee0fe;\n}\n.index nav {\n  text-align: center;\n}\n", ""]);
+exports.push([module.i, "nav {\n  background-color: #334959;\n}\nnav a {\n  display: inline-block;\n  padding: 8px 30px;\n}\nnav a.active {\n  background-color: #466479;\n}\nnav a.active:hover {\n  color: #fff;\n}\nnav a:hover {\n  text-decoration: none;\n  color: #9ee0fe;\n}\n.index nav {\n  text-align: center;\n}\n", ""]);
 
 // exports
 
@@ -12069,7 +12075,7 @@ exports = module.exports = __webpack_require__(1)();
 
 
 // module
-exports.push([module.i, ".content {\n  padding: 20px;\n}\n.example {\n  height: 300px;\n  overflow: hidden;\n  display: flex;\n  font-size: 0;\n  border: 1px solid;\n}\n.example .preview {\n  background: #333;\n  position: relative;\n}\n.example .preview,\n.example .code {\n  font-size: 14px;\n  flex: 1;\n  width: 50%;\n  overflow: auto;\n}\n.example .preview pre,\n.example .code pre {\n  margin: 0;\n}\n.example .trans-layer {\n  position: absolute;\n  width: 124px;\n  height: 200px;\n  top: 20px;\n  left: 0;\n  right: 0;\n  margin: auto;\n}\n.example button {\n  background-color: #2ea2f8;\n  color: #fff;\n  border-radius: 3px;\n  width: 180px;\n  line-height: 38px;\n  font-size: 18px;\n  border: 0;\n  padding: 0;\n  margin: 0;\n  outline: 0;\n  position: absolute;\n  bottom: 40px;\n  left: 0;\n  right: 0;\n  margin: auto;\n  cursor: pointer;\n}\n.example button:hover {\n  background-color: #5fb8fa;\n}\n.alpha {\n  transition: all 0.3s ease-out;\n  opacity: 1;\n}\n.alpha-enter,\n.alpha-before-leave {\n  transform: translate(0, 0);\n}\n.alpha-before-enter {\n  opacity: 0;\n  transform: translate(-50px, 0);\n}\n.alpha-leave {\n  opacity: 0;\n  transform: translate(50px, 0);\n}\n.beta {\n  transition: all 0.3s ease-out;\n  opacity: 1;\n}\n.beta-enter,\n.beta-before-leave {\n  transform: translate(0, 0);\n}\n.beta-before-enter,\n.beta-leave {\n  opacity: 0;\n  transform: translate(0, -50px);\n}\n.gamma {\n  transition: all 0.3s ease-out;\n  opacity: 1;\n}\n.gamma-on {\n  transform: scale(1);\n}\n.gamma-off {\n  opacity: 0;\n  transform: scale(0);\n}\n.delta {\n  transition: all 0.3s ease-out;\n  opacity: 1;\n}\n.delta.reverse img {\n  transform: rotate(180deg);\n}\n.delta-enter,\n.delta-before-leave {\n  transform: rotate(0deg) translate(0, 0);\n}\n.delta-before-enter {\n  opacity: 0;\n  transform: rotate(-180deg) translate(-200px, 0);\n}\n.delta-leave {\n  opacity: 0;\n  transform: rotate(180deg) translate(200px, 0);\n}\n.epsilon-before-enter {\n  transform: scale(0) translate(-100px, 0) rotate(360deg);\n}\n.epsilon-enter {\n  animation: come-in 0.5s;\n}\n.epsilon-leave {\n  animation: go-out 0.5s;\n  animation-fill-mode: forwards;\n}\n@-moz-keyframes come-in {\n  0% {\n    transform: scale(0) translate(-100px, 0) rotate(360deg);\n  }\n  50% {\n    transform: scale(1.2) translate(-50px, 0) rotate(-90deg);\n  }\n  100% {\n    transform: scale(1) translate(0, 0) rotate(0deg);\n  }\n}\n@-webkit-keyframes come-in {\n  0% {\n    transform: scale(0) translate(-100px, 0) rotate(360deg);\n  }\n  50% {\n    transform: scale(1.2) translate(-50px, 0) rotate(-90deg);\n  }\n  100% {\n    transform: scale(1) translate(0, 0) rotate(0deg);\n  }\n}\n@-o-keyframes come-in {\n  0% {\n    transform: scale(0) translate(-100px, 0) rotate(360deg);\n  }\n  50% {\n    transform: scale(1.2) translate(-50px, 0) rotate(-90deg);\n  }\n  100% {\n    transform: scale(1) translate(0, 0) rotate(0deg);\n  }\n}\n@keyframes come-in {\n  0% {\n    transform: scale(0) translate(-100px, 0) rotate(360deg);\n  }\n  50% {\n    transform: scale(1.2) translate(-50px, 0) rotate(-90deg);\n  }\n  100% {\n    transform: scale(1) translate(0, 0) rotate(0deg);\n  }\n}\n@-moz-keyframes go-out {\n  0% {\n    transform: scale(1) translate(0, 0) rotate(0deg);\n  }\n  50% {\n    transform: scale(1.2) translate(50px, 0) rotate(90deg);\n  }\n  100% {\n    transform: scale(0) translate(100px, 0) rotate(-360deg);\n  }\n}\n@-webkit-keyframes go-out {\n  0% {\n    transform: scale(1) translate(0, 0) rotate(0deg);\n  }\n  50% {\n    transform: scale(1.2) translate(50px, 0) rotate(90deg);\n  }\n  100% {\n    transform: scale(0) translate(100px, 0) rotate(-360deg);\n  }\n}\n@-o-keyframes go-out {\n  0% {\n    transform: scale(1) translate(0, 0) rotate(0deg);\n  }\n  50% {\n    transform: scale(1.2) translate(50px, 0) rotate(90deg);\n  }\n  100% {\n    transform: scale(0) translate(100px, 0) rotate(-360deg);\n  }\n}\n@keyframes go-out {\n  0% {\n    transform: scale(1) translate(0, 0) rotate(0deg);\n  }\n  50% {\n    transform: scale(1.2) translate(50px, 0) rotate(90deg);\n  }\n  100% {\n    transform: scale(0) translate(100px, 0) rotate(-360deg);\n  }\n}\n", ""]);
+exports.push([module.i, ".content {\n  padding: 20px;\n}\n.example {\n  height: 300px;\n  overflow: hidden;\n  display: flex;\n  font-size: 0;\n  border: 1px solid;\n}\n.example .preview {\n  background: #333;\n  position: relative;\n}\n.example .preview,\n.example .code {\n  font-size: 14px;\n  flex: 1;\n  width: 50%;\n  overflow: auto;\n}\n.example .preview pre,\n.example .code pre {\n  border: 0;\n  margin: 0;\n}\n.example .trans-layer {\n  position: absolute;\n  width: 124px;\n  height: 200px;\n  top: 20px;\n  left: 0;\n  right: 0;\n  margin: auto;\n}\n.example button {\n  background-color: #2ea2f8;\n  color: #fff;\n  border-radius: 3px;\n  width: 180px;\n  line-height: 38px;\n  font-size: 18px;\n  border: 0;\n  padding: 0;\n  margin: 0;\n  outline: 0;\n  position: absolute;\n  bottom: 40px;\n  left: 0;\n  right: 0;\n  margin: auto;\n  cursor: pointer;\n}\n.example button:hover {\n  background-color: #5fb8fa;\n}\n.alpha {\n  transition: all 0.3s ease-out;\n  opacity: 1;\n}\n.alpha-enter,\n.alpha-before-leave {\n  transform: translate(0, 0);\n}\n.alpha-before-enter {\n  opacity: 0;\n  transform: translate(-50px, 0);\n}\n.alpha-leave {\n  opacity: 0;\n  transform: translate(50px, 0);\n}\n.beta {\n  transition: all 0.3s ease-out;\n  opacity: 1;\n}\n.beta-enter,\n.beta-before-leave {\n  transform: translate(0, 0);\n}\n.beta-before-enter,\n.beta-leave {\n  opacity: 0;\n  transform: translate(0, -50px);\n}\n.gamma {\n  transition: all 0.3s ease-out;\n  opacity: 1;\n}\n.gamma-on {\n  transform: scale(1);\n}\n.gamma-off {\n  opacity: 0;\n  transform: scale(0);\n}\n.delta {\n  transition: all 0.3s ease-out;\n  opacity: 1;\n}\n.delta.reverse img {\n  transform: rotate(180deg);\n}\n.delta-enter,\n.delta-before-leave {\n  transform: rotate(0deg) translate(0, 0);\n}\n.delta-before-enter {\n  opacity: 0;\n  transform: rotate(-180deg) translate(-200px, 0);\n}\n.delta-leave {\n  opacity: 0;\n  transform: rotate(180deg) translate(200px, 0);\n}\n.epsilon-before-enter {\n  transform: scale(0) translate(-100px, 0) rotate(360deg);\n}\n.epsilon-enter {\n  animation: come-in 0.5s;\n}\n.epsilon-leave {\n  animation: go-out 0.5s;\n  animation-fill-mode: forwards;\n}\n@-moz-keyframes come-in {\n  0% {\n    transform: scale(0) translate(-100px, 0) rotate(360deg);\n  }\n  50% {\n    transform: scale(1.2) translate(-50px, 0) rotate(-90deg);\n  }\n  100% {\n    transform: scale(1) translate(0, 0) rotate(0deg);\n  }\n}\n@-webkit-keyframes come-in {\n  0% {\n    transform: scale(0) translate(-100px, 0) rotate(360deg);\n  }\n  50% {\n    transform: scale(1.2) translate(-50px, 0) rotate(-90deg);\n  }\n  100% {\n    transform: scale(1) translate(0, 0) rotate(0deg);\n  }\n}\n@-o-keyframes come-in {\n  0% {\n    transform: scale(0) translate(-100px, 0) rotate(360deg);\n  }\n  50% {\n    transform: scale(1.2) translate(-50px, 0) rotate(-90deg);\n  }\n  100% {\n    transform: scale(1) translate(0, 0) rotate(0deg);\n  }\n}\n@keyframes come-in {\n  0% {\n    transform: scale(0) translate(-100px, 0) rotate(360deg);\n  }\n  50% {\n    transform: scale(1.2) translate(-50px, 0) rotate(-90deg);\n  }\n  100% {\n    transform: scale(1) translate(0, 0) rotate(0deg);\n  }\n}\n@-moz-keyframes go-out {\n  0% {\n    transform: scale(1) translate(0, 0) rotate(0deg);\n  }\n  50% {\n    transform: scale(1.2) translate(50px, 0) rotate(90deg);\n  }\n  100% {\n    transform: scale(0) translate(100px, 0) rotate(-360deg);\n  }\n}\n@-webkit-keyframes go-out {\n  0% {\n    transform: scale(1) translate(0, 0) rotate(0deg);\n  }\n  50% {\n    transform: scale(1.2) translate(50px, 0) rotate(90deg);\n  }\n  100% {\n    transform: scale(0) translate(100px, 0) rotate(-360deg);\n  }\n}\n@-o-keyframes go-out {\n  0% {\n    transform: scale(1) translate(0, 0) rotate(0deg);\n  }\n  50% {\n    transform: scale(1.2) translate(50px, 0) rotate(90deg);\n  }\n  100% {\n    transform: scale(0) translate(100px, 0) rotate(-360deg);\n  }\n}\n@keyframes go-out {\n  0% {\n    transform: scale(1) translate(0, 0) rotate(0deg);\n  }\n  50% {\n    transform: scale(1.2) translate(50px, 0) rotate(90deg);\n  }\n  100% {\n    transform: scale(0) translate(100px, 0) rotate(-360deg);\n  }\n}\n", ""]);
 
 // exports
 
@@ -12104,7 +12110,7 @@ module.exports = "\n<nav>\n  <router-link s-for=\"route in routes\" class=\"{{ac
 /* 36 */
 /***/ (function(module, exports) {
 
-module.exports = "<header class=\"app-header\"><a href=\"https://github.com/dafrok/san-transition\"></a><h1><img class=\"logo\" src=\"https://ecomfe.github.io/san/img/logo-colorful.svg\"/><span>San Transition</span></h1><navigator></navigator></header>";
+module.exports = "<header class=\"app-header\"><a href=\"https://github.com/dafrok/san-transition\"></a><h1><router-link to=\"/\"><img class=\"logo\" src=\"https://ecomfe.github.io/san/img/logo-colorful.svg\"/></router-link><span>San Transition</span></h1><navigator></navigator></header>";
 
 /***/ }),
 /* 37 */
@@ -12128,13 +12134,13 @@ module.exports = "<section class=\"index page\"><jumbotron></jumbotron><navigato
 /* 40 */
 /***/ (function(module, exports) {
 
-module.exports = "<section class=\"page\"><app-header></app-header><div class=\"markdown-body\"><h3>Default Transition</h3><div class=\"example\"><div class=\"preview\"><alpha class=\"alpha\" s-if=\"alpha\"></alpha><button on-click=\"toggle('alpha')\">Toggle</button></div><div class=\"code\"><pre><code class=\"language-html\">&lt;template&gt;\n  &lt;div&gt;\n    &lt;default-transition-layer class=&quot;alpha&quot;&gt;A component with transition effects.&lt;/default-transition-layer&gt;\n  &lt;div&gt;\n&lt;/template&gt;\n\n&lt;script&gt;\nimport {transition} from 'san-transition'\n\nconst YourComponent = san.defineComponent({\n  template: `&lt;div&gt;&lt;slot&gt;&lt;/slot&gt;&lt;/div&gt;`\n})\n\nexport default {\n  components: {\n    'default-transition-layer': transition()(YourComponent)\n  }\n}\n&lt;/script&gt;\n\n&lt;style lang=&quot;stylus&quot;&gt;\n.alpha\n  transition all .3s ease-out\n  opacity 1\n.san-enter, .san-before-leave\n  transform translate(0, 0)\n.san-before-enter\n  opacity 0\n  transform translate(-50px, 0)\n.san-leave\n  opacity 0\n  transform translate(50px, 0)\n&lt;/style&gt;\n</code></pre>\n</div></div><h3>Named Transition</h3><div class=\"example\"><div class=\"preview\"><beta class=\"beta\" s-if=\"beta\"></beta><button on-click=\"toggle('beta')\">Toggle</button></div><div class=\"code\"><pre><code class=\"language-html\">&lt;template&gt;\n  &lt;div&gt;\n    &lt;named-transition-layer class=&quot;beta&quot;&gt;A component with transition effects.&lt;/named-transition-layer&gt;\n  &lt;div&gt;\n&lt;/template&gt;\n\n&lt;script&gt;\nimport {transition} from 'san-transition'\n\nconst YourComponent = san.defineComponent({\n  template: `&lt;div&gt;&lt;slot&gt;&lt;/slot&gt;&lt;/div&gt;`\n})\n\nexport default {\n  components: {\n    'default-transition-layer': transition('toggle')(YourComponent)\n  }\n}\n&lt;/script&gt;\n\n&lt;style lang=&quot;stylus&quot;&gt;\n.beta\n  transition all .3s ease-out\n  opacity 1\n.toggle-enter, .toggle-before-leave\n  transform translate(0, 0)\n.toggle-before-enter, .toggle-leave\n  opacity 0\n  transform translate(0, -50px)\n&lt;/style&gt;\n</code></pre>\n</div></div><h3>Custom Transition Hook</h3><div class=\"example\"><div class=\"preview\"><gamma class=\"gamma\" s-if=\"gamma\"></gamma><button on-click=\"toggle('gamma')\">Toggle</button></div><div class=\"code\"><pre><code class=\"language-html\">&lt;template&gt;\n  &lt;div&gt;\n    &lt;custom-transition-layer class=&quot;gamma&quot;&gt;A component with transition effects.&lt;/custom-transition-layer&gt;\n  &lt;div&gt;\n&lt;/template&gt;\n\n&lt;script&gt;\nimport {transition} from 'san-transition'\n\nconst YourComponent = san.defineComponent({\n  template: `&lt;div&gt;&lt;slot&gt;&lt;/slot&gt;&lt;/div&gt;`\n})\n\nexport default {\n  components: {\n    'custom-transition-layer': transition({\n      beforeEnter: 'off',\n      enter: 'on',\n      beforeLeave: 'on',\n      leave: 'off'\n    })(YourComponent)\n  }\n}\n&lt;/script&gt;\n\n&lt;style lang=&quot;stylus&quot;&gt;\n.gamma\n  transition all .3s ease-out\n  opacity 1\n.on\n  transform scale(1)\n.off\n  opacity 0\n  transform scale(0)\n&lt;/style&gt;\n</code></pre>\n</div></div><h3>Transition with s-if / s-else Directive</h3><div class=\"example\"><div class=\"preview\"><delta class=\"delta\" s-if=\"delta\"></delta><delta class=\"delta reverse\" s-else=\"s-else\"></delta><button on-click=\"toggle('delta')\">Toggle</button></div><div class=\"code\"><pre><code class=\"language-html\">&lt;template&gt;\n  &lt;div&gt;\n    &lt;transition-with-ifel class=&quot;delta&quot;&gt;A component with transition effects.&lt;/transition-layer-with-ifel&gt;\n    &lt;transition-with-ifel class=&quot;delta&quot;&gt;A component with transition effects.&lt;/transition-layer-with-ifel&gt;\n  &lt;div&gt;\n&lt;/template&gt;\n\n&lt;script&gt;\nimport {transition} from 'san-transition'\n\nconst YourComponent = san.defineComponent({\n  template: `&lt;div&gt;&lt;slot&gt;&lt;/slot&gt;&lt;/div&gt;`\n})\n\nexport default {\n  components: {\n    'transition-layer-with-ifel': transition('toggle')(YourComponent)\n  }\n}\n&lt;/script&gt;\n\n&lt;style lang=&quot;stylus&quot;&gt;\n.delta\n  transition all .3s ease-out\n  opacity 1\n.toggle-enter, .toggle-before-leave\n  transform rotate(0deg) translate(0, 0)\n.toggle-before-enter\n  opacity 0\n  transform rotate(-180deg) translate(-200px, 0)\n.toggle-leave\n  opacity 0\n  transform rotate(180deg) translate(200px, 0)\n&lt;/style&gt;\n</code></pre>\n</div></div><h3>Transition with animation</h3><div class=\"example\"><div class=\"preview\"><epsilon class=\"epsilon\" s-if=\"epsilon\"></epsilon><button on-click=\"toggle('epsilon')\">Toggle</button></div><div class=\"code\"><pre><code class=\"language-html\">&lt;template&gt;\n  &lt;div&gt;\n    &lt;transition-layer-with-animation class=&quot;epsilon&quot;&gt;A component with transition effects.&lt;/transition-layer-with-animation&gt;\n  &lt;div&gt;\n&lt;/template&gt;\n\n&lt;script&gt;\nimport {transition} from 'san-transition'\n\nconst YourComponent = san.defineComponent({\n  template: `&lt;div&gt;&lt;slot&gt;&lt;/slot&gt;&lt;/div&gt;`\n})\n\nexport default {\n  components: {\n    'transition-layer-with-animation': transition('toggle')(YourComponent)\n  }\n}\n&lt;/script&gt;\n\n&lt;style lang=&quot;stylus&quot;&gt;\n.toggle-before-enter\n  transform scale(0) translate(-100px, 0) rotate(360deg)\n.toggle-enter\n  animation come-in .5s\n.toggle-leave\n  animation go-out .5s\n  animation-fill-mode forwards\n\n@keyframes come-in\n  0%\n    transform scale(0) translate(-100px, 0) rotate(360deg)\n  50%\n    transform scale(1.2) translate(-50px, 0) rotate(-90deg)\n  100%\n    transform scale(1) translate(0, 0) rotate(0deg)\n\n@keyframes go-out\n  0%\n    transform scale(1) translate(0, 0) rotate(0deg)\n  50%\n    transform scale(1.2) translate(50px, 0) rotate(90deg)\n  100%\n    transform scale(0) translate(100px, 0) rotate(-360deg)\n&lt;/style&gt;\n</code></pre>\n</div></div></div></section>";
+module.exports = "<section class=\"page\"><app-header></app-header><div class=\"markdown-body\"><h3>Default Transition</h3><div class=\"example\"><div class=\"preview\"><alpha class=\"alpha\" s-if=\"alpha\"></alpha><button on-click=\"toggle('alpha')\">Toggle</button></div><div class=\"code\"><pre><code class=\"language-html\">&lt;template&gt;\n  &lt;div&gt;\n    &lt;default-transition-layer class=&quot;alpha&quot;&gt;A component with transition effects.&lt;/default-transition-layer&gt;\n  &lt;div&gt;\n&lt;/template&gt;\n\n&lt;script&gt;\nimport san from 'san'\nimport {transition} from 'san-transition'\n\nconst YourComponent = san.defineComponent({\n  template: `&lt;div&gt;&lt;slot&gt;&lt;/slot&gt;&lt;/div&gt;`\n})\n\nexport default {\n  components: {\n    'default-transition-layer': transition()(YourComponent)\n  }\n}\n&lt;/script&gt;\n\n&lt;style lang=&quot;stylus&quot;&gt;\n.alpha\n  transition all .3s ease-out\n  opacity 1\n.san-enter, .san-before-leave\n  transform translate(0, 0)\n.san-before-enter\n  opacity 0\n  transform translate(-50px, 0)\n.san-leave\n  opacity 0\n  transform translate(50px, 0)\n&lt;/style&gt;\n</code></pre>\n</div></div><h3>Named Transition</h3><div class=\"example\"><div class=\"preview\"><beta class=\"beta\" s-if=\"beta\"></beta><button on-click=\"toggle('beta')\">Toggle</button></div><div class=\"code\"><pre><code class=\"language-html\">&lt;template&gt;\n  &lt;div&gt;\n    &lt;named-transition-layer class=&quot;beta&quot;&gt;A component with transition effects.&lt;/named-transition-layer&gt;\n  &lt;div&gt;\n&lt;/template&gt;\n\n&lt;script&gt;\nimport san from 'san'\nimport {transition} from 'san-transition'\n\nconst YourComponent = san.defineComponent({\n  template: `&lt;div&gt;&lt;slot&gt;&lt;/slot&gt;&lt;/div&gt;`\n})\n\nexport default {\n  components: {\n    'default-transition-layer': transition('toggle')(YourComponent)\n  }\n}\n&lt;/script&gt;\n\n&lt;style lang=&quot;stylus&quot;&gt;\n.beta\n  transition all .3s ease-out\n  opacity 1\n.toggle-enter, .toggle-before-leave\n  transform translate(0, 0)\n.toggle-before-enter, .toggle-leave\n  opacity 0\n  transform translate(0, -50px)\n&lt;/style&gt;\n</code></pre>\n</div></div><h3>Custom Transition Hook</h3><div class=\"example\"><div class=\"preview\"><gamma class=\"gamma\" s-if=\"gamma\"></gamma><button on-click=\"toggle('gamma')\">Toggle</button></div><div class=\"code\"><pre><code class=\"language-html\">&lt;template&gt;\n  &lt;div&gt;\n    &lt;custom-transition-layer class=&quot;gamma&quot;&gt;A component with transition effects.&lt;/custom-transition-layer&gt;\n  &lt;div&gt;\n&lt;/template&gt;\n\n&lt;script&gt;\nimport san from 'san'\nimport {transition} from 'san-transition'\n\nconst YourComponent = san.defineComponent({\n  template: `&lt;div&gt;&lt;slot&gt;&lt;/slot&gt;&lt;/div&gt;`\n})\n\nexport default {\n  components: {\n    'custom-transition-layer': transition({\n      beforeEnter: 'off',\n      enter: 'on',\n      beforeLeave: 'on',\n      leave: 'off'\n    })(YourComponent)\n  }\n}\n&lt;/script&gt;\n\n&lt;style lang=&quot;stylus&quot;&gt;\n.gamma\n  transition all .3s ease-out\n  opacity 1\n.on\n  transform scale(1)\n.off\n  opacity 0\n  transform scale(0)\n&lt;/style&gt;\n</code></pre>\n</div></div><h3>Transition with s-if / s-else Directive</h3><div class=\"example\"><div class=\"preview\"><delta class=\"delta\" s-if=\"delta\"></delta><delta class=\"delta reverse\" s-else=\"s-else\"></delta><button on-click=\"toggle('delta')\">Toggle</button></div><div class=\"code\"><pre><code class=\"language-html\">&lt;template&gt;\n  &lt;div&gt;\n    &lt;transition-with-ifel class=&quot;delta&quot;&gt;A component with transition effects.&lt;/transition-layer-with-ifel&gt;\n    &lt;transition-with-ifel class=&quot;delta&quot;&gt;A component with transition effects.&lt;/transition-layer-with-ifel&gt;\n  &lt;div&gt;\n&lt;/template&gt;\n\n&lt;script&gt;\nimport san from 'san'\nimport {transition} from 'san-transition'\n\nconst YourComponent = san.defineComponent({\n  template: `&lt;div&gt;&lt;slot&gt;&lt;/slot&gt;&lt;/div&gt;`\n})\n\nexport default {\n  components: {\n    'transition-layer-with-ifel': transition('toggle')(YourComponent)\n  }\n}\n&lt;/script&gt;\n\n&lt;style lang=&quot;stylus&quot;&gt;\n.delta\n  transition all .3s ease-out\n  opacity 1\n.toggle-enter, .toggle-before-leave\n  transform rotate(0deg) translate(0, 0)\n.toggle-before-enter\n  opacity 0\n  transform rotate(-180deg) translate(-200px, 0)\n.toggle-leave\n  opacity 0\n  transform rotate(180deg) translate(200px, 0)\n&lt;/style&gt;\n</code></pre>\n</div></div><h3>Transition with animation</h3><div class=\"example\"><div class=\"preview\"><epsilon class=\"epsilon\" s-if=\"epsilon\"></epsilon><button on-click=\"toggle('epsilon')\">Toggle</button></div><div class=\"code\"><pre><code class=\"language-html\">&lt;template&gt;\n  &lt;div&gt;\n    &lt;transition-layer-with-animation class=&quot;epsilon&quot;&gt;A component with transition effects.&lt;/transition-layer-with-animation&gt;\n  &lt;div&gt;\n&lt;/template&gt;\n\n&lt;script&gt;\nimport san from 'san'\nimport {transition} from 'san-transition'\n\nconst YourComponent = san.defineComponent({\n  template: `&lt;div&gt;&lt;slot&gt;&lt;/slot&gt;&lt;/div&gt;`\n})\n\nexport default {\n  components: {\n    'transition-layer-with-animation': transition('toggle')(YourComponent)\n  }\n}\n&lt;/script&gt;\n\n&lt;style lang=&quot;stylus&quot;&gt;\n.toggle-before-enter\n  transform scale(0) translate(-100px, 0) rotate(360deg)\n.toggle-enter\n  animation come-in .5s\n.toggle-leave\n  animation go-out .5s\n  animation-fill-mode forwards\n\n@keyframes come-in\n  0%\n    transform scale(0) translate(-100px, 0) rotate(360deg)\n  50%\n    transform scale(1.2) translate(-50px, 0) rotate(-90deg)\n  100%\n    transform scale(1) translate(0, 0) rotate(0deg)\n\n@keyframes go-out\n  0%\n    transform scale(1) translate(0, 0) rotate(0deg)\n  50%\n    transform scale(1.2) translate(50px, 0) rotate(90deg)\n  100%\n    transform scale(0) translate(100px, 0) rotate(-360deg)\n&lt;/style&gt;\n</code></pre>\n</div></div></div></section>";
 
 /***/ }),
 /* 41 */
 /***/ (function(module, exports) {
 
-module.exports = "<section class=\"page\"><app-header></app-header><article class=\"markdown-body\"><h2>Get Start</h2>\n<h3>Installation</h3>\n<h4>NPM</h4>\n<pre><code class=\"language-bash\">$ npm install --save san-transition\n</code></pre>\n<h4>CDN</h4>\n<pre><code class=\"language-html\">&lt;script src=&quot;//unpkg.com/san-transition&quot;&gt;&lt;/script&gt;\n</code></pre>\n<h3>Usage</h3>\n<pre><code class=\"language-html\">&lt;template&gt;\n  &lt;div&gt;\n    &lt;transition-layer&gt;A component with transition effects.&lt;/transition-layer&gt;\n  &lt;div&gt;\n&lt;/template&gt;\n\n&lt;script&gt;\nimport {transition} from 'san-transition'\nimport {YourComponent} from 'YOUR_SAN_COMPONENT'\n\nexport default {\n  components: {\n    'transition-layer': transition('fade')(YourComponent)\n  }\n}\n&lt;/script&gt;\n\n&lt;style&gt;\n.fade-live {\n  opacity: 1;\n  transform: translate(0, 0);\n  transition: all .5s;\n}\n.fade-in, .fade-out {\n  opacity: 0;\n  transform: translate(100px, 0);\n}\n&lt;/style&gt;\n\n</code></pre>\n</article></section>";
+module.exports = "<section class=\"page\"><app-header></app-header><article class=\"markdown-body\"><h2>Get Start</h2>\n<h3>Installation</h3>\n<h4>NPM</h4>\n<pre><code class=\"language-bash\">$ npm install --save san-transition\n</code></pre>\n<h4>CDN</h4>\n<pre><code class=\"language-html\">&lt;script src=&quot;//unpkg.com/san-transition&quot;&gt;&lt;/script&gt;\n</code></pre>\n<h3>Usage</h3>\n<pre><code class=\"language-html\">&lt;template&gt;\n  &lt;div&gt;\n    &lt;transition-layer class=&quot;layer&quot;&gt;A component with transition effects.&lt;/transition-layer&gt;\n  &lt;div&gt;\n&lt;/template&gt;\n\n&lt;script&gt;\nimport san from 'san'\nimport {transition} from 'san-transition'\n\nconst YourComponent = san.defineComponent({\n  template: `&lt;div&gt;&lt;slot&gt;&lt;/slot&gt;&lt;/div&gt;`\n})\n\nexport default {\n  components: {\n    'transition-layer': transition('fade')(YourComponent)\n  }\n}\n&lt;/script&gt;\n\n&lt;style&gt;\n.layer {\n  transition: all .5s;\n}\n.fade-enter, .fade-before-leave {\n  opacity: 1;\n  transform: translate(0, 0);\n}\n.fade-before-enter, .fade-leave {\n  opacity: 0;\n  transform: translate(100px, 0);\n}\n&lt;/style&gt;\n\n</code></pre>\n</article></section>";
 
 /***/ }),
 /* 42 */
