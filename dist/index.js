@@ -2433,6 +2433,16 @@ function parseTemplate(source) {
                 }
             }
             else {
+                if (aElement.tagName === 'tr' && currentNode.tagName === 'table') {
+                    var tbodyNode = createANode({
+                        tagName: 'tbody',
+                        parent: currentNode
+                    });
+                    currentNode.childs.push(tbodyNode);
+                    currentNode = tbodyNode;
+                    aElement.parent = tbodyNode;
+                }
+
                 currentNode.childs.push(aElement);
             }
 
@@ -3443,8 +3453,8 @@ Node.prototype._toAttached = function () {
 /**
  * 销毁释放元素
  */
-Node.prototype.dispose = function () {
-    this._dispose();
+Node.prototype.dispose = function (dontDetach) {
+    this._dispose(dontDetach);
     this._toPhase('disposed');
 };
 
@@ -3625,15 +3635,25 @@ TextNode.prototype._init = function (options) {
  * @param {StringBuffer} buf html串存储对象
  */
 TextNode.prototype.genHTML = function (buf) {
-    buf.push(this.evalExpr(this.aNode.textExpr, 1));
+    this.content = this.evalExpr(this.aNode.textExpr, 1);
+    buf.push(this.content);
 };
 
 /**
  * 刷新文本节点的内容
  */
 TextNode.prototype.update = function () {
+    // 根据 text value 判断是否需要更新
+    var text = this.evalExpr(this.aNode.textExpr, 1);
+    if (text === this.content) {
+        return;
+    }
+    this.content = text;
+
+
     var me = this;
 
+    // 无 stump 元素，所以需要根据组件结构定位
     if (!this._located) {
         each(this.parent.childs, function (child, i) {
             if (child === me) {
@@ -3645,30 +3665,86 @@ TextNode.prototype.update = function () {
         this._located = 1;
     }
 
+    // 两种 update 模式
+    // 1. 单纯的 text node
+    // 2. 可能是复杂的 html 结构
+    if (!me.updateMode) {
+        me.updateMode = 1;
+        each(this.aNode.textExpr.segs, function (seg) {
+            if (seg.type === ExprType.INTERP) {
+                each(seg.filters, function (filter) {
+                    switch (filter.name) {
+                        case 'html':
+                        case 'url':
+                            return;
+                    }
+
+                    me.updateMode = 2;
+                    return false;
+                });
+            }
+
+            return me.updateMode < 2;
+        });
+    }
 
     var parentEl = this.parent._getEl();
-    var insertBeforeEl = me._prev && me._prev._getEl().nextSibling || parentEl.firstChild;
-    var startRemoveEl = insertBeforeEl;
+    switch (me.updateMode) {
+        case 1:
+            if (me.el) {
+                me.el[typeof me.el.textContent === 'string' ? 'textContent' : 'data'] = text;
+            }
+            else {
+                var el = me._prev && me._prev._getEl().nextSibling || parentEl.firstChild;
+                if (el) {
+                    switch (el.nodeType) {
+                        case 3:
+                            me.el = el;
+                            me.el[typeof me.el.textContent === 'string' ? 'textContent' : 'data'] = text;
+                            break;
+                        case 1:
+                            el.insertAdjacentHTML('beforebegin', text);
+                            break;
+                        default:
+                            me.el = document.createTextNode(text);
+                            parentEl.insertBefore(me.el, el);
+                    }
+                }
+                else {
+                    parentEl.insertAdjacentHTML('beforeend', text);
+                }
+            }
 
-    while (startRemoveEl && !/^_san_/.test(startRemoveEl.id)) {
-        insertBeforeEl = startRemoveEl.nextSibling;
-        removeEl(startRemoveEl);
-        startRemoveEl = insertBeforeEl;
-    }
+            break;
 
-    // #[begin] error
-    warnSetHTML(parentEl);
-    // #[end]
-    
-    var text = this.evalExpr(this.aNode.textExpr, 1);
-    if (insertBeforeEl) {
-        insertBeforeEl.insertAdjacentHTML('beforebegin', text);
-    }
-    else if (me._prev) {
-        me._prev._getEl().insertAdjacentHTML('afterend', text);
-    }
-    else {
-        parentEl.innerHTML = text;
+        case 2:
+            var insertBeforeEl = me._prev && me._prev._getEl().nextSibling || parentEl.firstChild;
+            var startRemoveEl = insertBeforeEl;
+        
+            while (startRemoveEl && !/^_san_/.test(startRemoveEl.id)) {
+                insertBeforeEl = startRemoveEl.nextSibling;
+                removeEl(startRemoveEl);
+                startRemoveEl = insertBeforeEl;
+            }
+        
+            // #[begin] error
+            warnSetHTML(parentEl);
+            // #[end]
+            
+            
+            if (insertBeforeEl) {
+                insertBeforeEl.insertAdjacentHTML('beforebegin', text);
+            }
+            else if (me._prev) {
+                me._prev._getEl().insertAdjacentHTML('afterend', text);
+            }
+            else {
+                parentEl.innerHTML = text;
+            }
+
+            break;
+
+
     }
 };
 
@@ -4163,6 +4239,7 @@ function Element(options) {
     this.childs = [];
     this.slotChilds = [];
     this._elFns = {};
+    this._propVals = {};
 
     Node.call(this, options);
 }
@@ -4453,6 +4530,10 @@ Element.prototype.updateView = function (changes) {
     var me = this;
 
     this.props.each(function (prop) {
+        if (prop.expr.value) {
+            return;
+        }
+
         each(changes, function (change) {
             if (!isDataChangeByElement(change, me, prop.name)
                 && changeExprCompare(change.expr, prop.expr, me.scope)
@@ -4511,10 +4592,9 @@ Element.prototype._detach = function () {
 /**
  * 销毁释放元素的行为
  */
-Element.prototype._dispose = function () {
-    this._disposeChilds();
-    this.detach();
-
+Element.prototype._dispose = function (dontDetach) {
+    this._disposeChilds(dontDetach);
+    
     // el 事件解绑
     for (var key in this._elFns) {
         var nameListeners = this._elFns[key];
@@ -4526,10 +4606,15 @@ Element.prototype._dispose = function () {
     }
     this._elFns = null;
 
-    this.childs = null;
+    if (!dontDetach) {
+        this.detach();
+    }
+    this._toPhase('detached');
 
+    this.childs = null;
     this.props = null;
     this.binds = null;
+    this._propVals = null;
 
     // 这里不用挨个调用 dispose 了，因为 childs 释放链会调用的
     this.slotChilds = null;
@@ -4540,9 +4625,9 @@ Element.prototype._dispose = function () {
 /**
  * 销毁释放子元素的行为
  */
-Element.prototype._disposeChilds = function () {
+Element.prototype._disposeChilds = function (dontDetach) {
     each(this.childs, function (child) {
-        child.dispose();
+        child.dispose(dontDetach);
     });
     this.childs.length = 0;
 };
@@ -5349,7 +5434,7 @@ ForDirective.prototype._attach = function (parentEl, beforeEl) {
 };
 
 /**
- * 绘制整个列表。用于被 attach，或整个列表数据被重置时的刷新
+ * 绘制整个列表。用于被 attach
  *
  * @private
  */
@@ -5358,6 +5443,24 @@ ForDirective.prototype._paintList = function () {
     var el = this._getEl() || parentEl.firstChild;
     var prevEl = el && el.previousSibling;
     var buf = new StringBuffer();
+
+    prev: while (prevEl) {
+        switch (prevEl.nodeType) {
+            case 1:
+                break prev;
+
+            case 3:
+                if (!/^\s*$/.test(prevEl.textContent)) {
+                    break prev;
+                }
+
+                removeEl(prevEl);
+                break;
+
+        }
+
+        prevEl = prevEl.previousSibling;
+    }
 
     if (!prevEl) {
         this.genHTML(buf, 1);
@@ -5390,7 +5493,7 @@ ForDirective.prototype._paintList = function () {
  * 将元素从页面上移除的行为
  */
 ForDirective.prototype._detach = function () {
-    this._disposeChilds();
+    this._disposeChilds(true);
     removeEl(this._getEl());
 };
 
@@ -5411,12 +5514,16 @@ ForDirective.prototype._create = function () {
  */
 ForDirective.prototype.updateView = function (changes) {
     var childsChanges = [];
+    var oldChildsLen = this.childs.length;
     each(this.childs, function () {
         childsChanges.push([]);
     });
 
-    var repaintAll = 0;
     var forDirective = this.aNode.directives.get('for');
+    var parentEl = getNodeStumpParent(this);
+    var disposeChilds = [];
+
+
     each(changes, function (change) {
         var relation = changeExprCompare(change.expr, forDirective.list, this.scope);
 
@@ -5465,8 +5572,43 @@ ForDirective.prototype.updateView = function (changes) {
         else if (change.type === DataChangeType.SET) {
             // 变更表达式是list绑定表达式本身或母项的重新设值
             // 此时需要更新整个列表
-            this._disposeChilds();
-            repaintAll = 1;
+            var oldLen = this.childs.length;
+            var newList = this.evalExpr(forDirective.list);
+            var newLen = newList.length;
+
+            // 老的比新的多的部分，标记需要dispose
+            if (oldLen > newLen) {
+                disposeChilds = disposeChilds.concat(this.childs.slice(newLen));
+
+                childsChanges.length = newLen;
+                this.childs.length = newLen;
+            }
+
+            // 整项变更
+            for (var i = 0; i < newLen; i++) {
+                childsChanges[i] = [
+                    {
+                        type: DataChangeType.SET,
+                        option: change.option,
+                        expr: {
+                            type: ExprType.ACCESSOR,
+                            paths: forDirective.item.paths.slice(0)
+                        },
+                        value: newList[i]
+                    }
+                ];
+                if (this.childs[i]) {
+                    Data.prototype.set.call(
+                        this.childs[i].scope,
+                        forDirective.item,
+                        newList[i],
+                        {silence: 1}
+                    );
+                }
+                else {
+                    this.childs[i] = createForDirectiveChild(this, newList[i], i);
+                }
+            }
         }
         else if (relation === 2 && change.type === DataChangeType.SPLICE) {
             // 变更表达式是list绑定表达式本身数组的SPLICE操作
@@ -5474,17 +5616,6 @@ ForDirective.prototype.updateView = function (changes) {
             var changeStart = change.index;
             var deleteCount = change.deleteCount;
 
-            var lengthChange = {
-                type: DataChangeType.SET,
-                option: change.option,
-                expr: {
-                    type: ExprType.ACCESSOR,
-                    paths: change.expr.paths.concat({
-                        type: ExprType.STRING,
-                        value: 'length'
-                    })
-                }
-            };
             var indexChange = {
                 type: DataChangeType.SET,
                 option: change.option,
@@ -5492,20 +5623,20 @@ ForDirective.prototype.updateView = function (changes) {
             };
 
             var insertionsLen = change.insertions.length;
-            each(this.childs, function (child, index) {
-                childsChanges[index].push(lengthChange);
-
-                // update child index
-                if (index >= changeStart + deleteCount) {
-                    childsChanges[index].push(indexChange);
-                    Data.prototype.set.call(
-                        child.scope,
-                        indexChange.expr,
-                        index - deleteCount + insertionsLen,
-                        {silence: 1}
-                    );
-                }
-            }, this);
+            if (insertionsLen !== deleteCount) {
+                each(this.childs, function (child, index) {
+                    // update child index
+                    if (index >= changeStart + deleteCount) {
+                        childsChanges[index].push(indexChange);
+                        Data.prototype.set.call(
+                            child.scope,
+                            indexChange.expr,
+                            index - deleteCount + insertionsLen,
+                            {silence: 1}
+                        );
+                    }
+                }, this);
+            }
 
             var spliceArgs = [changeStart, deleteCount];
             var childsChangesSpliceArgs = [changeStart, deleteCount];
@@ -5514,38 +5645,63 @@ ForDirective.prototype.updateView = function (changes) {
                 childsChangesSpliceArgs.push([]);
             }, this);
 
-            each(this.childs.splice.apply(this.childs, spliceArgs), function (child) {
-                child.dispose();
-            });
+            disposeChilds = disposeChilds.concat(this.childs.splice.apply(this.childs, spliceArgs));
             childsChanges.splice.apply(childsChanges, childsChangesSpliceArgs);
         }
-
-        return !repaintAll;
     }, this);
 
+    var newChildsLen = this.childs.length;
 
-    if (repaintAll) {
-        // 整个列表都需要重新刷新
-        this._paintList();
-        this._toAttached();
+    // 标记 length 是否发生变化
+    if (newChildsLen !== oldChildsLen) {
+        var lengthChange = {
+            type: DataChangeType.SET,
+            option: {},
+            expr: {
+                type: ExprType.ACCESSOR,
+                paths: forDirective.list.paths.concat({
+                    type: ExprType.STRING,
+                    value: 'length'
+                })
+            }
+        };
+        each(childsChanges, function (childChanges) {
+            childChanges.push(lengthChange);
+        });
     }
-    else {
-        // 对相应的项进行更新
-        // 如果不存在则直接创建，如果存在则调用更新函数
-        var len = this.childs.length;
-        var attachStump = this;
 
-        while (len--) {
-            var child = this.childs[len];
-            if (child.lifeCycle.is('attached')) {
-                childsChanges[len].length && child.updateView(childsChanges[len]);
-            }
-            else {
-                child.attach(getNodeStumpParent(attachStump), attachStump._getEl());
-            }
+    
+    // 清除应该干掉的 child
+    var clearAll = newChildsLen === 0 && this.parent.childs.length === 1;
 
-            attachStump = child;
+    each(disposeChilds, function (child) {
+        var childEl = child._getEl();
+        child.dispose(true);
+        !clearAll && parentEl.removeChild(childEl);
+    });
+
+    if (clearAll) {
+        parentEl.innerHTML = '';
+        this._create();
+        parentEl.appendChild(this.el);
+        return;
+    }
+
+
+    // 对相应的项进行更新
+    // 如果不attached则直接创建，如果存在则调用更新函数
+    var attachStump = this;
+
+    while (newChildsLen--) {
+        var child = this.childs[newChildsLen];
+        if (child.lifeCycle.is('attached')) {
+            childsChanges[newChildsLen].length && child.updateView(childsChanges[newChildsLen]);
         }
+        else {
+            child.attach(parentEl, attachStump._getEl() || parentEl.firstChild);
+        }
+
+        attachStump = child;
     }
 };
 
@@ -6210,8 +6366,8 @@ Component.prototype.watch = function (dataName, listener) {
 /**
  * 组件销毁的行为
  */
-Component.prototype._dispose = function () {
-    Element.prototype._dispose.call(this);
+Component.prototype._dispose = function (dontDetach) {
+    Element.prototype._dispose.call(this, dontDetach);
 
     this.ownSlotChilds = null;
 
@@ -7788,7 +7944,7 @@ function parseANodeFromEl(el) {
 //  * @inner
 //  */
 // function componentCompilePreCode() {
-//     var $version = '3.2.3';
+//     var $version = '3.2.4';
 // 
 //     function extend(target, source) {
 //         if (source) {
@@ -8029,7 +8185,7 @@ function parseANodeFromEl(el) {
          *
          * @type {string}
          */
-        version: '3.2.3',
+        version: '3.2.4',
 
         // #[begin] devtool
         /**
@@ -11603,7 +11759,9 @@ exports.default = {
   //   background-color #334959
   //   a 
   //     display inline-block
-  //     padding 8px 30px
+  //     height 44px
+  //     line-height 44px
+  //     padding 0 40px
   //     &.active
   //       // background-color #9ee0fe
   //       background-color lighten(#334959, 10)
@@ -11802,7 +11960,8 @@ exports.default = {
   //   overflow hidden
   //   display flex
   //   font-size 0
-  //   border 1px solid
+  //   border 1px solid #ccc
+  //   border-radius 3px
   //   .preview
   //     background #333
   //     position relative
@@ -12058,7 +12217,7 @@ exports = module.exports = __webpack_require__(1)();
 
 
 // module
-exports.push([module.i, "nav {\n  background-color: #334959;\n}\nnav a {\n  display: inline-block;\n  padding: 8px 30px;\n}\nnav a.active {\n  background-color: #466479;\n}\nnav a.active:hover {\n  color: #fff;\n}\nnav a:hover {\n  text-decoration: none;\n  color: #9ee0fe;\n}\n.index nav {\n  text-align: center;\n}\n@media (max-width: 640px) {\n  nav a {\n    display: block;\n    border-bottom: 1px solid #19232e;\n  }\n}\n", ""]);
+exports.push([module.i, "nav {\n  background-color: #334959;\n}\nnav a {\n  display: inline-block;\n  height: 44px;\n  line-height: 44px;\n  padding: 0 40px;\n}\nnav a.active {\n  background-color: #466479;\n}\nnav a.active:hover {\n  color: #fff;\n}\nnav a:hover {\n  text-decoration: none;\n  color: #9ee0fe;\n}\n.index nav {\n  text-align: center;\n}\n@media (max-width: 640px) {\n  nav a {\n    display: block;\n    border-bottom: 1px solid #19232e;\n  }\n}\n", ""]);
 
 // exports
 
@@ -12086,7 +12245,7 @@ exports = module.exports = __webpack_require__(1)();
 
 
 // module
-exports.push([module.i, ".content {\n  padding: 20px;\n}\n.example {\n  height: 300px;\n  overflow: hidden;\n  display: flex;\n  font-size: 0;\n  border: 1px solid;\n}\n.example .preview {\n  background: #333;\n  position: relative;\n}\n.example .preview,\n.example .code {\n  font-size: 14px;\n  flex: 1;\n  width: 50%;\n  overflow: auto;\n}\n.example .preview pre,\n.example .code pre {\n  border: 0;\n  margin: 0;\n}\n.example .trans-layer {\n  position: absolute;\n  width: 124px;\n  height: 200px;\n  top: 20px;\n  left: 0;\n  right: 0;\n  margin: auto;\n}\n.example button {\n  background-color: #2ea2f8;\n  color: #fff;\n  border-radius: 3px;\n  width: 180px;\n  line-height: 38px;\n  font-size: 18px;\n  border: 0;\n  padding: 0;\n  margin: 0;\n  outline: 0;\n  position: absolute;\n  bottom: 40px;\n  left: 0;\n  right: 0;\n  margin: auto;\n  cursor: pointer;\n}\n.example button:hover {\n  background-color: #5fb8fa;\n}\n@media (max-width: 640px) {\n  .example {\n    flex-direction: column;\n    height: 600px;\n  }\n  .example .code,\n  .example .preview {\n    width: auto;\n  }\n}\n.alpha {\n  transition: all 0.3s ease-out;\n  opacity: 1;\n}\n.alpha-enter,\n.alpha-before-leave {\n  transform: translate(0, 0);\n}\n.alpha-before-enter {\n  opacity: 0;\n  transform: translate(-50px, 0);\n}\n.alpha-leave {\n  opacity: 0;\n  transform: translate(50px, 0);\n}\n.beta {\n  transition: all 0.3s ease-out;\n  opacity: 1;\n}\n.beta-enter,\n.beta-before-leave {\n  transform: translate(0, 0);\n}\n.beta-before-enter,\n.beta-leave {\n  opacity: 0;\n  transform: translate(0, -50px);\n}\n.gamma {\n  transition: all 0.3s ease-out;\n  opacity: 1;\n}\n.gamma-on {\n  transform: scale(1);\n}\n.gamma-off {\n  opacity: 0;\n  transform: scale(0);\n}\n.delta {\n  transition: all 0.3s ease-out;\n  opacity: 1;\n}\n.delta.reverse img {\n  transform: rotate(180deg);\n}\n.delta-enter,\n.delta-before-leave {\n  transform: rotate(0deg) translate(0, 0);\n}\n.delta-before-enter {\n  opacity: 0;\n  transform: rotate(-180deg) translate(-200px, 0);\n}\n.delta-leave {\n  opacity: 0;\n  transform: rotate(180deg) translate(200px, 0);\n}\n.epsilon-before-enter {\n  transform: scale(0) translate(-100px, 0) rotate(360deg);\n}\n.epsilon-enter {\n  animation: come-in 0.5s;\n}\n.epsilon-leave {\n  animation: go-out 0.5s;\n  animation-fill-mode: forwards;\n}\n@-moz-keyframes come-in {\n  0% {\n    transform: scale(0) translate(-100px, 0) rotate(360deg);\n  }\n  50% {\n    transform: scale(1.2) translate(-50px, 0) rotate(-90deg);\n  }\n  100% {\n    transform: scale(1) translate(0, 0) rotate(0deg);\n  }\n}\n@-webkit-keyframes come-in {\n  0% {\n    transform: scale(0) translate(-100px, 0) rotate(360deg);\n  }\n  50% {\n    transform: scale(1.2) translate(-50px, 0) rotate(-90deg);\n  }\n  100% {\n    transform: scale(1) translate(0, 0) rotate(0deg);\n  }\n}\n@-o-keyframes come-in {\n  0% {\n    transform: scale(0) translate(-100px, 0) rotate(360deg);\n  }\n  50% {\n    transform: scale(1.2) translate(-50px, 0) rotate(-90deg);\n  }\n  100% {\n    transform: scale(1) translate(0, 0) rotate(0deg);\n  }\n}\n@keyframes come-in {\n  0% {\n    transform: scale(0) translate(-100px, 0) rotate(360deg);\n  }\n  50% {\n    transform: scale(1.2) translate(-50px, 0) rotate(-90deg);\n  }\n  100% {\n    transform: scale(1) translate(0, 0) rotate(0deg);\n  }\n}\n@-moz-keyframes go-out {\n  0% {\n    transform: scale(1) translate(0, 0) rotate(0deg);\n  }\n  50% {\n    transform: scale(1.2) translate(50px, 0) rotate(90deg);\n  }\n  100% {\n    transform: scale(0) translate(100px, 0) rotate(-360deg);\n  }\n}\n@-webkit-keyframes go-out {\n  0% {\n    transform: scale(1) translate(0, 0) rotate(0deg);\n  }\n  50% {\n    transform: scale(1.2) translate(50px, 0) rotate(90deg);\n  }\n  100% {\n    transform: scale(0) translate(100px, 0) rotate(-360deg);\n  }\n}\n@-o-keyframes go-out {\n  0% {\n    transform: scale(1) translate(0, 0) rotate(0deg);\n  }\n  50% {\n    transform: scale(1.2) translate(50px, 0) rotate(90deg);\n  }\n  100% {\n    transform: scale(0) translate(100px, 0) rotate(-360deg);\n  }\n}\n@keyframes go-out {\n  0% {\n    transform: scale(1) translate(0, 0) rotate(0deg);\n  }\n  50% {\n    transform: scale(1.2) translate(50px, 0) rotate(90deg);\n  }\n  100% {\n    transform: scale(0) translate(100px, 0) rotate(-360deg);\n  }\n}\n", ""]);
+exports.push([module.i, ".content {\n  padding: 20px;\n}\n.example {\n  height: 300px;\n  overflow: hidden;\n  display: flex;\n  font-size: 0;\n  border: 1px solid #ccc;\n  border-radius: 3px;\n}\n.example .preview {\n  background: #333;\n  position: relative;\n}\n.example .preview,\n.example .code {\n  font-size: 14px;\n  flex: 1;\n  width: 50%;\n  overflow: auto;\n}\n.example .preview pre,\n.example .code pre {\n  border: 0;\n  margin: 0;\n}\n.example .trans-layer {\n  position: absolute;\n  width: 124px;\n  height: 200px;\n  top: 20px;\n  left: 0;\n  right: 0;\n  margin: auto;\n}\n.example button {\n  background-color: #2ea2f8;\n  color: #fff;\n  border-radius: 3px;\n  width: 180px;\n  line-height: 38px;\n  font-size: 18px;\n  border: 0;\n  padding: 0;\n  margin: 0;\n  outline: 0;\n  position: absolute;\n  bottom: 40px;\n  left: 0;\n  right: 0;\n  margin: auto;\n  cursor: pointer;\n}\n.example button:hover {\n  background-color: #5fb8fa;\n}\n@media (max-width: 640px) {\n  .example {\n    flex-direction: column;\n    height: 600px;\n  }\n  .example .code,\n  .example .preview {\n    width: auto;\n  }\n}\n.alpha {\n  transition: all 0.3s ease-out;\n  opacity: 1;\n}\n.alpha-enter,\n.alpha-before-leave {\n  transform: translate(0, 0);\n}\n.alpha-before-enter {\n  opacity: 0;\n  transform: translate(-50px, 0);\n}\n.alpha-leave {\n  opacity: 0;\n  transform: translate(50px, 0);\n}\n.beta {\n  transition: all 0.3s ease-out;\n  opacity: 1;\n}\n.beta-enter,\n.beta-before-leave {\n  transform: translate(0, 0);\n}\n.beta-before-enter,\n.beta-leave {\n  opacity: 0;\n  transform: translate(0, -50px);\n}\n.gamma {\n  transition: all 0.3s ease-out;\n  opacity: 1;\n}\n.gamma-on {\n  transform: scale(1);\n}\n.gamma-off {\n  opacity: 0;\n  transform: scale(0);\n}\n.delta {\n  transition: all 0.3s ease-out;\n  opacity: 1;\n}\n.delta.reverse img {\n  transform: rotate(180deg);\n}\n.delta-enter,\n.delta-before-leave {\n  transform: rotate(0deg) translate(0, 0);\n}\n.delta-before-enter {\n  opacity: 0;\n  transform: rotate(-180deg) translate(-200px, 0);\n}\n.delta-leave {\n  opacity: 0;\n  transform: rotate(180deg) translate(200px, 0);\n}\n.epsilon-before-enter {\n  transform: scale(0) translate(-100px, 0) rotate(360deg);\n}\n.epsilon-enter {\n  animation: come-in 0.5s;\n}\n.epsilon-leave {\n  animation: go-out 0.5s;\n  animation-fill-mode: forwards;\n}\n@-moz-keyframes come-in {\n  0% {\n    transform: scale(0) translate(-100px, 0) rotate(360deg);\n  }\n  50% {\n    transform: scale(1.2) translate(-50px, 0) rotate(-90deg);\n  }\n  100% {\n    transform: scale(1) translate(0, 0) rotate(0deg);\n  }\n}\n@-webkit-keyframes come-in {\n  0% {\n    transform: scale(0) translate(-100px, 0) rotate(360deg);\n  }\n  50% {\n    transform: scale(1.2) translate(-50px, 0) rotate(-90deg);\n  }\n  100% {\n    transform: scale(1) translate(0, 0) rotate(0deg);\n  }\n}\n@-o-keyframes come-in {\n  0% {\n    transform: scale(0) translate(-100px, 0) rotate(360deg);\n  }\n  50% {\n    transform: scale(1.2) translate(-50px, 0) rotate(-90deg);\n  }\n  100% {\n    transform: scale(1) translate(0, 0) rotate(0deg);\n  }\n}\n@keyframes come-in {\n  0% {\n    transform: scale(0) translate(-100px, 0) rotate(360deg);\n  }\n  50% {\n    transform: scale(1.2) translate(-50px, 0) rotate(-90deg);\n  }\n  100% {\n    transform: scale(1) translate(0, 0) rotate(0deg);\n  }\n}\n@-moz-keyframes go-out {\n  0% {\n    transform: scale(1) translate(0, 0) rotate(0deg);\n  }\n  50% {\n    transform: scale(1.2) translate(50px, 0) rotate(90deg);\n  }\n  100% {\n    transform: scale(0) translate(100px, 0) rotate(-360deg);\n  }\n}\n@-webkit-keyframes go-out {\n  0% {\n    transform: scale(1) translate(0, 0) rotate(0deg);\n  }\n  50% {\n    transform: scale(1.2) translate(50px, 0) rotate(90deg);\n  }\n  100% {\n    transform: scale(0) translate(100px, 0) rotate(-360deg);\n  }\n}\n@-o-keyframes go-out {\n  0% {\n    transform: scale(1) translate(0, 0) rotate(0deg);\n  }\n  50% {\n    transform: scale(1.2) translate(50px, 0) rotate(90deg);\n  }\n  100% {\n    transform: scale(0) translate(100px, 0) rotate(-360deg);\n  }\n}\n@keyframes go-out {\n  0% {\n    transform: scale(1) translate(0, 0) rotate(0deg);\n  }\n  50% {\n    transform: scale(1.2) translate(50px, 0) rotate(90deg);\n  }\n  100% {\n    transform: scale(0) translate(100px, 0) rotate(-360deg);\n  }\n}\n", ""]);
 
 // exports
 
@@ -12133,7 +12292,7 @@ module.exports = "<div class=\"trans-layer\"><slot><img src=\"https://ecomfe.git
 /* 38 */
 /***/ (function(module, exports) {
 
-module.exports = "<section class=\"page\"><app-header></app-header><article class=\"markdown-body\"><h2>API</h2>\n<h3>transition</h3>\n<ul>\n<li>Arguments\n<ul>\n<li><strong>{None, String, Object}</strong> hook id</li>\n</ul>\n</li>\n<li>Usage<pre><code class=\"language-javascript\">// register default hooks\n// the same as `transition('san')(YourComponent)`\ntransition()(YourComponent)\n\n// register named hooks\ntransition('foo')(YourComponent)\n\n// register custom hooks\ntransition({\n  enter: 'custom-enter-hook'\n  beforeEnter: 'custom-before-enter-hook',\n  leave: 'custom-leave-hook',\n  beforeLeave: 'custom-before-leave-hook'\n})(YourComponent)\n</code></pre>\n</li>\n</ul>\n<h3>transitionGroup (under development)</h3>\n<p>Coming soon...</p>\n<h2>CSS Hooks</h2>\n<ul>\n<li><strong>before-enter</strong>: Applies when the component attaches DOM tree and removes in the next frame immediately.</li>\n<li><strong>before-leave</strong>: Applies when the component will dispose.</li>\n<li><strong>enter</strong>: Applies between the next frame of <em><strong>before-enter</strong></em> hook deactives and its transition ends.</li>\n<li><strong>leave</strong>: Applies between the next frame of <em><strong>before-leave</strong></em> hook deactives and its transition ends.</li>\n</ul>\n</article></section>";
+module.exports = "<section class=\"page\"><app-header></app-header><article class=\"markdown-body\"><h2>API</h2>\n<h3>transition</h3>\n<ul>\n<li>Arguments\n<ul>\n<li><strong>{None, String, Object}</strong> hook id</li>\n</ul>\n</li>\n<li>Usage<pre><code class=\"language-javascript\">// register default hooks\n// the same as `transition('san')(YourComponent)`\ntransition()(YourComponent)\n\n// register named hooks\ntransition('foo')(YourComponent)\n\n// register custom hooks\ntransition({\n  enter: 'custom-enter-hook'\n  beforeEnter: 'custom-before-enter-hook',\n  leave: 'custom-leave-hook',\n  beforeLeave: 'custom-before-leave-hook'\n})(YourComponent)\n</code></pre>\n</li>\n</ul>\n<h2>CSS Hooks</h2>\n<ul>\n<li><strong>before-enter</strong>: Applies when the component attaches DOM tree and removes in the next frame immediately.</li>\n<li><strong>before-leave</strong>: Applies when the component will dispose.</li>\n<li><strong>enter</strong>: Applies between the next frame of <em><strong>before-enter</strong></em> hook deactives and its transition ends.</li>\n<li><strong>leave</strong>: Applies between the next frame of <em><strong>before-leave</strong></em> hook deactives and its transition ends.</li>\n</ul>\n</article></section>";
 
 /***/ }),
 /* 39 */

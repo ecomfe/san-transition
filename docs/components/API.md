@@ -23,10 +23,6 @@
   })(YourComponent)
   ```
 
-### transitionGroup (under development)
-
-Coming soon...
-
 ## CSS Hooks
 
 - **before-enter**: Applies when the component attaches DOM tree and removes in the next frame immediately.

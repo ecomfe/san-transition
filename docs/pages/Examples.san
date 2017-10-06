@@ -84,7 +84,8 @@ export default {
   overflow hidden
   display flex
   font-size 0
-  border 1px solid
+  border 1px solid #ccc
+  border-radius 3px
   .preview
     background #333
     position relative

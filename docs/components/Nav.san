@@ -29,7 +29,9 @@ nav
   background-color #334959
   a 
     display inline-block
-    padding 8px 30px
+    height 44px
+    line-height 44px
+    padding 0 40px
     &.active
       // background-color #9ee0fe
       background-color lighten(#334959, 10)
