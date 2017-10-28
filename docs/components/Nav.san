@@ -41,4 +41,9 @@ nav
 .index
   nav
     text-align center
+@media(max-width: 640px)
+  nav
+    a
+      display block
+      border-bottom 1px solid #19232e
 </style>

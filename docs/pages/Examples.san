@@ -123,6 +123,12 @@ export default {
     cursor pointer
     &:hover
       background-color lighten(#2EA2F8, 10)
+@media(max-width: 640px)
+  .example
+    flex-direction column
+    height 600px
+    .code, .preview
+      width auto
 .alpha
   transition all .3s ease-out
   opacity 1
