@@ -1,6 +1,6 @@
 const getTime = (duration, delay) => Math.max.apply(this, duration.map((str, i) => getFloat(str) + parseFloat(delay[i])))
 
-const getFloat = (str) => (parseFloat(str) || 0) * 1000
+const getFloat = str => (parseFloat(str) || 0) * 1000
 
 export const getTimeout = el => {
   const style = getComputedStyle(el)
