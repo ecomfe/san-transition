@@ -13,6 +13,7 @@ section.page
 <script>
 import {router, Link} from 'san-router'
 import {transition} from '@/index.js'
+import Prism from 'prismjs'
 import Examples from 'docs/components/Examples.san'
 
 export default {
@@ -36,6 +37,9 @@ export default {
   hook: transition,
   toggle () {
     this.data.set('active', !this.data.get('active'))
+  },
+  attached () {
+    this.nextTick(Prism.highlightAll)
   }
 }
 </script>
