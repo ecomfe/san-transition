@@ -20,7 +20,7 @@ export default {
     return {
       active: true,
       query: '',
-      list: ['Errorik', 'Otakustay', 'Dafrok']
+      list: ['Errorrik', 'Otakustay', 'Dafrok']
     }
   },
   toggle () {
