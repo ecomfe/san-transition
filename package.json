@@ -16,7 +16,7 @@
     "lint": "eslint --ext .js src docs build",
     "dev": "webpack-dev-server --content-base docs/dist --config ./build/webpack.docs.config.js --hot --inline",
     "build": "webpack -p --config ./build/webpack.prod.config.js",
-    "build:docs": "webpack --config ./build/webpack.docs.config.js"
+    "build:docs": "webpack -p --config ./build/webpack.docs.config.js"
   },
   "repository": {
     "type": "git",
