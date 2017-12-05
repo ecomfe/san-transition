@@ -1,6 +1,6 @@
 # San Transition
 
-High order component factory for generating [san](//github.com/ecomfe/san) components with transition effects.
+Append transition effects for elements in [san](//github.com/ecomfe/san) components.
 
 ## Get Start
 
@@ -22,35 +22,27 @@ $ npm install --save san-transition
 
 ```html
 <template>
-  <div>
-    <transition-layer class="layer">A component with transition effects.</transition-layer>
-  <div>
+  <div>An Element with transition effects.<div>
 </template>
 
 <script>
 import san from 'san'
 import {transition} from 'san-transition'
 
-const YourComponent = san.defineComponent({
-  template: `<div><slot></slot></div>`
-})
-
 export default {
-  components: {
-    'transition-layer': transition('fade')(YourComponent)
-  }
+  transition: transition('slide')
 }
 </script>
 
 <style>
-.layer {
+.slide {
   transition: all .5s;
 }
-.fade-enter, .fade-before-leave {
+.slide-enter, .slide-before-leave {
   opacity: 1;
   transform: translate(0, 0);
 }
-.fade-before-enter, .fade-leave {
+.slide-before-enter, .slide-leave {
   opacity: 0;
   transform: translate(100px, 0);
 }
@@ -61,29 +53,38 @@ export default {
 
 ### transition
 
+To generate a transition object with properties `enter` and `leave` hook.
+
 - Arguments
-  - **{None, String, Object}** hook id
+  - **{string}** CSS hook name
+- Import
+  ```javascript
+  // For ES6 modules
+  import {transition} from 'san-transition'
+
+  // For CommonJS
+  var transition = require('san-transition').transition
+
+  // For browser runtime
+  var transition = sanTransition.transition
+  ```
 - Usage
   ```javascript
-  // register default hooks
-  // the same as `transition('san')(YourComponent)`
-  transition()(YourComponent)
 
-  // register named hooks
-  transition('foo')(YourComponent)
+  // To generate a transtion object with named hooks
+  sanTransition('foo')
 
-  // register custom hooks
-  transition({
-    enter: 'custom-enter-hook'
-    beforeEnter: 'custom-before-enter-hook',
-    leave: 'custom-leave-hook',
-    beforeLeave: 'custom-before-leave-hook'
-  })(YourComponent)
+  // To generate a transtion object with default hooks
+  // the same as `transition('san')`
+  transition()
   ```
 
 ## CSS Hooks
 
-- **before-enter**: Applies when the component attaches DOM tree and removes in the next frame immediately.
-- **before-leave**: Applies when the component will dispose.
-- **enter**: Applies between the next frame of ***before-enter*** hook deactives and its transition ends.
-- **leave**: Applies between the next frame of ***before-leave*** hook deactives and its transition ends.
+`{name}` is the name which is declared by `san-transition`.
+
+- **{name}-transition**: Applies Applies when the component attaches DOM tree and never removes. It's usually used to declare the CSS transition property.
+- **{name}-before-enter**: Applies when the component attaches DOM tree and removes in the next frame immediately.
+- **{name}-before-leave**: Applies when the component will dispose.
+- **{name}-enter**: Applies between the next frame of ***before-enter*** hook deactives and its transition ends.
+- **{name}-leave**: Applies between the next frame of ***before-leave*** hook deactives and its transition ends.

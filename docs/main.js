@@ -3,36 +3,49 @@ import App from './pages/App.san'
 import {router} from 'san-router'
 import Prism from 'prismjs'
 
-import API from './pages/API.san'
-import Examples from './pages/Examples.san'
-import GetStart from './pages/GetStart.san'
-import {transition} from '@/index.js'
+// import API from './pages/API.san'
+// import Examples from './pages/Examples.san'
+// import GetStart from './pages/GetStart.san'
+import Jumbotron from './components/Jumbotron.san'
+import Nav from './components/Nav.san'
+// import {transition} from '@/index.js'
 
-import 'prismjs/themes/prism-tomorrow.css'
+import 'prismjs/themes/prism.css'
 import 'normalize.css'
 import './markdown.styl'
 
-const genPage = transition('page')
+router.setMode('html5')
 
-router.setMode('hash')
+const jumbotron = new Jumbotron()
+const nav = new Nav()
+jumbotron.attach(document.body)
+nav.attach(document.body)
+
+// const $body = document.createElement('div')
+// document.body.appendChild($body)
+
+const $bodyEl = document.createElement('main')
+document.body.appendChild($bodyEl)
+const $body = 'main'
 
 router.add({
   rule: '/',
-  Component: genPage(App),
-  target: 'body'
-}).add({
-  rule: '/start',
-  Component: genPage(GetStart),
-  target: 'body'
-}).add({
-  rule: '/api',
-  Component: genPage(API),
-  target: 'body'
-}).add({
-  rule: '/examples',
-  Component: genPage(Examples),
-  target: 'body'
+  Component: App,
+  target: $body
 })
+// .add({
+//   rule: '/start',
+//   Component: GetStart,
+//   target: $body
+// }).add({
+//   rule: '/api',
+//   Component: API,
+//   target: $body
+// }).add({
+//   rule: '/examples',
+//   Component: Examples,
+//   target: $body
+// })
 
 router.start()
 

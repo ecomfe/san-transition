@@ -16,40 +16,45 @@ $ npm install --save san-transition
 
 ### Usage
 
-```html
-<template>
-  <div>
-    <transition-layer class="layer">A component with transition effects.</transition-layer>
-  <div>
-</template>
-
-<script>
+```javascript
 import san from 'san'
 import {transition} from 'san-transition'
 
-const YourComponent = san.defineComponent({
-  template: `<div><slot></slot></div>`
+const RootTransition = san.defineComponent({
+  template: '<div>Root element with transition effects.</div>'
+  transition: transition('slide')
 })
 
-export default {
-  components: {
-    'transition-layer': transition('fade')(YourComponent)
-  }
-}
-</script>
+const ChildTransition = san.defineComponent({
+  template: `<div>
+    <div s-transition="hook('slide')">Child elements with transition effects.</div>
+  </div>`
+  hook: transition
+})
 
-<style>
-.layer {
+const ListTransition = san.defineComponent({
+  template: `<ul>
+    <li s-for="item in list" s-transition="hook('slide')">Listed element with transition effects.</li>
+  </ul>`,
+  initData () {
+    return {
+      list: [1, 2, 3]
+    }
+  },
+  hook: transition
+})
+```
+
+```css
+.slide {
   transition: all .5s;
 }
-.fade-enter, .fade-before-leave {
+.slide-enter, .slide-before-leave {
   opacity: 1;
   transform: translate(0, 0);
 }
-.fade-before-enter, .fade-leave {
+.slide-before-enter, .slide-leave {
   opacity: 0;
   transform: translate(100px, 0);
 }
-</style>
-
 ```

@@ -1,55 +1,52 @@
 <template lang="pug">
-section.index.page
-  jumbotron
-  navigator
+section.page
+  section#start
+    article.markdown-body
+      include:markdown-it(html) ../components/GetStart.md
+  section#api
+    article.markdown-body
+      include:markdown-it(html) ../components/API.md
+  section#examples
+    examples
 </template>
 
 <script>
 import {router, Link} from 'san-router'
-import Jumbotron from '../components/Jumbotron.san'
-import Navigator from '../components/Nav.san'
 import {transition} from '@/index.js'
+import Examples from 'docs/components/Examples.san'
 
 export default {
   components: {
-    'jumbotron': Jumbotron,
-    'router-link': Link,
-    'navigator': Navigator
+    examples: Examples
+  },
+  initData () {
+    return {
+      list: ['foo', 'bar', 'baz', 'quz', 'qux'],
+      query: '',
+      active: true
+    }
+  },
+  computed: {
+    filteredList () {
+      const list = this.data.get('list')
+      const query = this.data.get('query')
+      return list.filter(item => ~item.indexOf(query))
+    }
+  },
+  hook: transition,
+  toggle () {
+    this.data.set('active', !this.data.get('active'))
   }
 }
 </script>
 
 <style lang="stylus">
-body
-  color: #999
-  background-color #19232e
-  margin 0
-  padding 0
-h1, a
-  color white
-a
-  text-decoration none
-  &:hover
-    text-decoration underline
-
-.logo
-  animation logo 2s infinite
-
 .page
-  transition all .3s ease-out
-  opacity 1
-  transform: translate(0, 0)
-.page-enter, .page-leave, .page-before-enter, .page-before-leave
-  width 100%
-  top 0
-  position: absolute
-.page-before-enter, .page-leave
-  opacity 0
-  transform translate(-100%, 0)
-
-@keyframes logo
-  0%
-    transform rotate3d(0, 1, 0, 0deg)
-  100%
-    transform rotate3d(0, 1, 0, 360deg)
+  margin 0 auto
+@media(min-width: 640px) and (max-width: 1279px)
+  .page
+    width 80%
+@media(min-width: 1280px)
+  .page
+    width 60%
 </style>

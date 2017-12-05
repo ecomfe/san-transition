@@ -1,0 +1,75 @@
+<template lang="pug">
+article.markdown-body
+  h2 Examples
+  h3 Single element with transition effect
+  div.preview
+    button(on-click="toggle") CLICK TO TOGGLE
+    p(s-if="active" s-transition="hook('example')") Hello, san-transition!
+  h3 Listed elements with transition effect
+  div.preview
+    input(value="{= query =}" placeholder="Input Keywords")
+    ul
+      li(s-transition="hook('example')" s-for="item in filteredList") {{item}}
+</template>
+
+<script>
+import {transition} from '@/index.js'
+export default {
+  hook: transition,
+  initData () {
+    return {
+      active: true,
+      query: '',
+      list: ['Errorik', 'Otakustay', 'Dafrok']
+    }
+  },
+  toggle () {
+    this.data.set('active', !this.data.get('active'))
+  },
+  computed: {
+    filteredList () {
+      return this.data.get('list').filter(item => ~item.toLowerCase().indexOf(this.data.get('query').toLowerCase()))
+    }
+  }
+}
+</script>
+
+<style lang="stylus">
+.example-transition
+  transition all .5s ease-out
+  transform scaleY(1)
+  opacity 1
+.example-before-enter, .example-leave
+  transform scaleY(0)
+  opacity 0
+.example-before-leave, .example-enter
+  opacity 1
+.preview
+  background #f2f2f2
+  padding 20px
+  input
+    border 1px solid #dbdbdb
+    border-radius 3px
+    padding 5px 10px
+    font-size: 14px
+    line-height 1
+    vertical-align top
+    background-color white
+    color #363636
+    box-shadow inset 0 1px 2px rgba(10, 10, 10, 0.1)
+    max-width 100%
+  button
+    background-color #2EA2F8
+    color #fff
+    border 1px solid #dbdbdb
+    padding 10px 15px
+    border-radius 3px
+    box-shadow none
+    font-size 14px
+    line-height 1
+    vertical-align top
+    user-select none
+    cursor pointer
+    text-align center
+    white-space nowrap
+</style>

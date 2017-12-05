@@ -1,31 +1,38 @@
-
 ## API
 
 ### transition
 
+To generate a transition object with properties `enter` and `leave` hook.
+
 - Arguments
-  - **{None, String, Object}** hook id
+  - **{string}** CSS hook name
+- Import
+  ```javascript
+  // In ES6 modules
+  import {transition} from 'san-transition'
+
+  // In CommonJS
+  var transition = require('san-transition').transition
+
+  // In browser runtime
+  var transition = sanTransition.transition
+  ```
 - Usage
   ```javascript
-  // register default hooks
-  // the same as `transition('san')(YourComponent)`
-  transition()(YourComponent)
+  // To generate a transtion object with named hooks
+  sanTransition('foo')
 
-  // register named hooks
-  transition('foo')(YourComponent)
-
-  // register custom hooks
-  transition({
-    enter: 'custom-enter-hook'
-    beforeEnter: 'custom-before-enter-hook',
-    leave: 'custom-leave-hook',
-    beforeLeave: 'custom-before-leave-hook'
-  })(YourComponent)
+  // To generate a transtion object with default hooks
+  // the same as `transition('san')`
+  transition()
   ```
 
-## CSS Hooks
+### CSS Hooks
 
-- **before-enter**: Applies when the component attaches DOM tree and removes in the next frame immediately.
-- **before-leave**: Applies when the component will dispose.
-- **enter**: Applies between the next frame of ***before-enter*** hook deactives and its transition ends.
-- **leave**: Applies between the next frame of ***before-leave*** hook deactives and its transition ends.
+`{name}` is the name which is declared by `san-transition`.
+
+- **{name}-transition**: Applies Applies when the component attaches DOM tree and never removes. It's usually used to declare the CSS transition property.
+- **{name}-before-enter**: Applies when the component attaches DOM tree and removes in the next frame immediately.
+- **{name}-before-leave**: Applies when the component will dispose.
+- **{name}-enter**: Applies between the next frame of ***before-enter*** hook deactives and its transition ends.
+- **{name}-leave**: Applies between the next frame of ***before-leave*** hook deactives and its transition ends.

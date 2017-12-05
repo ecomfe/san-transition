@@ -3,8 +3,8 @@ const path = require('path')
 module.exports = {
   entry: './src/index.js',
   output: {
-    path: path.resolve(__dirname, './'),
-    filename: '../index.js',
+    path: path.resolve(__dirname, '../dist'),
+    filename: './index.js',
     library: 'sanTransition',
     libraryTarget: 'umd'
   },

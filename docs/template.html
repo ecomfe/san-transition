@@ -4,6 +4,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>san-transition</title>
+    <style>
+      body {
+        color: #333;
+        margin: 0;
+        padding: 0;
+      }
+      h1,
+      a {
+        color: #fff;
+      }
+      a {
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      .logo {
+        -webkit-animation: logo 2s infinite;
+                animation: logo 2s infinite;
+      }
+      header {
+        text-align: center;
+        padding: 50px 0;
+        background-color: #00334a;
+        color:#999;
+        overflow: hidden;
+        -webkit-perspective: 800px;
+                perspective: 800px;
+      }
+      header .logo {
+        height: 220px;
+      }
+      @-webkit-keyframes logo {
+        0% {
+          -webkit-transform: rotate3d(0, 1, 0, 0deg);
+                  transform: rotate3d(0, 1, 0, 0deg);
+        }
+        100% {
+          -webkit-transform: rotate3d(0, 1, 0, 360deg);
+                  transform: rotate3d(0, 1, 0, 360deg);
+        }
+      }
+      @keyframes logo {
+        0% {
+          -webkit-transform: rotate3d(0, 1, 0, 0deg);
+                  transform: rotate3d(0, 1, 0, 0deg);
+        }
+        100% {
+          -webkit-transform: rotate3d(0, 1, 0, 360deg);
+                  transform: rotate3d(0, 1, 0, 360deg);
+        }
+      }
+    </style>
   </head>
   <body>
   </body>

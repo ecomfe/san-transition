@@ -1,0 +1,10 @@
+.fade-transition {
+  transition: all 1s;
+}
+
+.fade-enter, .fade-before-leave {
+  opacity: 1;
+}
+.fade-before-enter, .fade-leave {
+  opacity: 0;
+}

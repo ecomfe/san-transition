@@ -5,7 +5,7 @@
     </a>
   <img src="https://ecomfe.github.io/san/img/logo-colorful.svg" class="logo">
   <h1>San Transition</h1>
-  <p>High order component factory for generating <a href="//github.com/ecomfe/san">san</a> components with transition effects.</p>
+  <p>Append transition effects for elements in <a href="//github.com/ecomfe/san">san</a>  components.</p>
 </header>
 </template>
 

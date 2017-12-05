@@ -1,6 +1,6 @@
 <template>
   <nav>
-    <router-link s-for="route in routes" class="{{activeRoute === route.path ? 'active' : ''}}" to="{{route.path}}">{{route.name}}</router-link>
+    <a s-for="route in routes" href="{{route.path}}">{{route.name}}</a>
   </nav>  
 </template>
 
@@ -11,41 +11,32 @@ export default {
   initData () {
     return {
       routes: [
-        {name: 'Get Start', path: '/start'},
-        {name: 'API', path: '/api'},
-        {name: 'Examples', path: '/examples'}
-      ],
-      activeRoute: router.locator.current
+        {name: 'Get Start', path: '#start'},
+        {name: 'API', path: '#api'},
+        {name: 'Examples', path: '#examples'}
+      ]
     }
-  },
-  components: {
-    'router-link': Link
   }
 }
 </script>
 
 <style lang="stylus">
 nav
-  background-color #334959
+  background-color #efeefe
+  text-align center
   a 
     display inline-block
     height 44px
     line-height 44px
     padding 0 40px
-    &.active
-      // background-color #9ee0fe
-      background-color lighten(#334959, 10)
-      &:hover
-        color white
-    &:hover
+    color rgba(48,92,113,.8)
+    &:hover, &:active
       text-decoration none
-      color #9ee0fe
-.index
-  nav
-    text-align center
+      color #2EA2F8
 @media(max-width: 640px)
   nav
     a
       display block
-      border-bottom 1px solid #19232e
+      text-align center
+      border-bottom 1px solid #dedded
 </style>
