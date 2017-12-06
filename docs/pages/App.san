@@ -11,7 +11,6 @@ section.page
 </template>
 
 <script>
-import {router, Link} from 'san-router'
 import {transition} from '@/index.js'
 import Prism from 'prismjs'
 import Examples from 'docs/components/Examples.san'

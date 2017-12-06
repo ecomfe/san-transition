@@ -5,8 +5,6 @@
 </template>
 
 <script>
-import {router, Link} from 'san-router'
-
 export default {
   initData () {
     return {

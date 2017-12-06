@@ -2,7 +2,7 @@
 header.app-header
   a(href="https://github.com/dafrok/san-transition")
   h1
-    router-link(to="/")
+    a(href="#")
       img(src="https://ecomfe.github.io/san/img/logo-colorful.svg" class="logo")
     span San Transition
   navigator
@@ -10,11 +10,9 @@ header.app-header
 
 <script>
 import Navigator from '../components/Nav.san'
-import {Link} from 'san-router'
 
 export default {
   components: {
-    'router-link': Link,
     'navigator': Navigator
   }
 }
