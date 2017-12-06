@@ -31,7 +31,7 @@ To generate a transition object with properties `enter` and `leave` hook.
 
 `{name}` is the name which is declared by `san-transition`.
 
-- **{name}-transition**: Applies Applies when the component attaches DOM tree and never removes. It's usually used to declare the CSS transition property.
+- **{name}-transition**: Applies when the component attaches DOM tree and never removes. It's usually used to declare the CSS transition property.
 - **{name}-before-enter**: Applies when the component attaches DOM tree and removes in the next frame immediately.
 - **{name}-before-leave**: Applies when the component will dispose.
 - **{name}-enter**: Applies between the next frame of ***before-enter*** hook deactives and its transition ends.
