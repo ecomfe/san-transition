@@ -1,4 +1,5 @@
 import {transition} from '@/index.js'
+import {getTimeout} from '@/util.js'
 
 describe('Single element transition', function () {
   it ('transition when attached', function (done) {
@@ -10,16 +11,16 @@ describe('Single element transition', function () {
       attached: function () {
         const el = this.el
         nextFrame(function () {
-          expect(isClassNameExists(el, 'fade-transition')).toBe(true)
           expect(isClassNameExists(el, 'fade-before-enter')).toBe(true)
           expect(isClassNameExists(el, 'fade-enter')).toBe(false)
           afterNextFrame(function () {
-            expect(isClassNameExists(el, 'fade-transition')).toBe(true)
             expect(isClassNameExists(el, 'fade-before-enter')).toBe(false)
             expect(isClassNameExists(el, 'fade-enter')).toBe(true)
-            myComponent.dispose()
-            document.body.removeChild(wrap)
-            done()
+            setTimeout(() => {
+              myComponent.dispose()
+              document.body.removeChild(wrap)
+              done()
+            }, getTimeout(el))
           })
         })
       }
@@ -38,11 +39,9 @@ describe('Single element transition', function () {
         const el = this.el
         myComponent.dispose()
         nextFrame(function () {
-          expect(isClassNameExists(el, 'fade-transition')).toBe(true)
           expect(isClassNameExists(el, 'fade-before-leave')).toBe(true)
           expect(isClassNameExists(el, 'fade-leave')).toBe(false)
           afterNextFrame(function () {
-            expect(isClassNameExists(el, 'fade-transition')).toBe(true)
             expect(isClassNameExists(el, 'fade-before-leave')).toBe(false)
             expect(isClassNameExists(el, 'fade-leave')).toBe(true)
             done()

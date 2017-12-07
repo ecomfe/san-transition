@@ -8,7 +8,6 @@ import capability from './capability.js'
 
 export default (name = 'san') => {
   const hooks = {
-    transition: `${name}-transition`,
     beforeEnter: `${name}-before-enter`,
     enter: `${name}-enter`,
     beforeLeave: `${name}-before-leave`,
@@ -16,10 +15,10 @@ export default (name = 'san') => {
   }
   return {
     enter (el, done) {
+      /* istanbul ignore if */
       if (!capability) {
         return done()
       }
-      addHook(el, hooks.transition)
       addHook(el, hooks.beforeEnter)
       const transitionHandler = () => {
         removeHook(el, hooks.beforeEnter)
@@ -32,6 +31,7 @@ export default (name = 'san') => {
       afterNextFrame(transitionHandler)
     },
     leave (el, done) {
+      /* istanbul ignore if */
       if (!capability) {
         return done()
       }

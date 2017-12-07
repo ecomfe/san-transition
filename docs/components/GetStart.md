@@ -46,7 +46,7 @@ const ListTransition = san.defineComponent({
 ```
 
 ```css
-.slide {
+.slide-enter, .slide-leave {
   transition: all .5s;
 }
 .slide-enter, .slide-before-leave {

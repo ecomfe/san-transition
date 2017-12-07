@@ -1,4 +1,4 @@
-.fade-transition {
+.fade-enter, .fade-leave {
   transition: all 1s;
 }
 
