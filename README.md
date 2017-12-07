@@ -2,6 +2,10 @@
 
 Append transition effects for elements in [san](//github.com/ecomfe/san) components.
 
+[![Build Status](https://travis-ci.org/ecomfe/san-transition.svg?branch=master)](https://travis-ci.org/ecomfe/san-transition)
+[![npm](https://img.shields.io/npm/v/san-transition.svg)](https://img.shields.io/npm/v/san-transition.svg)
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg)]()
+
 ## Get Start
 
 ### Installation
