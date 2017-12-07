@@ -16,6 +16,9 @@ script:
   - npm run lint
   - npm test
   - npm run build:docs
+test:
+  post:
+    - npm run codecov
 branches:
   only: master
 after_script:

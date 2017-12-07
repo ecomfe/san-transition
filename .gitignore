@@ -38,4 +38,4 @@ jspm_packages
 
 docs/dist
 dist
-test/coverage
+coverage

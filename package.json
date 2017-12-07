@@ -14,6 +14,7 @@
   "scripts": {
     "test": "karma start ./test/karma.conf.js --single-run",
     "lint": "eslint --ext .js src docs build",
+    "codecov": "codecov",
     "dev": "webpack-dev-server --content-base docs/dist --config ./build/webpack.docs.config.js --hot --inline",
     "build": "webpack -p --config ./build/webpack.prod.config.js",
     "build:docs": "webpack -p --config ./build/webpack.docs.config.js"
@@ -34,6 +35,7 @@
     "babel-loader": "^7.1.2",
     "babel-preset-env": "^1.6.1",
     "babel-preset-es2015": "^6.24.1",
+    "codecov": "^3.0.0",
     "css-loader": "^0.25.0",
     "eslint": "^3.19.0",
     "eslint-config-standard": "^10.2.1",

@@ -30,8 +30,9 @@ module.exports = function (config) {
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
     reporters: ['progress', 'coverage'],
     coverageReporter: {
-      type: 'html',
-      dir: 'test/coverage/'
+      reporters: [{type: 'lcov'}]
+      // type: 'html',
+      // dir: 'test/coverage/'
     },
     webpack: require('../build/webpack.test.config.js'),
     webpackMiddleware: {
