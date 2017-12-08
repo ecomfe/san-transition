@@ -1,4 +1,3 @@
-var transition = sanTransition.transition
 function nextFrame (callback) {
   return requestAnimationFrame(callback)
 }

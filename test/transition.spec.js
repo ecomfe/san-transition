@@ -1,3 +1,5 @@
+import {transition} from '@/index.js'
+
 describe('Single element transition', function () {
   it ('transition when attached', function (done) {
     var wrap = document.createElement('div');

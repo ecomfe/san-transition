@@ -13,7 +13,6 @@ module.exports = function (config) {
 
     // list of files / patterns to load in the browser
     files: [
-      './dist/index.js',
       './node_modules/san/dist/san.dev.js',
       './test/util/**',
       './test/**/*spec.js'
@@ -22,7 +21,8 @@ module.exports = function (config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'dist/index.js': 'coverage'
+      'test/*.js': ['webpack'],
+      'src/*.js': ['webpack', 'coverage']
     },
 
     // test results reporter to use
@@ -33,7 +33,10 @@ module.exports = function (config) {
       type: 'html',
       dir: 'test/coverage/'
     },
-
+    webpack: require('../build/webpack.test.config.js'),
+    webpackMiddleware: {
+      noInfo: true
+    },
     // web server port
     port: 9876,
 
