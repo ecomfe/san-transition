@@ -35,8 +35,8 @@ export default {
 </script>
 
 <style lang="stylus">
-.example-enter
-  transition all .5s ease-out
+.example-enter, .example-leave
+  transition all .3s ease-out
 .example-before-enter, .example-leave
   transform scaleY(0)
   opacity 0
