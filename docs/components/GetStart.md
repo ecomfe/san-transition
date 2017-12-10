@@ -16,15 +16,19 @@ $ npm install --save san-transition
 
 ### Usage
 
+#### JavaScript
+
 ```javascript
 import san from 'san'
 import {transition} from 'san-transition'
 
+// transition for the root element
 const RootTransition = san.defineComponent({
   template: '<div>Root element with transition effects.</div>'
   transition: transition('slide')
 })
 
+// transition for child elements
 const ChildTransition = san.defineComponent({
   template: `<div>
     <div s-transition="hook('slide')">Child elements with transition effects.</div>
@@ -32,6 +36,7 @@ const ChildTransition = san.defineComponent({
   hook: transition
 })
 
+// transition for a list of elements
 const ListTransition = san.defineComponent({
   template: `<ul>
     <li s-for="item in list" s-transition="hook('slide')">Listed element with transition effects.</li>
@@ -44,6 +49,8 @@ const ListTransition = san.defineComponent({
   hook: transition
 })
 ```
+
+#### CSS
 
 ```css
 .slide-enter, .slide-leave {
