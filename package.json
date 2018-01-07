@@ -55,8 +55,6 @@
     "karma-coverage": "^1.1.1",
     "karma-jasmine": "^1.1.1",
     "karma-webpack": "^2.0.6",
-    "marked": "^0.3.6",
-    "marked-engine": "^0.1.0",
     "normalize.css": "^6.0.0",
     "prismjs": "^1.8.1",
     "pug": "^2.0.0-rc.4",
