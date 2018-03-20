@@ -68,5 +68,8 @@
   },
   "peerDependencies": {
     "san": "^3.4.3"
+  },
+  "dependencies": {
+    "asap": "^2.0.6"
   }
 }
