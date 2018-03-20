@@ -1,12 +1,12 @@
-
 /**
  * @file Transition object generator
  */
 
-import { getTimeout, afterNextFrame, addHook, removeHook } from './util'
-import capability from './capability.js'
+import { getTimeout, addHook, removeHook } from './util'
+import stage from './stage'
+import capability from './capability'
 
-export default (name = 'san') => {
+export default (name = 'san', stagger = 0) => {
   const hooks = {
     beforeEnter: `${name}-before-enter`,
     enter: `${name}-enter`,
@@ -28,7 +28,7 @@ export default (name = 'san') => {
           done()
         }, getTimeout(el))
       }
-      afterNextFrame(transitionHandler)
+      stage(el, stagger, transitionHandler)
     },
     leave (el, done) {
       /* istanbul ignore if */
@@ -41,7 +41,7 @@ export default (name = 'san') => {
         addHook(el, hooks.leave)
         setTimeout(done, getTimeout(el))
       }
-      afterNextFrame(transitionHandler)
+      stage(el, stagger, transitionHandler)
     }
   }
 }
