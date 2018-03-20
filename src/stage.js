@@ -6,7 +6,7 @@ import asap from 'asap'
 import { afterNextFrame } from './util'
 
 const stacks = {}
-export default function (el, stagger, transitionHandler, done) {
+export default function (el, stagger, transitionHandler) {
   if (stagger) {
     const parentEl = el.parentElement
     if (!parentEl) {
