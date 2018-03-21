@@ -16,13 +16,15 @@ describe('Staged transition', function () {
     stage($item2, 300, transitionHandler)
 
     nextFrame(() => afterNextFrame(() => {
-      expect(count).toBe(1)
+      setTimeout(() => {
+        expect(count).toBe(1)
+      }, 0)
       setTimeout(() => {
         expect(count).toBe(2)
         document.body.removeChild($item1)
         document.body.removeChild($item2)
         done()
-      }, 400)
+      }, 300)
     }))
   })
 
