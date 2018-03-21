@@ -1,6 +1,7 @@
 function nextFrame (callback) {
   return requestAnimationFrame(callback)
 }
+
 function afterNextFrame(callback) {
   return nextFrame(function () {
     return nextFrame(callback)
