@@ -9,7 +9,7 @@ article.markdown-body
   div.preview
     input(value="{= query =}" placeholder="Input Keywords")
     ul
-      li(s-transition="hook('example')" s-for="item in filteredList") {{item}}
+      li(s-transition="hook('example', 300)" s-for="item in filteredList") {{item}}
 </template>
 
 <script>
@@ -36,7 +36,7 @@ export default {
 
 <style lang="stylus">
 .example-enter, .example-leave
-  transition all .3s ease-out
+  transition all .5s ease-out
 .example-before-enter, .example-leave
   transform scaleY(0)
   opacity 0

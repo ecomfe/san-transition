@@ -39,7 +39,7 @@ const ChildTransition = san.defineComponent({
 // transition for a list of elements
 const ListTransition = san.defineComponent({
   template: `<ul>
-    <li s-for="item in list" s-transition="hook('slide')">Listed element with transition effects.</li>
+    <li s-for="item in list" s-transition="hook('slide', 300)">Listed element with transition effects.</li>
   </ul>`,
   initData () {
     return {

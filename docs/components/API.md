@@ -7,7 +7,8 @@
 To generate a transition object with properties `enter` and `leave` hooks.
 
 - Arguments
-  - **{string}** Declare a hook name as the prefix of the CSS hooks.
+  - **name** {string} Declare a hook name as the prefix of the CSS hooks.
+  - **stagger** {number} Staged transition interval.
 - Import
   ```javascript
   // In ES6 modules
