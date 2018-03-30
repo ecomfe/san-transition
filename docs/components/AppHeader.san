@@ -3,7 +3,7 @@ header.app-header
   a(href="https://github.com/dafrok/san-transition")
   h1
     a(href="#")
-      img(src="https://ecomfe.github.io/san/img/logo-colorful.svg" class="logo")
+      img(src="https://camo.githubusercontent.com/a290f602d8248dd069fe4fc9eb7dfec86014183a/68747470733a2f2f62616964752e6769746875622e696f2f73616e2f696d672f6c6f676f2d636f6c6f7266756c2e737667" class="logo")
     span San Transition
   navigator
 </template>
