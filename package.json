@@ -58,7 +58,7 @@
     "normalize.css": "^6.0.0",
     "prismjs": "^1.8.1",
     "pug": "^2.0.0-rc.4",
-    "san": "^3.4.3",
+    "san": "^3.6.1",
     "san-loader": "0.0.4",
     "style-loader": "^0.13.2",
     "stylus": "^0.54.5",
@@ -67,7 +67,7 @@
     "webpack-dev-server": "^2.9.5"
   },
   "peerDependencies": {
-    "san": "^3.4.3"
+    "san": "^3.6.0"
   },
   "dependencies": {
     "asap": "^2.0.6"

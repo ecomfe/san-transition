@@ -9,7 +9,7 @@ article.markdown-body
   div.preview
     input(value="{= query =}" placeholder="Input Keywords")
     ul
-      li(s-transition="hook('example', 300)" s-for="item in filteredList") {{item}}
+      li(s-transition="hook('example', 300)" s-for="item in filteredList trackBy item") {{item}}
 </template>
 
 <script>
@@ -20,7 +20,11 @@ export default {
     return {
       active: true,
       query: '',
-      list: ['Errorrik', 'Otakustay', 'Dafrok']
+      list: [
+        'Errorrik',
+        'Otakustay',
+        'Dafrok'
+      ]
     }
   },
   toggle () {

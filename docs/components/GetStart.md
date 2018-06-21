@@ -36,14 +36,14 @@ const ChildTransition = san.defineComponent({
   hook: transition
 })
 
-// transition for a list of elements
+// tracked transition for a list of elements
 const ListTransition = san.defineComponent({
   template: `<ul>
-    <li s-for="item in list" s-transition="hook('slide', 300)">Listed element with transition effects.</li>
+    <li s-for="item in list trackBy item" s-transition="hook('slide', 300)">Listed element with transition effects.</li>
   </ul>`,
   initData () {
     return {
-      list: [1, 2, 3]
+      list: [1, 2, 3, 4, 5]
     }
   },
   hook: transition
