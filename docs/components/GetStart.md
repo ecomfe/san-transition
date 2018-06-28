@@ -22,31 +22,25 @@ $ npm install --save san-transition
 import san from 'san'
 import {transition} from 'san-transition'
 
-// transition for the root element
-const RootTransition = san.defineComponent({
-  template: '<div>Root element with transition effects.</div>'
-  transition: transition('slide')
-})
-
-// transition for child elements
+// normal transition
 const ChildTransition = san.defineComponent({
   template: `<div>
-    <div s-transition="hook('slide')">Child elements with transition effects.</div>
-  </div>`
-  hook: transition
+    <div s-transition="transition('slide')">Child elements with transition effects.</div>
+  </div>`,
+  transition
 })
 
-// tracked transition for a list of elements
+// a list of tracked elements
 const ListTransition = san.defineComponent({
   template: `<ul>
-    <li s-for="item in list trackBy item" s-transition="hook('slide', 300)">Listed element with transition effects.</li>
+    <li s-for="item in list trackBy item" s-transition="transition('slide', 300)">Listed element with transition effects.</li>
   </ul>`,
   initData () {
     return {
       list: [1, 2, 3, 4, 5]
     }
   },
-  hook: transition
+  transition
 })
 ```
 

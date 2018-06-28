@@ -4,18 +4,18 @@ article.markdown-body
   h3 Single element with transition effects
   div.preview
     button(on-click="toggle") CLICK TO TOGGLE
-    p(s-if="active" s-transition="hook('example')") Hello, san-transition!
+    p(s-if="active" s-transition="transition('example')") Hello, san-transition!
   h3 Listed elements with transition effects
   div.preview
     input(value="{= query =}" placeholder="Input Keywords")
     ul
-      li(s-transition="hook('example', 300)" s-for="item in filteredList trackBy item") {{item}}
+      li(s-transition="transition('example', 300)" s-for="item in filteredList trackBy item") {{item}}
 </template>
 
 <script>
 import {transition} from '@/index.js'
 export default {
-  hook: transition,
+  transition,
   initData () {
     return {
       active: true,
