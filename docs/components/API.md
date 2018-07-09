@@ -23,7 +23,7 @@ To generate a transition object with properties `enter` and `leave` hooks.
 - Usage
   ```javascript
   // To generate a transtion object with named hooks
-  sanTransition('foo')
+  transition('foo')
 
   // To generate a transtion object with default hooks
   // the same as `transition('san')`
